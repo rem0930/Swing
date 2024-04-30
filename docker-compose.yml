@@ -32,6 +32,9 @@ services:
       - redis # redisサービスが起動後にbackendを起動
     environment:
       REDIS_URL: redis://redis:6379/1 # Redisサーバーの接続情報
+      MYSQL_USER: ${MYSQL_USER} # MySQLユーザー名
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # MySQLパスワード
+      MYSQL_DATABASE: ${MYSQL_DATABASE} # データベース名
 
   # フロントエンドアプリケーションサービス
   frontend:
@@ -39,7 +42,7 @@ services:
       context: ./frontend/
       dockerfile: Dockerfile
     volumes:
-      - ./frontend:/usr/src/app # ソースコードをコンテナにマウント
+      - ./frontend/app:/usr/src/app # ソースコードをコンテナにマウント
     command: 'yarn dev' # 開発サーバーを起動
     ports:
       - '8000:8000'
