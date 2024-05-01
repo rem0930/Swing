@@ -11,7 +11,7 @@
 | id               | INT              | PRIMARY KEY, AUTO_INCREMENT        | 　　　　                    |
 | email            | VARCHAR(255)     | UNIQUE, NOT NULL                   | 　　　　　　                     |
 | password_digest  | VARCHAR(255)     | NOT NULL                           |                      |
-| user_name        | VARCHAR(22)      | NOT NULL                           | 'anonymous'              |
+| user_name        | VARCHAR(30)      | NOT NULL                           | 'anonymous'              |
 | profile_photo    | VARCHAR(255)     |                                    |                          |
 | background_photo | VARCHAR(255)     |                                    |                          |
 | bio              | VARCHAR(250)     |                                    | 'No bio available'       |
@@ -25,9 +25,8 @@
 |-------------------|-----------------|-------------------|-------------------------|
 | id                | INT             | PRIMARY KEY, AUTO_INCREMENT | なし                   |
 | owner_id          | INT             | FOREIGN KEY       | なし                   |
-| name              | VARCHAR(255)    | NOT NULL          | なし                   |
+| name              | VARCHAR(50)     | NOT NULL          | なし                   |
 | details           | TEXT            |                   |                         |
-| status            | VARCHAR(50)     | NOT NULL          |                         |
 | created_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 | updated_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 
@@ -41,9 +40,10 @@
 | type          | ENUM('member', 'opponent', 'helper') | NOT NULL | なし       | 募集タイプ       |
 | title         | VARCHAR(255)       | NOT NULL                  | なし             | 募集タイトル     |
 | description   | TEXT               | NOT NULL                  | なし             | 募集内容（bio風）|
+| location_id   | INT                | FOREIGN KEY　　　　　　　　　　　　           | なし             | ロケーションID   |
 | area          | VARCHAR(255)       |                           | なし             | 開催エリア       |
-| event_date    | DATE               | NULL                      |                  | 開催日           |
-| deadline      | DATE               | NULL                      |                  | 募集期限         |
+| event_date    | DATE               | 　　　　　　　　                      |                  | 開催日           |
+| deadline      | DATE               | 　　　　　　　　                      |                  | 募集期限         |
 | status        | ENUM('open', 'closed') | NOT NULL              | 'open'           | 募集状態         |
 | created_at    | DATETIME           | NOT NULL                  | CURRENT_TIMESTAMP | 作成日時         |
 | updated_at    | DATETIME           | NOT NULL                  | CURRENT_TIMESTAMP | 更新日時         |
@@ -51,22 +51,60 @@
 
 ### 4. likes（いいねテーブル）
 
-| カラム名          | データ型        | 制約              | 説明                       |
-|-------------------|-----------------|-------------------|----------------------------|
-| id                | INT             | PRIMARY KEY, AUTO_INCREMENT | いいねID                 |
-| user_id           | INT             | FOREIGN KEY       | ユーザーID                 |
-| post_id           | INT             | FOREIGN KEY       | 投稿ID                     |
-| created_at        | DATETIME        | NOT NULL          | いいねした日時             |
+| カラム名    | データ型    | 制約                      | 初期値            | 説明         |
+|------------|-------------|---------------------------|------------------|--------------|
+| id         | INT         | PRIMARY KEY, AUTO_INCREMENT | なし           | いいねID     |
+| user_id    | INT         | FOREIGN KEY                | なし           | ユーザーID   |
+| post_id    | INT         | FOREIGN KEY                | なし           | 投稿ID       |
+| created_at | DATETIME    | NOT NULL                  | CURRENT_TIMESTAMP | いいねした日時 |
+
 
 ### 5. notifications（通知テーブル）
 
-| カラム名          | データ型        | 制約              | 説明                       |
-|-------------------|-----------------|-------------------|----------------------------|
-| id                | INT             | PRIMARY KEY, AUTO_INCREMENT | 通知ID                   |
-| user_id           | INT             | FOREIGN KEY       | ユーザーID                 |
-| message           | VARCHAR(255)    | NOT NULL          | 通知メッセージ             |
-| read              | BOOLEAN         | NOT NULL          | 既読状態（既読、未読）     |
-| created_at        | DATETIME        | NOT NULL          | 通知日時                   |
+| カラム名          | データ型        | 制約              | 初期値            | 説明                       |
+|-------------------|-----------------|-------------------|------------------|----------------------------|
+| id                | INT             | PRIMARY KEY, AUTO_INCREMENT | なし       | 通知ID                   |
+| user_id           | INT             | FOREIGN KEY       | なし             | ユーザーID                 |
+| message           | VARCHAR(255)    | NOT NULL          | なし             | 通知メッセージ             |
+| read              | BOOLEAN         | NOT NULL          | FALSE            | 既読状態（既読、未読）     |
+| created_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP | 通知日時                   |
+
+
+### 6. messages テーブル
+
+| カラム名          | データ型        | 制約              | 初期値            | 説明               |
+|-------------------|-----------------|-------------------|------------------|--------------------|
+| id                | INT             | PRIMARY KEY, AUTO_INCREMENT | なし           | メッセージID      |
+| conversation_id   | INT             | FOREIGN KEY       | なし             | 会話ID             |
+| sender_id         | INT             | FOREIGN KEY       | なし             | 送信者のユーザーID |
+| message_text      | TEXT            | NOT NULL          | なし             | メッセージの内容   |
+| created_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP | 作成日時           |
+
+### 7. conversations テーブル
+
+| カラム名       | データ型        | 制約              | 初期値            | 説明         |
+|----------------|-----------------|-------------------|------------------|--------------|
+| id             | INT             | PRIMARY KEY, AUTO_INCREMENT | なし       | 会話ID       |
+| created_at     | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP | 作成日時     |
+
+### 8. participants テーブル
+
+| カラム名          | データ型        | 制約              | 初期値            | 説明         |
+|-------------------|-----------------|-------------------|------------------|--------------|
+| conversation_id   | INT             | FOREIGN KEY       | なし             | 会話ID       |
+| user_id           | INT             | FOREIGN KEY       | なし             | ユーザーID   |
+
+
+### 9. locations テーブル
+
+| カラム名       | データ型         | 制約                      | 初期値 | 説明               |
+|----------------|------------------|---------------------------|--------|--------------------|
+| id             | INT              | PRIMARY KEY, AUTO_INCREMENT | なし | ロケーションID     |
+| latitude       | DECIMAL(10, 8)   | NOT NULL                  |        | 緯度               |
+| longitude      | DECIMAL(11, 8)   | NOT NULL                  |        | 経度               |
+| address        | VARCHAR(255)     |                           |        | 完全な住所         |
+| description    | TEXT             |                           |        | 位置に関する説明   |
+
 
 ## システム構成
 
