@@ -26,7 +26,7 @@
 4. データベースのセットアップを行います。
 
     ```bash
-    docker-compose run --rm backend bundle exec rails db:create db:migrate
+    docker-compose run --rm backend bundle exec rails db:migrate
     ```
 
 5. 開発中のコンテナを利用します。ソースコードの変更を行うと、自動でリロードされます。
