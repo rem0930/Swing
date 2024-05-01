@@ -42,8 +42,8 @@
 | description   | TEXT               | NOT NULL                  | なし             | 募集内容（bio風）|
 | location_id   | INT                | FOREIGN KEY　　　　　　　　　　　　           | なし             | ロケーションID   |
 | area          | VARCHAR(255)       |                           | なし             | 開催エリア       |
-| event_date    | DATE               | 　　　　　　　　                      |                  | 開催日           |
-| deadline      | DATE               | 　　　　　　　　                      |                  | 募集期限         |
+| event_date    | DATETIME           | 　　　　　　　　                      |                  | 開催日時           |
+| deadline      | DATETIME           | 　　　　　　　　                      |                  | 募集期限         |
 | status        | ENUM('open', 'closed') | NOT NULL              | 'open'           | 募集状態         |
 | created_at    | DATETIME           | NOT NULL                  | CURRENT_TIMESTAMP | 作成日時         |
 | updated_at    | DATETIME           | NOT NULL                  | CURRENT_TIMESTAMP | 更新日時         |
