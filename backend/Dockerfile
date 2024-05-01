@@ -6,7 +6,7 @@ ENV LANG=C.UTF-8 \
 WORKDIR /app
 
 # 必要なパッケージのインストール
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client redis-tools && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client redis-tools nano && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # アプリケーションのファイルをコピー
 COPY Gemfile /app/Gemfile
