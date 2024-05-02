@@ -30,6 +30,8 @@
 | created_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 | updated_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 
+* FOREIGN KEY (user_id) REFERENCES users(id)
+
 
 ### 3. recruitments（投稿テーブル）
 
