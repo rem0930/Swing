@@ -12,8 +12,8 @@ class ApplicationController < ActionController::API
             end
 
             begin
-                @decoded = JWT.decode(header, Rails.apllication.credentials.jwt_secret_key, true, {algorithm: 'HS256'})[0]
-                @current_user = User.find(@decoded[0]['id'])
+                @decoded = JWT.decode(header, Rails.application.credentials.jwt_secret_key, true, {algorithm: 'HS256'})[0]
+                @current_user = User.find(@decoded['id'])
             rescue JWT::DecodeError => e
                 render json: { errors: "Invalid token: #{e.message}" }, status: :unauthorized
             rescue ActiveRecord::RecordNotFound
