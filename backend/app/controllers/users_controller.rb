@@ -1,4 +1,7 @@
 class UsersController < ApplicationController
+  # 新規ユーザーの作成時に認証が不要
+  skip_before_action :authenticate_request, only: [:create]
+
   # マイページ
   def show
     render json: @current_user, status: :ok
@@ -9,7 +12,7 @@ class UsersController < ApplicationController
     if user.save
       render json: { status: "User created successfully" }, status: :created
     else
-      render json: { errors: user.errors.full_messages }, status: :bad_request
+      render json: { errors: user_errors(user) }, status: :bad_request
     end
   end
 
@@ -17,5 +20,14 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(:email, :password, :user_name, :profile_photo, :background_photo, :bio)
+  end
+
+  def user_errors(user)
+    errors = []
+    errors << "Email has already been taken" if user.errors[:email].present?
+    errors << "Password is too short (minimum is 6 characters)" if user.errors[:password].present?
+    errors << "User name is required" if user.errors[:user_name].present?
+    # 他のエラーチェックも追加可能
+    errors
   end
 end
