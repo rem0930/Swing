@@ -34,7 +34,7 @@
 6. テストを実行します。
 
     ```bash
-    docker-compose run --rm backend bundle exec rspec
+    docker-compose run --rm backend bundle exec rubocop
     ```
 
 7. 開発が完了したら、コンテナを停止し、クリーンアップします。
