@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TeamsController < ApplicationController
   before_action :set_team, only: [:show, :update, :destroy]
 
@@ -38,12 +40,11 @@ class TeamsController < ApplicationController
   end
 
   private
+    def set_team
+      @team = @current_user.teams.find(params[:id])
+    end
 
-  def set_team
-    @team = @current_user.teams.find(params[:id])
-  end
-
-  def team_params
-    params.require(:team).permit(:name, :details, :profile_photo, :background_photo)
-  end
+    def team_params
+      params.require(:team).permit(:name, :details, :profile_photo, :background_photo)
+    end
 end
