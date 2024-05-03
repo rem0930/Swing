@@ -41,13 +41,15 @@ services:
       context: ./frontend/
       dockerfile: Dockerfile
     volumes:
-      - ./frontend/app:/usr/src/app # ソースコードをコンテナにマウント
-    command: 'npm run dev' # 開発サーバーを起動
-    ports:
-      - '8000:8000'
+      - ./frontend:/app # ソースコードをコンテナにマウント
+      - /app/node_modules # node_modulesをコンテナにマウント
     environment:
       - NODE_ENV=development # Node.jsの実行環境
+      # - WATCHPACK_POLLING=true # ホットリロード
       - API_KEY=${API_KEY} # 外部サービスへのアクセス用
+    command: npm run dev # 開発サーバーを起動
+    ports:
+      - '8000:8000'
 
 # 永続ボリューム
 volumes:
