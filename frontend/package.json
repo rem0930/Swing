@@ -1,15 +1,19 @@
 {
-  "name": "app",
+  "name": "frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 8000",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "^14.2.3",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "framer-motion": "^11.1.7",
+    "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
   },
