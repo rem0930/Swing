@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # db/seeds.rb
 User.create!(
-    email: 'user@example.com',
-    password_digest: BCrypt::Password.create('password'),
-    user_name: 'Demo User',
-    bio: 'This is a demo user.'
-)
+    email: "user@example.com",
+    password_digest: BCrypt::Password.create("password"),
+    user_name: "Demo User",
+    bio: "This is a demo user."
+  )

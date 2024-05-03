@@ -1,88 +1,398 @@
 require:
+  - rubocop-minitest
+  - rubocop-packaging
   - rubocop-performance
   - rubocop-rails
+  - rubocop-md
 
 AllCops:
+  TargetRubyVersion: 3.2.4
+  # RuboCop has a bunch of cops enabled by default. This setting tells RuboCop
+  # to ignore them, so only the ones explicitly set in this file are enabled.
+  DisabledByDefault: true
+  # RuboCopの拡張機能の提案を有効にするかどうかを指定
   SuggestExtensions: false
-  # 最新のルールを適用する
-  NewCops: enable
-  # 何のルールに引っかかったか表示する
-  DisplayCopNames: true
-  # rubocop対象外(リポジトリ毎で調節)
+  # ルールの適用対象から除外するファイルやディレクトリを指定します
   Exclude:
-    - "bin/**/*"
-    - "db/**/*"
-    - "log/**/*"
-    - "tmp/**/*"
-    - "vendor/**/*"
-    - "lib/tasks/auto_annotate_models.rake"
-    - "config/environments/*"
-    - "config/puma.rb"
-    - "script/**/*"
+    - '**/tmp/**/*'
+    - '**/templates/**/*'
+    - '**/vendor/**/*'
+    - 'actionpack/lib/action_dispatch/journey/parser.rb'
+    - 'actionmailbox/test/dummy/**/*'
+    - 'activestorage/test/dummy/**/*'
+    - 'actiontext/test/dummy/**/*'
+    - 'tools/rail_inspector/test/fixtures/*'
+    - guides/source/debugging_rails_applications.md
+    - guides/source/active_support_instrumentation.md
+    - '**/node_modules/**/*'
+    - '**/CHANGELOG.md'
+    - '**/2_*_release_notes.md'
+    - '**/3_*_release_notes.md'
+    - '**/4_*_release_notes.md'
+    - '**/5_*_release_notes.md'
+    - '**/6_*_release_notes.md'
 
-### ルールのカスタマイズ
+# パフォーマンス関連のルールを除外するファイルやディレクトリを指定します
+Performance:
+  Exclude:
+    - '**/test/**/*'
 
-# 設定が厳しいので一旦全てfalseにする
-Metrics:
-  Enabled: false
+# assert_not を assert より優先
+Rails/AssertNot:
+  Include:
+    - '**/test/**/*'
 
-# 一行あたりの文字数
-Layout/LineLength:
-  Max: 120
+# Prefute_x を assert_not_x より優先
+Rails/RefuteMethods:
+  Include:
+    - '**/test/**/*'
 
-# メソッドの改行ルール
-Layout/MultilineMethodCallIndentation:
-  EnforcedStyle: indented
+Rails/IndexBy:
+  Enabled: true
 
-# 日本語にコメントを許可
-Style/AsciiComments:
-  Enabled: false
+Rails/IndexWith:
+  Enabled: true
 
-# クラスにコメントを残さなくても良い
-Style/Documentation:
-  Enabled: false
+# and/or よりも &&/|| を優先
+Style/AndOr:
+  Enabled: true
 
-# コントローラ等のモジュールをネストしての宣言
-Style/ClassAndModuleChildren:
-  Enabled: false
+Layout/ClosingHeredocIndentation:
+  Enabled: true
 
-# 文字列のfreeze（Ruby3からは自動でfreezeされるので要らない）
+Layout/ClosingParenthesisIndentation:
+  Enabled: true
+
+# メソッド定義とコメントを整列
+Layout/CommentIndentation:
+  Enabled: true
+
+Layout/DefEndAlignment:
+  Enabled: true
+
+Layout/ElseAlignment:
+  Enabled: true
+
+# `end` を対応するキーワードや開始式に整列させますが、代入の場合はLHSに整列
+Layout/EndAlignment:
+  Enabled: true
+  EnforcedStyleAlignWith: variable
+  AutoCorrect: true
+
+Layout/EndOfLine:
+  Enabled: true
+
+Layout/EmptyLineAfterMagicComment:
+  Enabled: true
+
+Layout/EmptyLinesAroundAccessModifier:
+  Enabled: true
+  EnforcedStyle: only_before
+
+Layout/EmptyLinesAroundBlockBody:
+  Enabled: true
+
+# 通常のクラス定義では、本文の周りに空行を入れない
+Layout/EmptyLinesAroundClassBody:
+  Enabled: true
+
+# 通常のメソッド定義では、本文の周りに空行を入れない
+Layout/EmptyLinesAroundMethodBody:
+  Enabled: true
+
+# In a regular module definition, no empty lines around the body.
+Layout/EmptyLinesAroundModuleBody:
+  Enabled: true
+
+# ハッシュに関するRuby >= 1.9の構文を使用します。{ :a => :b } よりも { a: :b } を優先します。
+Style/HashSyntax:
+  Enabled: true
+  EnforcedShorthandSyntax: either
+
+# private や protected の後のメソッド定義は追加のインデントが必要
+Layout/IndentationConsistency:
+  Enabled: true
+  EnforcedStyle: indented_internal_methods
+  Exclude:
+    - '**/*.md'
+
+# インデントにはタブではなく2つのスペースを使用
+Layout/IndentationWidth:
+  Enabled: true
+
+Layout/LeadingCommentSpace:
+  Enabled: true
+
+Layout/SpaceAfterColon:
+  Enabled: true
+
+Layout/SpaceAfterComma:
+  Enabled: true
+
+Layout/SpaceAfterSemicolon:
+  Enabled: true
+
+Layout/SpaceAroundEqualsInParameterDefault:
+  Enabled: true
+
+Layout/SpaceAroundKeyword:
+  Enabled: true
+
+Layout/SpaceAroundOperators:
+  Enabled: true
+
+Layout/SpaceBeforeComma:
+  Enabled: true
+
+Layout/SpaceBeforeComment:
+  Enabled: true
+
+Layout/SpaceBeforeFirstArg:
+  Enabled: true
+
+Style/DefWithParentheses:
+  Enabled: true
+
+# パラメータを持つメソッドの定義には括弧が必要
+Style/MethodDefParentheses:
+  Enabled: true
+
+Style/ExplicitBlockArgument:
+  Enabled: true
+
 Style/FrozenStringLiteralComment:
-  Enabled: false
+  Enabled: true
+  EnforcedStyle: always
+  Exclude:
+    - 'actionview/test/**/*.builder'
+    - 'actionview/test/**/*.ruby'
+    - 'actionpack/test/**/*.builder'
+    - 'actionpack/test/**/*.ruby'
+    - 'activestorage/db/migrate/**/*.rb'
+    - 'activestorage/db/update_migrate/**/*.rb'
+    - 'actionmailbox/db/migrate/**/*.rb'
+    - 'actiontext/db/migrate/**/*.rb'
+    - '**/*.md'
 
-# ガード節の提案（難しいので一旦false）
-Style/GuardClause:
-  Enabled: false
+Style/MapToHash:
+  Enabled: true
 
-# 文字列のダブルクォートチェック
+Style/RedundantFreeze:
+  Enabled: true
+
+# Use `foo {}` not `foo{}`.
+Layout/SpaceBeforeBlockBraces:
+  Enabled: true
+
+# Use `foo { bar }` not `foo {bar}`.
+Layout/SpaceInsideBlockBraces:
+  Enabled: true
+  EnforcedStyleForEmptyBraces: space
+
+# Use `{ a: 1 }` not `{a:1}`.
+Layout/SpaceInsideHashLiteralBraces:
+  Enabled: true
+
+Layout/SpaceInsideParens:
+  Enabled: true
+
+# リントルールに基づいてクォートの使用をチェック
 Style/StringLiterals:
+  Enabled: true
   EnforcedStyle: double_quotes
 
-# シンボルによる配列の%記法のチェック
-Style/SymbolArray:
-  Enabled: false
-  # EnforcedStyle: brackets
-
-# 文字列による配列の%記法のチェック
-Style/WordArray:
-  Enabled: false
-
-# 変数名に数字を許可
-Naming/VariableNumber:
+# タブを検出し、タブ文字を使用しないでください
+Layout/IndentationStyle:
   Enabled: true
 
-# = と == の指摘
-Lint/AssignmentInCondition:
-  Enabled: false
-
-# メソッド名等の命名の指摘
-Naming/PredicateName:
-  Enabled: false
-
-# 未i18nのチェック（バリデーションエラーメッセージをi18nに登録するのはやや冗長？なためfalse）
-Rails/I18nLocaleTexts:
-  Enabled: false
-
-# before_actionの際の未定義メソッドのチェック
-Rails/LexicallyScopedActionFilter:
+# 空行にはスペースを入れないでください
+Layout/TrailingEmptyLines:
   Enabled: true
+
+# 末尾の空白はありません
+Layout/TrailingWhitespace:
+  Enabled: true
+
+# 文字列リテラルには十分な場合にクォートを使用
+Style/RedundantPercentQ:
+  Enabled: true
+
+Lint/AmbiguousOperator:
+  Enabled: true
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+
+Lint/DuplicateRequire:
+  Enabled: true
+
+Lint/DuplicateMagicComment:
+  Enabled: true
+
+Lint/DuplicateMethods:
+  Enabled: true
+
+Lint/ErbNewArguments:
+  Enabled: true
+
+Lint/EnsureReturn:
+  Enabled: true
+
+Lint/MissingCopEnableDirective:
+  Enabled: true
+
+# Use my_method(my_arg) not my_method( my_arg ) or my_method my_arg.
+Lint/RequireParentheses:
+  Enabled: true
+
+Lint/RedundantCopDisableDirective:
+  Enabled: true
+
+Lint/RedundantCopEnableDirective:
+  Enabled: true
+
+Lint/RedundantStringCoercion:
+  Enabled: true
+
+Lint/RedundantSafeNavigation:
+  Enabled: true
+
+Lint/UriEscapeUnescape:
+  Enabled: true
+
+Lint/UselessAssignment:
+  Enabled: true
+
+Lint/DeprecatedClassMethods:
+  Enabled: true
+
+Lint/InterpolationCheck:
+  Enabled: true
+  Exclude:
+    - '**/test/**/*'
+
+Lint/SafeNavigationChain:
+  Enabled: true
+
+Style/EvalWithLocation:
+  Enabled: true
+  Exclude:
+    - '**/test/**/*'
+
+Style/ParenthesesAroundCondition:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/RedundantBegin:
+  Enabled: true
+
+Style/RedundantReturn:
+  Enabled: true
+  AllowMultipleReturnValues: true
+
+Style/RedundantRegexpEscape:
+  Enabled: true
+
+Style/Semicolon:
+  Enabled: true
+  AllowAsExpressionSeparator: true
+
+# Prefer Foo.method over Foo::method
+Style/ColonMethodCall:
+  Enabled: true
+
+Style/TrivialAccessors:
+  Enabled: true
+
+# Prefer a = b || c over a = b ? b : c
+Style/RedundantCondition:
+  Enabled: true
+
+Style/RedundantDoubleSplatHashBraces:
+  Enabled: true
+
+Style/OpenStructUse:
+  Enabled: true
+
+Style/ArrayIntersect:
+  Enabled: true
+
+Performance/BindCall:
+  Enabled: true
+
+Performance/FlatMap:
+  Enabled: true
+
+Performance/MapCompact:
+  Enabled: true
+
+Performance/SelectMap:
+  Enabled: true
+
+Performance/RedundantMerge:
+  Enabled: true
+
+Performance/StartWith:
+  Enabled: true
+
+Performance/EndWith:
+  Enabled: true
+
+Performance/RegexpMatch:
+  Enabled: true
+
+Performance/ReverseEach:
+  Enabled: true
+
+Performance/StringReplacement:
+  Enabled: true
+
+Performance/DeletePrefix:
+  Enabled: true
+
+Performance/DeleteSuffix:
+  Enabled: true
+
+Performance/InefficientHashSearch:
+  Enabled: true
+
+Performance/ConstantRegexp:
+  Enabled: true
+
+Performance/RedundantStringChars:
+  Enabled: true
+
+Performance/StringInclude:
+  Enabled: true
+
+Minitest/AssertPredicate:
+  Enabled: true
+
+Minitest/AssertRaisesWithRegexpArgument:
+  Enabled: true
+
+Minitest/AssertWithExpectedArgument:
+  Enabled: true
+
+Minitest/LiteralAsActualArgument:
+  Enabled: true
+
+Minitest/NonExecutableTestMethod:
+  Enabled: true
+
+Minitest/SkipEnsure:
+  Enabled: true
+
+Minitest/UnreachableAssertion:
+  Enabled: true
+
+Markdown:
+  # Markdownファイルの構文をチェックします
+  WarnInvalid: true
+  # コードブロックの自動検出を無効にします
+  Autodetect: false
