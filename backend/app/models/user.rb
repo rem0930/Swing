@@ -2,6 +2,7 @@
 
 class User < ApplicationRecord
   has_secure_password
+  belongs_to :location, optional: true
 
   # バリデーション
   validates :email, presence: true, uniqueness: true
