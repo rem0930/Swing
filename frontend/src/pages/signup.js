@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
-    Flex, Box, FormControl, FormLabel, Input, Button, VStack,
-    InputGroup, InputRightElement, IconButton, useToast, Text, Heading
+    Flex, Box, FormControl, FormLabel, Input, Button, VStack, useToast, Text, Heading
 } from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import EmailInput from '@/components/EmailInput';
+import PasswordInput from '@/components/PasswordInput';
 
 function Signup() {
     const [user_name, setUser_name] = useState('');
@@ -95,47 +95,8 @@ function Signup() {
                             />
                             {touched.user_name && user_name === '' && <Text color="red">ユーザー名を入力してください。</Text>}
                         </FormControl>
-                        <FormControl isRequired>
-                            <FormLabel>メールアドレス</FormLabel>
-                            <Input
-                            type="email"
-                            placeholder="メールアドレスを入力"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            onBlur={() => handleBlur('email')}
-                            />
-                            {touched.email && (email === '' ? (
-                                <Text color="red">メールアドレスを入力してください。</Text>
-                            ) : (
-                                !validateEmail(email) && <Text color="red">メールアドレスを正しく入力してください。</Text>
-                            ))}
-                        </FormControl>
-
-                        <FormControl isRequired>
-                            <FormLabel>パスワード</FormLabel>
-                            <InputGroup>
-                                <Input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="パスワードを入力"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    onBlur={() => handleBlur('password')}
-                                />
-                                <InputRightElement>
-                                    <IconButton
-                                        icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
-                                        onClick={toggleShowPassword}
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
-                                    />
-                                </InputRightElement>
-                            </InputGroup>
-                            {touched.password && (password === '' ? (
-                                <Text color="red">パスワードを入力してください。</Text>
-                            ) : (
-                                password.length < 8 && <Text color="red">パスワードは8文字以上で入力してください。</Text>
-                            ))}
-                        </FormControl>
-
+                        <EmailInput {...{ email, setEmail, handleBlur, touched, validateEmail }} />
+                        <PasswordInput {...{ password, setPassword, handleBlur, touched, showPassword, toggleShowPassword }} />
                         <Button
                             type="submit"
                             colorScheme="teal"
