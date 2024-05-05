@@ -2,7 +2,7 @@
 
 class SessionsController < ApplicationController
   include ActionController::Cookies
-  skip_before_action :authenticate_request, only: [:create, :logged_in]
+  skip_before_action :authenticate_request, only: [:create]
 
   def create
     user = User.find_by(email: params[:email])
