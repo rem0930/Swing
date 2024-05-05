@@ -1,18 +1,23 @@
-# frozen_string_literal: true
-
 class UsersController < ApplicationController
+  include ActionController::Cookies
   # 新規ユーザーの作成時に認証が不要
   skip_before_action :authenticate_request, only: [:create]
 
   # マイページ
   def show
-    render json: @current_user, status: :ok
+    if @current_user
+      render json: @current_user
+    else
+      render json: { error: 'Not authorized' }, status: :unauthorized
+    end
   end
 
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: { status: "User created successfully" }, status: :created
+      token = @user.generate_jwt
+      cookies.encrypted[:auth_token] = { value: token, httponly: true, expires: 24.hours.from_now }
+      render json: { token: token }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -20,7 +25,7 @@ class UsersController < ApplicationController
 
     private
       def user_params
-        params.required(:user).permit(:email, :password, :user_name, :profile_photo, :background_photo, :bio, :location_id)
+        params.required(:user).permit(:email, :password, :user_name)
       end
 
       def user_errors
