@@ -8,5 +8,4 @@ Rails.application.routes.draw do
   get "/me",     to: "users#show"
   # チーム作成のルート
   resources :teams
-  get "up" => "rails/health#show", as: :rails_health_check
 end

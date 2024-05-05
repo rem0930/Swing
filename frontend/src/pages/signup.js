@@ -1,16 +1,8 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Button,
-    VStack,
-    InputGroup,
-    InputRightElement,
-    IconButton,
-    useToast
+    Flex, Box, FormControl, FormLabel, Input, Button, VStack,
+    InputGroup, InputRightElement, IconButton, useToast, Text, Heading
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
@@ -19,8 +11,11 @@ function Signup() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [touched, setTouched] = useState({ user_name: false, email: false, password: false });
     const [isLoading, setIsLoading] = useState(false);  // ローディング状態の管理
-    const toast = useToast('');
+    const [errors, setErrors] = useState({});
+    const toast = useToast();
+    const router = useRouter();
 
     const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -28,14 +23,14 @@ function Signup() {
         event.preventDefault();
         setIsLoading(true);
 
-        if (!user_name || !validateEmail(email) || password.length < 6) {
-            toast({
-                title: 'Error',
-                description: "Please fill all fields correctly.",
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
+        // バリデーションロジックの改善
+        let newErrors = {};
+        if (!user_name) newErrors.user_name = 'ユーザー名を入力してください。';
+        if (!validateEmail(email)) newErrors.email = 'メールアドレスを正しく入力してください。';
+        if (password.length < 8) newErrors.password = 'パスワードは8文字以上で入力してください。';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
             setIsLoading(false);
             return;
         }
@@ -51,17 +46,19 @@ function Signup() {
             if (response.ok) {
                 toast({
                     title: '新規登録が完了しました！',
-                    description: 'Swingへようこそ!',
+                    description: 'プロフィール画像を設定しよう!',
                     status:'success',
                     duration: 9000,
                     isClosable: true,
                 });
-                setUser_name('')
-                setEmail('')
-                setPassword('')
+                setUser_name('');
+                setEmail('');
+                setPassword('');
+                setTouched({ user_name: false, email: false, password: false }); // フォームフィールドのtouched状態をリセット
+                router.push('/ChooseProfilePicture');
             } else {
                 throw new Error(data.message || '新規登録に失敗しました。');
-            }
+                }
         } catch (error) {
             toast({
                 title: '新規作成に失敗しました。',
@@ -75,22 +72,28 @@ function Signup() {
         }
     };
 
-    const toggleShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
+    const toggleShowPassword = () => setShowPassword(!showPassword);
+
+    const handleBlur = (field) => setTouched({ ...touched, [field]: true });
 
     return (
-        <Flex height="100vh" alignItems="center" justifyContent="center">
-            <Box width="full" maxWidth="500px" p={5} borderWidth={1} borderRadius={8} boxShadow="lg">
+        <Flex height="100vh" alignItems="center" justifyContent="center" bg="gray.50">
+            <Box p={8} width="full" maxWidth="500px" borderWidth={1} borderRadius={8} boxShadow="lg" bg="white">
+                <Heading size="lg" color="teal.400" textAlign="center" mb={6}>新規登録</Heading>
                 <form onSubmit={handleSubmit}>
                     <VStack spacing={4}>
+                        {Object.keys(errors).map((key) => (
+                            <Text key={key} color="red">{errors[key]}</Text>
+                        ))}
                         <FormControl isRequired>
                             <FormLabel>ユーザー名</FormLabel>
                             <Input
                             placeholder="ユーザー名を入力"
                             value={user_name}
                             onChange={(e) => setUser_name(e.target.value)}
+                            onBlur={() => handleBlur('user_name')}
                             />
+                            {touched.user_name && user_name === '' && <Text color="red">ユーザー名を入力してください。</Text>}
                         </FormControl>
                         <FormControl isRequired>
                             <FormLabel>メールアドレス</FormLabel>
@@ -99,7 +102,13 @@ function Signup() {
                             placeholder="メールアドレスを入力"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            onBlur={() => handleBlur('email')}
                             />
+                            {touched.email && (email === '' ? (
+                                <Text color="red">メールアドレスを入力してください。</Text>
+                            ) : (
+                                !validateEmail(email) && <Text color="red">メールアドレスを正しく入力してください。</Text>
+                            ))}
                         </FormControl>
 
                         <FormControl isRequired>
@@ -110,6 +119,7 @@ function Signup() {
                                     placeholder="パスワードを入力"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    onBlur={() => handleBlur('password')}
                                 />
                                 <InputRightElement>
                                     <IconButton
@@ -119,15 +129,20 @@ function Signup() {
                                     />
                                 </InputRightElement>
                             </InputGroup>
+                            {touched.password && (password === '' ? (
+                                <Text color="red">パスワードを入力してください。</Text>
+                            ) : (
+                                password.length < 8 && <Text color="red">パスワードは8文字以上で入力してください。</Text>
+                            ))}
                         </FormControl>
 
                         <Button
                             type="submit"
-                            colorScheme="blue"
+                            colorScheme="teal"
                             isLoading={isLoading}
                             loadingText="Submitting"
                         >
-                            新規登録
+                            同意してメールアドレスを送信
                         </Button>
                     </VStack>
                 </form>
