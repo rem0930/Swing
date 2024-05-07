@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   include ActionController::Cookies
   # 新規ユーザーの作成時に認証が不要
@@ -8,7 +10,7 @@ class UsersController < ApplicationController
     if @current_user
       render json: @current_user
     else
-      render json: { error: 'Not authorized' }, status: :unauthorized
+      render json: { error: "Not authorized" }, status: :unauthorized
     end
   end
 
@@ -16,7 +18,15 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       token = @user.generate_jwt
-      cookies.encrypted[:auth_token] = { value: token, httponly: true, expires: 24.hours.from_now }
+      cookies.encrypted[:auth_token] = {
+      value: token,
+      httponly: true,
+      path: '/',
+      # secure: Rails.env.production?,  # 本番環境でのみsecureオプションを有効にする
+      expires: 24.hours.from_now
+    }
+      puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
+      puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
       render json: { token: token }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
