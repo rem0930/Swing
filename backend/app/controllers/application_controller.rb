@@ -1,16 +1,17 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::API
   before_action :authenticate_request
 
   private
-
     def authenticate_request
       header = request.headers["Authorization"]
-      header = header.split(' ').last if header
+      header = header.split(" ").last if header
 
       if header
         decoded_authentication_token(header)
       else
-        return render json: { errors: "No token provided" }, status: :forbidden
+        render json: { errors: "No token provided" }, status: :forbidden
       end
     end
 
@@ -32,7 +33,5 @@ class ApplicationController < ActionController::API
       render json: { errors: message }, status: :unauthorized
     end
 
-    def current_user
-      @current_user
-    end
+    attr_reader :current_user
 end

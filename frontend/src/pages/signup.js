@@ -40,6 +40,7 @@ function Signup() {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user: { user_name, email, password } }),
+                credentials: 'include'
             });
 
             const data = await response.json(); // JSON レスポンスを取得
