@@ -1,25 +1,12 @@
 FROM ruby:3.2
 
-ENV LANG=C.UTF-8 \
-    TZ=Asia/Tokyo
-
+RUN mkdir /app
 WORKDIR /app
+RUN apt-get update -qq && apt-get install -y default-mysql-client
+ADD Gemfile /app/Gemfile
+ADD Gemfile.lock /app/Gemfile.lock
+RUN gem update && \
+    bundle install
+ADD . /app
 
-# 必要なパッケージのインストール
-RUN apt-get update -qq && apt-get install -y nodejs default-mysql-client redis-tools nano && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# アプリケーションのファイルをコピー
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-
-# Bundler を使って Gem をインストール
-RUN bundle install
-
-# アプリケーションのソースをコンテナにコピー
-COPY . /app
-
-# ポート3000を開放
-EXPOSE 3000
-
-# Railsサーバーの起動
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]

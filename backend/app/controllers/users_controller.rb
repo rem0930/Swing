@@ -19,11 +19,12 @@ class UsersController < ApplicationController
     if @user.save
       token = @user.generate_jwt
       cookies.encrypted[:auth_token] = {
-      value: token,
-      httponly: true,
-      path: '/',
-      # secure: Rails.env.production?,  # 本番環境でのみsecureオプションを有効にする
-      expires: 24.hours.from_now
+        value: token,
+        httponly: true,
+        secure: Rails.env.production?,
+        expires: 24.hours.from_now,
+        domain: request.host, # ドメインを動的に設定
+        same_site: Rails.env.production? ? :strict : :lax, # 開発ではLax、本番ではStrict
     }
       puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
       puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
