@@ -2,10 +2,10 @@
 FROM node:18
 
 # コンテナ内での作業ディレクトリを設定
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # パッケージファイルをコピー
-COPY package.json package-lock.json* ./
+COPY package.json package-lock.json ./
 
 # 依存関係のインストール
 RUN npm install

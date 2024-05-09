@@ -30,7 +30,7 @@ function ChooseProfilePicture() {
         formData.append('profile_photo', imageFile); // 'profile_photo' キーでファイルを追加
 
         try {
-            const response = await fetch('http://localhost:3000/signup', {
+            const response = await fetch(uploadUrl, {
                 method: 'POST',
                 body: formData,
             });
