@@ -27,6 +27,8 @@
 | user_id          | INT             | FOREIGN KEY       | なし                   |
 | name              | VARCHAR(50)     | NOT NULL          | なし                   |
 | details           | TEXT            |                   |                         |
+| profile_photo    | VARCHAR(255)     |                                    |                          |
+| background_photo | VARCHAR(255)     |                                    |                          |
 | created_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 | updated_at        | DATETIME        | NOT NULL          | CURRENT_TIMESTAMP       |
 
