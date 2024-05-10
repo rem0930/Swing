@@ -76,14 +76,14 @@ function ProfileSetup() {
                     <FormControl>
                         <FormLabel>プロフィール画像</FormLabel>
                         <Input type="file" accept="image/*" onChange={(e) => handleImageChange(e, setProfileImage)} />
-                        {profileImage && <Image src={profileImage} boxSize="100px" />}
+                        {profileImage && <Image src={profileImage} alt='' boxSize="100px" />}
                     </FormControl>
                 </Box>
                 <Box>
                     <FormControl>
                         <FormLabel>背景画像</FormLabel>
                         <Input type="file" accept="image/*" onChange={(e) => handleImageChange(e, setBackgroundImage)} />
-                        {backgroundImage && <Image src={backgroundImage} boxSize="100px" />}
+                        {backgroundImage && <Image src={backgroundImage} alt='' boxSize="100px" />}
                     </FormControl>
                 </Box>
                 <Box>

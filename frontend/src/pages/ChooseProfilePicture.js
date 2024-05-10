@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Text, Button, VStack, useToast, Input, Center, Icon } from '@chakra-ui/react';
+import { Box, Text, Button, VStack, useToast, Input, Center, Icon, Img } from '@chakra-ui/react';
 import { useRouter } from 'next/router';  // Next.jsのルーターフックをインポート
 import { FiCamera } from 'react-icons/fi';
 
@@ -63,7 +63,7 @@ function ChooseProfilePicture() {
                 <Text fontSize="2xl" fontWeight="bold" color="teal.500" textAlign="center">プロフィール画像を設定！</Text>
                 <Box position="relative" w="150px" h="150px" borderRadius="full" overflow="hidden" bg="teal.500">
                     {image ? (
-                        <img src={image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        <Img src={image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     ) : (
                         <Center w="full" h="full">
                             <Icon as={FiCamera} w={8} h={8} color="white" />

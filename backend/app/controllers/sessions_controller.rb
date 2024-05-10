@@ -20,7 +20,7 @@ class SessionsController < ApplicationController
         same_site: Rails.env.production? ? :strict : :lax # 開発ではLax、本番ではStrict
       }
       Rails.logger.info "Setting cookie: #{cookies.inspect}"
-      render json: { user: { id: user.id, email: user.email } }, status: :ok
+      render json: { token: token, user: { id: user.id, email: user.email } }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
     end

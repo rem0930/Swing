@@ -5,10 +5,10 @@ class UsersController < ApplicationController
   # 新規ユーザーの作成時に認証が不要
   skip_before_action :authenticate_request, only: [:create]
 
-  # マイページ
+  # GET /users/:id
   def show
-    if @current_user
-      render json: @current_user
+    if @current_user && @current_user.id == params[:id].to_i
+      render json: @current_user.as_json(except: [:password_digest]), status: :ok
     else
       render json: { error: "Not authorized" }, status: :unauthorized
     end
@@ -31,6 +31,29 @@ class UsersController < ApplicationController
       render json: { token: token }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
+  # PUT /users/:id
+  def update
+    if @current_user.id == params[:id].to_i
+      if @current_user.update(user_params)
+        render json: { message: "User updated successfully" }, status: :ok
+      else
+        render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { error: "Not authorized" }, status: :forbidden
+    end
+  end
+
+  # DELETE /users/:id
+  def destroy
+    if @current_user.id == params[:id].to_i
+      @current_user.destroy
+      render json: { message: "User deleted successfully" }, status: :ok
+    else
+      render json: { error: "Not authorized" }, status: :forbidden
     end
   end
 

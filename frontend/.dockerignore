@@ -1,0 +1,39 @@
+# バージョン管理システム
+.git/
+.gitignore
+
+# ノードモジュールとログ
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 環境設定ファイル
+.env
+.env.*
+
+# ログファイル
+*.log
+
+# OSによる生成ファイル
+.DS_Store
+Thumbs.db
+
+# ビルド出力
+dist/
+build/
+out/
+
+# テストとドキュメント
+**/__tests__/
+**/__mocks__/
+**/coverage/
+*.md
+
+# IDE設定
+.vscode/
+.idea/
+*.sublime*
+
+# キャッシュファイル
+.cache/
+.next/

@@ -16,8 +16,7 @@ services:
     build:
       context: ./frontend/
     volumes:
-      - ./frontend:/app/usr/src/app
-    command: npm run dev # 開発サーバーを起動
+      - ./frontend:/usr/src/app
     ports:
       - '8000:8000'
   # バックエンドアプリケーションサービス
