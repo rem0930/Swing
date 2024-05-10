@@ -16,9 +16,8 @@ class SessionsController < ApplicationController
         httponly: true,
         secure: Rails.env.production?,
         expires: 24.hours.from_now,
-        domain: 'localhost',
-        same_site: Rails.env.production? ? :strict : :lax, # 開発ではLax、本番ではStrict
-        # domain: 'all' # ドメインを設定
+        domain: request.host, # ドメインを動的に設定
+        same_site: Rails.env.production? ? :strict : :lax # 開発ではLax、本番ではStrict
       }
       Rails.logger.info "Setting cookie: #{cookies.inspect}"
       render json: { user: { id: user.id, email: user.email } }, status: :ok

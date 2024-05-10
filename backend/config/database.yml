@@ -10,3 +10,6 @@ development:
   <<: *default
   database: <%= ENV["MYSQL_DATABASE"] %>
 
+test:
+  <<: *default
+  database: <%= ENV["MYSQL_DATABASE"] %>_test
