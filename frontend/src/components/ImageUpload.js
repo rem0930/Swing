@@ -27,8 +27,8 @@ const ImageUpload = ({ label, onChange, previewUrl, alt, size, isRound = false }
             {image && (
                 <Box width={size.width} height={size.height} overflow="hidden" mt={2}>
                     <Image
-                        src={image}
-                        alt={alt}
+                        src={yourImagePath}
+                        alt="画像の説明"
                         objectFit="cover"
                         borderRadius={isRound ? "full" : "none"}
                     />

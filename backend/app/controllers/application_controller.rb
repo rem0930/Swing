@@ -9,6 +9,7 @@ class ApplicationController < ActionController::API
       token = cookies.encrypted[:auth_token]
       unless token
         render json: { errors: "No token provided" }, status: :forbidden
+        return
       end
 
       begin
@@ -17,7 +18,8 @@ class ApplicationController < ActionController::API
           rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError
             render json: { errors: "Invalid or expired token" }, status: :unauthorized
           rescue ActiveRecord::RecordNotFound
-            render json: { errors: "User not found" }, stasus: :unauthorized
+            render json: { errors: "User not found" }, status: :unauthorized
+            return
         end
     end
 

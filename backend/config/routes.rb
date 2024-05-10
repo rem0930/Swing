@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#logout"
 
-  # マイページ用のルート
-  get "/me",     to: "users#show"
-  # チーム作成のルート
+  # Usersのルート
+  resources :users
+  # teamsのルート
   resources :teams
 end
