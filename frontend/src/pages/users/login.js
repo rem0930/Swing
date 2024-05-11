@@ -35,9 +35,9 @@ function LoginPage() {
                     duration: 5000,
                     isClosable: true,
                 });
+                router.push('/');
                 setEmail('');
                 setPassword('');
-                router.push('/');
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to login');

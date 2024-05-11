@@ -17,14 +17,36 @@ function EditUserProfile() {
     const router = useRouter();
     const { userId } = router.query;
 
+     // ユーザーデータのロード
     useEffect(() => {
-        // ユーザーのロード情報
-    }, []);
+        if (userId) {
+            fetch(`http://localhost:3000/users/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include' // Cookieを含める
+            })
+            .then(response => response.json())
+            .then(data => {
+                setName(data.name || '');
+                setEmail(data.email || '');
+            })
+            .catch(error => {
+                toast({
+                    title: 'プロフィールの読み込みに失敗しました',
+                    description: error.toString(),
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true
+                });
+            });
+        }
+    }, [userId]);
 
+    // フォームの送信処理
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('http://localhost:3000/users/${userId}', {
+            const response = await fetch(`http://localhost:3000/users/${userId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email }),
@@ -38,11 +60,12 @@ function EditUserProfile() {
                 duration: 5000,
                 isClosable: true
             });
-            router.push('/users/mypage');
+            router.push('/'); // 成功時のリダイレクト先
         } catch (error) {
             toast({
                 title: 'プロフィール更新に失敗しました',
-                status: error.message,
+                description: error.toString(),
+                status: 'error',
                 duration: 9000,
                 isClosable: true
             });

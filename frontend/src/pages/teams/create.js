@@ -10,6 +10,7 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 function CreateTeamForm() {
     const [name, setName] = useState('');
@@ -34,21 +35,26 @@ function CreateTeamForm() {
                 body: JSON.stringify(teamData),
                 credentials: 'include' // cookies
             });
-            if (response.status === 200) {
+            if (response.status === 201) {
+                const data = await response.json(); // レスポンスからJSONデータを取得
+                Cookies.set('auth_token', token, { secure: process.env.NODE_ENV === 'production' });
+
                 toast({
-                    title: 'チームを作成しました',
+                    title: 'success',
                     status:'チームの作成に成功しました！',
                     duration: 5000,
                     isClosable: true,
                 });
-                router.push('/ChooseProfilePicture');
+                router.push('/teams/ChooseProfilePicture');
             } else {
-                throw new Error('チームの作成に失敗しました');
+                const errorData = await response.json(); // エラー時の詳細を取得
+                throw new Error(errorData.message || 'チームの作成に失敗しました');
             }
         } catch (error) {
                 toast({
                     title: 'チームの作成に失敗しました',
-                    status: error.message,
+                    description: error.message,
+                    status: 'error',
                     duration: 5000,
                     isClosable: true,
                 });
@@ -66,7 +72,7 @@ function CreateTeamForm() {
             mx="auto"
             my={12}
         >
-            <form onSubmit={handleSubmit} enctype="multipart/form-data">
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <FormControl isRequired>
                     <FormLabel htmlFor="name" color={textColor}>チーム名</FormLabel>
                     <Input
