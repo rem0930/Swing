@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
+  skip_before_action :authenticate_request, only: [:index, :show]
   before_action :set_team, only: [:show, :update, :destroy]
+  before_action :check_owner, only: [:update, :destroy]
 
   # GET /teams
   def index
@@ -28,7 +30,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/:id
   def update
     if @team.update(team_params)
-      render json: @team
+      render json: @team, status: :ok
     else
       render json: @team.errors, status: :unprocessable_entity
     end
@@ -47,5 +49,11 @@ class TeamsController < ApplicationController
 
     def team_params
       params.require(:team).permit(:name, :details, :profile_photo, :background_photo)
+    end
+
+    def check_owner
+      unless @team.user_id == @current_user.id
+        render json: { error: "この操作を行う権限がありません。"}, status: :forbidden
+      end
     end
 end
