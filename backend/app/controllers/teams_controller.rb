@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:index, :show]
+  # skip_before_action :authenticate_request, only: [:index, :show]
   before_action :set_team, only: [:show, :update, :destroy]
-  before_action :check_owner, only: [:update, :destroy]
+  # before_action :check_owner, only: [:update, :destroy]
 
   # GET /teams
   def index
@@ -53,7 +53,7 @@ class TeamsController < ApplicationController
 
     def check_owner
       unless @team.user_id == @current_user.id
-        render json: { error: "この操作を行う権限がありません。"}, status: :forbidden
+        render json: { error: "この操作を行う権限がありません。" }, status: :forbidden
       end
     end
 end

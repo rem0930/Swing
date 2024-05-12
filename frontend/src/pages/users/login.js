@@ -26,7 +26,7 @@ function LoginPage() {
             if (response.ok) {
                 // クッキーの取得
                 const { token } = await response.json();
-                Cookies.set('auth_token', token, { secure: process.env.NODE_ENV === 'production' });
+                Cookies.set('auth_token', token, { expires: 1 });
 
                 toast({
                     title: "Login Successful",
@@ -35,7 +35,7 @@ function LoginPage() {
                     duration: 5000,
                     isClosable: true,
                 });
-                router.push('/');
+                router.push('/teams/');
                 setEmail('');
                 setPassword('');
             } else {

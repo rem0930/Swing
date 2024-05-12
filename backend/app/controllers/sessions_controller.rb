@@ -16,11 +16,11 @@ class SessionsController < ApplicationController
         httponly: true,
         secure: Rails.env.production?,
         expires: 24.hours.from_now,
-        domain: request.host,
-        same_site: Rails.env.production? ? :strict : :lax
+        # domain: request.host,
+        same_site: :lax
       }
       Rails.logger.info "Setting cookie: #{cookies.inspect}"
-      render json: { success: true }, status: :ok
+      render json: { token: token, success: true }, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
     end
