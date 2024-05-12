@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   include ActionController::Cookies
   # 新規ユーザーの作成時に認証が不要
-  # skip_before_action :authenticate_request, only: [:create]
+  skip_before_action :authenticate_request, only: [:create]
 
   # GET /users/:id
   def show
