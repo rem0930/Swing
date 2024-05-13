@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecruitmentsController < ApplicationController
   before_action :set_recruitment, only: [:show, :update, :destroy]
 
