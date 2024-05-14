@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Text, Button, Flex, useToast } from '@chakra-ui/react';
 import Link from 'next/link';
+import axios from 'axios';
 
 function TeamsPage() {
     const [teams, setTeams] = useState([]);
@@ -9,16 +10,18 @@ function TeamsPage() {
     useEffect(() => {
         const fetchTeams = async () => {
             try {
-                const response = await fetch('http://localhost:3000/teams', {
-                    credentials: 'include'
+                // const token = localStorage.getItem('token');
+                const response = await axios.get('http://localhost:3000/teams', {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'Authorization': `Bearer ${token}`  // トークンを添付
+                    }
                 });
-                if (!response.ok) throw new Error('チームの読み込みに失敗しました。');
-                const data = await response.json();
-                setTeams(data);
+                setTeams(response.data);
             } catch (error) {
                 toast({
                     title: 'エラー',
-                    description: error.message,
+                    description: error.response?.data?.message || 'チームの読み込みに失敗しました。',
                     status: 'error',
                     duration: 5000,
                     isClosable: true,

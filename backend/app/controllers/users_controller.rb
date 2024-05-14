@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  include ActionController::Cookies
+  # include ActionController::Cookies
   # 新規ユーザーの作成時に認証が不要
   skip_before_action :authenticate_request, only: [:create]
 
@@ -18,16 +18,15 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       token = @user.generate_jwt
-      cookies.encrypted[:auth_token] = {
-        value: token,
-        httponly: true,
-        secure: Rails.env.production?,
-        expires: 24.hours.from_now,
-        domain: request.host, # ドメインを動的に設定
-        same_site: Rails.env.production? ? :strict : :lax, # 開発ではLax、本番ではStrict
-    }
-      puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
-      puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
+    #   cookies.encrypted[:jwt] = {
+    #     value: token,
+    #     httponly: true,
+    #     secure: true,
+    #     expires: 24.hours.from_now,
+    #     same_site: None # 開発ではLax、本番ではStrict
+    # }
+    #   puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
+    #   puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
       render json: { token: token }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
