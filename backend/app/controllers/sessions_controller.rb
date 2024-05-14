@@ -1,33 +1,32 @@
 # frozen_string_literal: true
 
 class SessionsController < ApplicationController
-  include ActionController::Cookies
+  # include ActionController::Cookies
   skip_before_action :authenticate_request, only: [:create, :logout]
 
   # login_user
   def create
     user = User.find_by(email: params[:email])
-    if user&.authenticate(params[:password])
-      token = user.generate_jwt
-      Rails.logger.debug "Setting cookie for domain: #{request.domain}"
-      # JWTをHttpOnlyクッキーにセット
-      cookies.encrypted[:auth_token] = {
-        value: token,
-        httponly: true,
-        secure: Rails.env.production?,
-        expires: 24.hours.from_now,
-        # domain: request.host,
-        same_site: :lax
-      }
-      Rails.logger.info "Setting cookie: #{cookies.inspect}"
-      render json: { token: token, success: true }, status: :ok
+    if user
+      if user&.authenticate(params[:password])
+        token = user.generate_jwt
+        # cookies.encrypted[:jwt] = {
+        #   value: token,   # JWT token
+        #   httponly: true, # JavaScriptからのアクセスを防ぐ
+        #   secure: true,
+        #   same_site: :None # CSRF攻撃防止
+        # }
+        # Rails.logger.info "Setting cookie: #{cookies.inspect}"
+        render json: { token: token, user_id: user.id, success: "Logged in successfully" }, status: :ok
+      else
+        render json: { error: "Invalid password" }, status: :unauthorized
+      end
     else
-      render json: { error: "Invalid email or password" }, status: :unauthorized
+      render json: { error: "Email not found" }, status: :unauthorized
     end
   end
 
   def logout
-    cookies.delete(:auth_token)
     render json: { message: "Successfully logged out" }, status: :ok
   end
 end

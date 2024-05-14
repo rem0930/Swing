@@ -10,7 +10,7 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
+import useAuthRequest from '@/hooks/useAuthRequest';
 
 function CreateTeamForm() {
     const [name, setName] = useState('');
@@ -19,6 +19,7 @@ function CreateTeamForm() {
     const textColor = useColorModeValue('gray.800', 'white');
     const toast = useToast();
     const router = useRouter();
+    const { authAxios } = useAuthRequest();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,26 +30,15 @@ function CreateTeamForm() {
         };
 
         try {
-            const response = await fetch('http://localhost:3000/teams', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(teamData),
-                credentials: 'include' // cookies
-            });
+            const response = await authAxios.post('/teams', teamData);
             if (response.status === 201) {
-                const data = await response.json(); // レスポンスからJSONデータを取得
-                Cookies.set('auth_token', token, { secure: process.env.NODE_ENV === 'production' });
-
                 toast({
                     title: 'success',
                     status:'チームの作成に成功しました！',
                     duration: 5000,
                     isClosable: true,
                 });
-                router.push('/teams/ChooseProfilePicture');
-            } else {
-                const errorData = await response.json(); // エラー時の詳細を取得
-                throw new Error(errorData.message || 'チームの作成に失敗しました');
+                router.push('/teams');
             }
         } catch (error) {
                 toast({

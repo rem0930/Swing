@@ -2,11 +2,10 @@
 
 class ApplicationController < ActionController::API
   before_action :authenticate_request
-  include ActionController::Cookies
 
   private
     def authenticate_request
-      token = cookies.encrypted[:auth_token]
+      # token = cookies.encrypted[:jwt]
       unless token
         render json: { errors: "No token provided" }, status: :forbidden
         return
@@ -23,6 +22,7 @@ class ApplicationController < ActionController::API
       end
     end
 
-    # helper_method :current_user
-    attr_reader :current_user
+    def current_user
+      @current_user
+    end
 end

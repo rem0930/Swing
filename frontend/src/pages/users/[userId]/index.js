@@ -30,6 +30,8 @@ function UserProfile() {
                 setError(err.message);
             });
         }
+
+        // fetchUser();
     }, [userId]);
 
     return (
