@@ -2,7 +2,7 @@
 
 class SessionsController < ApplicationController
   # include ActionController::Cookies
-  skip_before_action :authenticate_request, only: [:create, :logout]
+  skip_before_action :authenticate_user, only: [:create, :logout]
 
   # login_user
   def create
@@ -10,13 +10,6 @@ class SessionsController < ApplicationController
     if user
       if user&.authenticate(params[:password])
         token = user.generate_jwt
-        # cookies.encrypted[:jwt] = {
-        #   value: token,   # JWT token
-        #   httponly: true, # JavaScriptからのアクセスを防ぐ
-        #   secure: true,
-        #   same_site: :None # CSRF攻撃防止
-        # }
-        # Rails.logger.info "Setting cookie: #{cookies.inspect}"
         render json: { token: token, user_id: user.id, success: "Logged in successfully" }, status: :ok
       else
         render json: { error: "Invalid password" }, status: :unauthorized

@@ -71,7 +71,7 @@ function EditTeam() {
                     <FormLabel>詳細</FormLabel>
                     <Input name="details" value={team.details} onChange={handleChange} />
                 </FormControl>
-                <Button mt={4} colorScheme="blue" isLoading={loading} type="submit">
+                <Button mt={4} colorScheme="teal" isLoading={loading} type="submit">
                     保存
                 </Button>
             </form>

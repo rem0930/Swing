@@ -10,7 +10,8 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import useAuthRequest from '@/hooks/useAuthRequest';
+import axios from 'axios';
+// import useAuthRequest from '@/hooks/useAuthRequest';
 
 function CreateTeamForm() {
     const [name, setName] = useState('');
@@ -19,10 +20,23 @@ function CreateTeamForm() {
     const textColor = useColorModeValue('gray.800', 'white');
     const toast = useToast();
     const router = useRouter();
-    const { authAxios } = useAuthRequest();
+    // const { authAxios } = useAuthRequest();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem('token'); // ここでトークンを取得
+
+        if (!token) {
+            // トークンがない場合の処理
+            toast({
+                title: '認証エラー',
+                description: 'トークンが存在しません。ログインしてください。',
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
+            return;
+        }
 
         const teamData = {
             name: name,
@@ -30,11 +44,20 @@ function CreateTeamForm() {
         };
 
         try {
-            const response = await authAxios.post('/teams', teamData);
+            const response = await axios.post(
+                'http://localhost:3000/teams',
+                teamData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
             if (response.status === 201) {
                 toast({
                     title: 'success',
-                    status:'チームの作成に成功しました！',
+                    description:'チームの作成に成功しました！',
                     duration: 5000,
                     isClosable: true,
                 });
@@ -62,7 +85,7 @@ function CreateTeamForm() {
             mx="auto"
             my={12}
         >
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <form onSubmit={handleSubmit}>
                 <FormControl isRequired>
                     <FormLabel htmlFor="name" color={textColor}>チーム名</FormLabel>
                     <Input
