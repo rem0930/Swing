@@ -7,11 +7,8 @@ class UsersController < ApplicationController
 
   # GET /users/:id
   def show
-    if @current_user && @current_user.id == params[:id].to_i
-      render json: @current_user.as_json(except: [:password_digest]), status: :ok
-    else
-      render json: { error: "Not authorized" }, status: :unauthorized
-    end
+    return unauthorized_access unless authorized_user?
+    render json: @current_user.as_json(except: [:password_digest]), status: :ok
   end
 
   def create
@@ -28,7 +25,7 @@ class UsersController < ApplicationController
     #   puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
     #   puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
     # Cookieに関しては本番環境で実装
-      render json: { token: token, user_id: user.id }, status: :created
+      render json: { token: token, user_id: @user.id }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -36,25 +33,19 @@ class UsersController < ApplicationController
 
   # PUT /users/:id
   def update
-    if @current_user.id == params[:id].to_i
-      if @current_user.update(user_params)
-        render json: { message: "User updated successfully" }, status: :ok
-      else
-        render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
-      end
+    return unauthorized_access unless authorized_user?
+    if @current_user.update(user_params)
+      render json: { message: "User updated successfully" }, status: :ok
     else
-      render json: { error: "Not authorized" }, status: :forbidden
+      render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   # DELETE /users/:id
   def destroy
-    if @current_user.id == params[:id].to_i
-      @current_user.destroy
-      render json: { message: "User deleted successfully" }, status: :ok
-    else
-      render json: { error: "Not authorized" }, status: :forbidden
-    end
+    return unauthorized_access unless authorized_user?
+    @current_user.destroy
+    render json: { message: "User deleted successfully" }, status: :ok
   end
 
     private
@@ -62,12 +53,11 @@ class UsersController < ApplicationController
         params.required(:user).permit(:email, :password, :user_name)
       end
 
-      def user_errors
-        errors = []
-        errors << "Email has already been taken" if @user.errors[:email].present?
-        errors << "Password is too short (minimum is 6 characters)" if @user.errors[:password].present?
-        errors << "User name is required" if @user.errors[:user_name].present?
-        # 他のエラーチェックも追加可能
-        errors
+      def authorized_user?
+        @current_user && @current_user.id == params[:id].to_i
+      end
+
+      def unauthorized_access
+        rener json: { message: "Not authorized" }, status: :unauthorized
       end
 end
