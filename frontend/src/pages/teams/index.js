@@ -36,7 +36,7 @@ function TeamsPage() {
         <Box p={5}>
             <Flex justifyContent="space-between" alignItems="center" mb={5}>
                 <Text fontSize="2xl">チーム一覧</Text>
-                <Button colorScheme="blue">
+                <Button colorScheme="teal">
                     <Link href="/teams/create">新しいチームを作成</Link>
                 </Button>
             </Flex>

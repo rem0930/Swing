@@ -92,7 +92,7 @@ function ProfileSetup() {
                         <Textarea value={bio} onChange={(e) => setBio(e.target.value)} />
                     </FormControl>
                 </Box>
-                <Button colorScheme="blue" onClick={handleSubmit}>保存</Button>
+                <Button colorScheme="teal" onClick={handleSubmit}>保存</Button>
                 <Button colorScheme="gray" onClick={skipSetup}>スキップ</Button>
             </VStack>
         </Flex>

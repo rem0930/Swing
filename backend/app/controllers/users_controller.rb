@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   # include ActionController::Cookies
   # 新規ユーザーの作成時に認証が不要
-  skip_before_action :authenticate_request, only: [:create]
+  skip_before_action :authenticate_user, only: [:create]
 
   # GET /users/:id
   def show
@@ -27,7 +27,8 @@ class UsersController < ApplicationController
     # }
     #   puts "Setting cookie for domain: #{request.domain}"  # ドメインのログ出力
     #   puts "Cookie secure flag: #{Rails.env.production?}"  # セキュアフラグの状態ログ出力
-      render json: { token: token }, status: :created
+    # Cookieに関しては本番環境で実装
+      render json: { token: token, user_id: user.id }, status: :created
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end

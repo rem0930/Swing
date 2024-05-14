@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TeamsController < ApplicationController
-  skip_before_action :authenticate_request, only: [:index, :show]
+  skip_before_action :authenticate_user, only: [:index, :show]
   before_action :set_team, only: [:show, :update, :destroy]
   before_action :check_owner, only: [:update, :destroy]
 

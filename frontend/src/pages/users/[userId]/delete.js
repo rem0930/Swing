@@ -22,7 +22,7 @@ const DeleteUser = ({ userId }) => {
         try {
             const response = await fetch(`http://localhost:3000/users/${userId}`, {
                 method: 'DELETE',
-                credentials: 'include' // cookies
+                // credentials: 'include' // cookies
             });
             if (!response.ok) throw new Error('User delete failed.');
             toast({
