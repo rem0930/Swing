@@ -81,7 +81,7 @@ export default function SignupPage() {
       <Box p={8} bg="white" boxShadow="2xl" borderRadius="xl" w="full" maxW="md">
         <VStack spacing={5} as="form" onSubmit={handleSubmit}>
           <Heading fontSize="3xl" fontWeight="bold" color="teal.500">
-            新規登録
+            会員登録
           </Heading>
           <NameInput
             value={formData.user_name}
@@ -105,7 +105,7 @@ export default function SignupPage() {
             toggleShowPassword={toggleShowPassword}
           />
           <Button type="submit" colorScheme="teal" w="full" size="lg">
-            送信
+            次へ
           </Button>
         </VStack>
       </Box>

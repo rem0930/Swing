@@ -1,6 +1,6 @@
 import { Box, Container } from "@chakra-ui/react";
 import HeroSection from "../components/HeroSection";
-import FeatureCard from "../components/FeatureCard";
+import FeatureCard from "../components/FeaturesSection";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
