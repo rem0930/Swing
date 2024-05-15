@@ -28,10 +28,10 @@ class ApplicationController < ActionController::API
       render_invalid_token("Token verification failed")
     end
 
-  # JWTトークン生成メソッド
-  def generate_token
-    JWT.encode({ user_id: self.id, exp: 24.hours.from_now.to_i }, Rails.application.credentials.jwt_secret_key)
-  end
+    # JWTトークン生成メソッド
+    def generate_token
+      JWT.encode({ user_id: self.id, exp: 24.hours.from_now.to_i }, Rails.application.credentials.jwt_secret_key, 'HS256')
+    end
 
     # リクエストヘッダーからトークンを取得する
     def token_from_request_headers
@@ -54,9 +54,14 @@ class ApplicationController < ActionController::API
       render json: { error: message }, status: :unauthorized
     end
 
-    # ユーザーが見つからない場合のエラーをレンダリングする
-    def render_user_not_found
-      render json: { error: "User not found" }, status: :not_found
+    # リソースが見つからないエラーをレンダリングする
+    def render_not_found(resource)
+      render json: { error: "#{resource} not found" }, status: :not_found
+    end
+
+    # 権限がないエラーをレンダリングする
+    def render_unauthorized(message = "この操作を行う権限がありません。")
+      render json: { error: message }, status: :forbidden
     end
 
     # エラーをログに記録する
