@@ -11,7 +11,7 @@ Doorkeeper.configure do
     # ユーザーが管理者でない場合はアクセスを拒否
     unless user&.admin?
       # ユーザーをログインページにリダイレクト
-      routes.redirect_to(new_user_session_url, alert: 'Access Denied: You are not authorized to access the admin panel.')
+      routes.redirect_to(new_user_session_url, alert: "Access Denied: You are not authorized to access the admin panel.")
     end
   end
 end

@@ -45,6 +45,7 @@ class TeamsController < ApplicationController
   private
     def set_team
       @team = @current_user.teams.find(params[:id])
+      render_not_found("Team") unless @team && @team.user_id == @current_user.id
     end
 
     def team_params
@@ -52,8 +53,6 @@ class TeamsController < ApplicationController
     end
 
     def check_owner
-      unless @team.user_id == @current_user.id
-        render json: { error: "この操作を行う権限がありません。" }, status: :forbidden
-      end
+      render_unauthorized("この操作を行う権限がありません。") unless @team.user_id == @current_user.id
     end
 end

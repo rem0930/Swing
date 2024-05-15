@@ -48,10 +48,10 @@ RSpec.describe User, type: :model do
   end
 
   # JWTトークン生成メソッドのテスト
-  describe "#generate_jwt" do
+  describe "#generate_token" do
     it "generates a valid JWT token" do
       user = User.create!(email: "test@example.com", user_name: "testuser", password: "password123")
-      token = user.generate_jwt
+      token = user.generate_token
       decoded_token = JWT.decode(token, Rails.application.credentials.jwt_secret_key, true, { algorithm: "HS256" })
 
       # トークンの内容を検証

@@ -5,43 +5,64 @@ class ApplicationController < ActionController::API
   include ErrorHandler
 
   private
-
     # ユーザーの認証を行う
     def authenticate_user
       token = token_from_request_headers
-      return unless token
+      unless token
+        render json: { error: "Authorization token is missing" }, status: :unauthorized
+        return
+      end
 
-      # トークンからユーザーIDを取得する
       user_id = decode_token(token)
-      @current_user = User.find(user_id)
+      find_current_user(user_id)
     rescue ActiveRecord::RecordNotFound
       render_user_not_found
-    rescue JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError
-      render_invalid_token
+    rescue JWT::DecodeError => e
+      log_error(e)
+      render_invalid_token("Invalid token")
+    rescue JWT::ExpiredSignature => e
+      log_error(e)
+      render_invalid_token("Expired token")
+    rescue JWT::VerificationError => e
+      log_error(e)
+      render_invalid_token("Token verification failed")
     end
+
+  # JWTトークン生成メソッド
+  def generate_token
+    JWT.encode({ user_id: self.id, exp: 24.hours.from_now.to_i }, Rails.application.credentials.jwt_secret_key)
+  end
 
     # リクエストヘッダーからトークンを取得する
     def token_from_request_headers
-      request.headers['Authorization']&.split&.last
+      request.headers["Authorization"]&.split&.last
     end
 
     # トークンをデコードしてユーザーIDを取得する
     def decode_token(token)
-      decoded_token = JWT.decode(token, Rails.application.credentials.jwt_secret_key, true, algorithm: 'HS256')
-      decoded_token.first['user_id']
+      decoded_token = JWT.decode(token, Rails.application.credentials.jwt_secret_key, true, algorithm: "HS256")
+      decoded_token.first["user_id"]
+    end
+
+    # ユーザーを検索する
+    def find_current_user(user_id)
+      @current_user = User.find(user_id)
     end
 
     # 無効なトークンエラーをレンダリングする
-    def render_invalid_token
-      render json: { error: 'Invalid or expired token' }, status: :unauthorized
+    def render_invalid_token(message = "Invalid or expired token")
+      render json: { error: message }, status: :unauthorized
     end
 
     # ユーザーが見つからない場合のエラーをレンダリングする
     def render_user_not_found
-      render json: { error: 'User not found' }, status: :not_found
+      render json: { error: "User not found" }, status: :not_found
     end
 
-    def current_user
-      @current_user
+    # エラーをログに記録する
+    def log_error(error)
+      Rails.logger.error("#{error.class}: #{error.message}")
     end
+
+    attr_reader :current_user
 end
