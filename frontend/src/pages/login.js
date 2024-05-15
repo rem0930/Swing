@@ -6,21 +6,26 @@ import EmailInput from '@/components/EmailInput';
 import PasswordInput from '@/components/PasswordInput';
 
 function LoginPage() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
-    const [touched, setTouched] = useState({ user_name: false, email: false, password: false });
+    const [touched, setTouched] = useState({ email: false, password: false });
     const toast = useToast();
     const router = useRouter();
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
 
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-                const response = await axios.post('http://localhost:3000/login', { email, password }, {
+            const response = await axios.post('http://localhost:3000/sessions',
+            { email: formData.email, password: formData.password },
+            {
                 headers: { 'Content-Type': 'application/json' },
                 // withCredentials: true, // Cookieを送信するために必要
             });
-
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
 
@@ -35,10 +40,9 @@ function LoginPage() {
                     isClosable: true,
                 });
                 router.push('/teams/');
-                setEmail('');
-                setPassword('');
+                setFormData({ email: '', password: '' });
             } else {
-                throw new Error('NO token received');
+                throw new Error('No token received');
             }
         } catch (error) {
             toast({
@@ -62,8 +66,21 @@ function LoginPage() {
                     <Text fontSize="3xl" fontWeight="bold" color="teal.500">
                         ログイン
                     </Text>
-                    <EmailInput {...{ email, setEmail, handleBlur, touched, validateEmail }} />
-                    <PasswordInput {...{ password, setPassword, handleBlur, touched, showPassword, toggleShowPassword }} />
+                    <EmailInput
+                        value={formData.email}
+                        onChange={handleChange}
+                        onBlur={() => handleBlur('email')}
+                        touched={touched.email}
+                        validateEmail={validateEmail}
+                    />
+                    <PasswordInput
+                        value={formData.password}
+                        onChange={handleChange}
+                        onBlur={() => handleBlur('password')}
+                        touched={touched.password}
+                        showPassword={showPassword}
+                        toggleShowPassword={toggleShowPassword}
+                    />
                     <Button type="submit" colorScheme="teal" w="full" size="lg">
                         ログイン
                     </Button>

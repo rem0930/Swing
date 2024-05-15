@@ -8,8 +8,8 @@ require_relative "../config/environment"
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require "rspec/rails"
 
-require 'capybara/rails'
-require 'capybara/rspec'
+require "capybara/rails"
+require "capybara/rspec"
 # require 'selenium-webdriver'
 # Capybara.server = :puma, { Silent: true } # テストサーバーとしてPumaを使用
 
