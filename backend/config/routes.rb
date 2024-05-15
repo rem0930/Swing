@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     post :reset, on: :collection
   end
   resources :emails, only: [:update]
-  resources :teams
-  resources :recruitments
+  resources :teams do
+    resources :recruitments, only:[:create, :index]
+  end
 end

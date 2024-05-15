@@ -2,17 +2,17 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 
-function useUserData(userId) {
+function useUserData(id) {
     const [userData, setUserData] = useState({ name: '', email: '' });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const toast = useToast();
 
     useEffect(() => {
-        if (!userId) return;
+        if (!id) return;
 
         const token = localStorage.getItem('token'); // トークンを取得
-        axios.get(`http://localhost:3000/users/${userId}`, {
+        axios.get(`http://localhost:3000/users/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ function useUserData(userId) {
             });
             setLoading(false);
         });
-    }, [userId, toast]);
+    }, [id, toast]);
 
     return { userData, loading, error };
 }

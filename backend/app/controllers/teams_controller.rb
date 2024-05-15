@@ -25,6 +25,9 @@ class TeamsController < ApplicationController
     else
       render json: @team.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    log_error(e)
+    render_unprocessable_entity(e.record.errors.full_messages)
   end
 
   # PATCH/PUT /teams/:id
@@ -34,18 +37,24 @@ class TeamsController < ApplicationController
     else
       render json: @team.errors, status: :unprocessable_entity
     end
+  rescue ActiveRecord::RecordInvalid => e
+    log_error(e)
+    render_unprocessable_entity(e.record.errors.full_messages)
   end
 
   # DELETE /teams/:id
   def destroy
     @team.destroy
     head :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    log_error(e)
+    render_unprocessable_entity(e.record.errors.full_messages)
   end
 
   private
     def set_team
-      @team = @current_user.teams.find(params[:id])
-      render_not_found("Team") unless @team && @team.user_id == @current_user.id
+      @team = Team.find_by(id: params[:id])
+      render_not_found("Team") unless @team
     end
 
     def team_params
@@ -54,5 +63,9 @@ class TeamsController < ApplicationController
 
     def check_owner
       render_unauthorized("この操作を行う権限がありません。") unless @team.user_id == @current_user.id
+    end
+
+    def render_unprocessable_entity(errors)
+      render json: { errors: errors }, status: :unprocessable_entity
     end
 end

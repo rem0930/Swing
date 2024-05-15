@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
   before_action :authorized_user?, only: [:show, :update, :destroy]
@@ -24,7 +26,6 @@ class UsersController < ApplicationController
   end
 
   private
-
     def set_user
       @user = User.find(params[:id])
     rescue ActiveRecord::RecordNotFound

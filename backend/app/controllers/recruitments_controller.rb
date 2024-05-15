@@ -16,9 +16,10 @@ class RecruitmentsController < ApplicationController
 
   # POST /recruitments
   def create
-    @recruitment = Recruitment.new(recruitment_params)
+    @recruitment = @team.recruitments.build(recruitment_params)
+    @recruitment.status = :open # デフォルトでopenに設定
     if @recruitment.save
-      render json: @recruitment, status: :created, location: @recruitment
+      render json: @recruitment, status: :created
     else
       render json: @recruitment.errors, status: :unprocessable_entity
     end
@@ -47,6 +48,6 @@ class RecruitmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def recruitment_params
-      params.require(:recruitment).permit(:title, :description, :status, :role, :location_id, :team_id, :event_date, :deadline)
+      params.require(:recruitment).permit(:title, :description, :role, :event_date, :deadline)
     end
 end
