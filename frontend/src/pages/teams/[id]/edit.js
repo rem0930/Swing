@@ -12,7 +12,7 @@ function EditTeam() {
     useEffect(() => {
         // チームデータを取得
         const fetchTeam = async () => {
-            const res = await fetch(`/api/teams/${id}`);
+            const res = await fetch(`http://localhost:3000/teams/${id}`);
             const data = await res.json();
             setTeam(data);
         };

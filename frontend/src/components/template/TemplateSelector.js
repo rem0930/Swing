@@ -1,6 +1,5 @@
 import React from 'react';
 import { Select } from '@chakra-ui/react';
-import Template1 from './template1';
 
 const TemplateSelector = ({ onChange }) => {
     return (

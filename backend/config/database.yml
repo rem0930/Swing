@@ -8,7 +8,7 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>
+  database: <%= ENV["MYSQL_DATABASE"] %>_development
 
 test:
   <<: *default
