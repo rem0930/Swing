@@ -6,12 +6,8 @@ class RecruitmentsController < ApplicationController
 
   # GET /recruitments
   def index
-    if params[:team_id]
-      recruitments = Recruitment.where(team_id: params[:team_id])
-    else
-      recruitments = Recruitment.all
-    end
-    render json: recruitments
+    @recruitments = Recruitment.all
+    render json: @recruitments
   end
 
   # GET /recruitments/1
