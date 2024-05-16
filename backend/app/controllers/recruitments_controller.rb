@@ -2,6 +2,7 @@
 
 class RecruitmentsController < ApplicationController
   before_action :set_recruitment, only: [:show, :update, :destroy]
+  skip_before_action :authenticate_user, only: [:index, :show]
 
   # GET /recruitments
   def index
@@ -11,7 +12,8 @@ class RecruitmentsController < ApplicationController
 
   # GET /recruitments/1
   def show
-    render json: @recruitment
+    recruitment = Recruitment.find(params[:id])
+    render json: recruitment
   end
 
   # POST /recruitments

@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Box, Flex, Image } from '@chakra-ui/react';
-import ProgressIndicator from '@/components/RecruitmentForm/ProgressIndicator';
-import Step1 from '@/components/RecruitmentForm/Step1';
-import Step2 from '@/components/RecruitmentForm/Step2';
-import Step3 from '@/components/RecruitmentForm/Step3';
-import Step4 from '@/components/RecruitmentForm/Step4';
-import Step5 from '@/components/RecruitmentForm/Step5';
+import ProgressIndicator from '../../components/RecruitmentForm/ProgressIndicator';
+import Step1 from '../../components/RecruitmentForm/Step1';
+import Step2 from '../../components/RecruitmentForm/Step2';
+import Step3 from '../../components/RecruitmentForm/Step3';
+import Step4 from '../../components/RecruitmentForm/Step4';
+import Step5 from '../../components/RecruitmentForm/Step5';
 
 const RecruitmentForm = () => {
   const [step, setStep] = useState(1);
