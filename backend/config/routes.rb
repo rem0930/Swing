@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   post   "/signup", to: "registations#create"
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#logout"
+  # current_user エンドポイント作成
+  get    "/current_user", to: "users#current"
+  # get    "/current_team", to: "current_team#show"
+  # get    "/current_team_member", to: "current_team_member#show"
 
   resources :users, only: [:show, :update, :destroy]
   resources :registrations, only: [:create]

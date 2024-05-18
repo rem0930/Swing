@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Box, Button, VStack, Text, useToast, Center } from '@chakra-ui/react';
-import EmailInput from '@/components/EmailInput';
-import PasswordInput from '@/components/PasswordInput';
+import EmailInput from '../components/Input/EmailInput';
+import PasswordInput from '../components/Input/PasswordInput';
 
 function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
