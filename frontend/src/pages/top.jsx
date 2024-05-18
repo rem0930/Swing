@@ -1,8 +1,8 @@
 import { Box, Container } from "@chakra-ui/react";
-import HeroSection from "../components/HeroSection";
-import FeatureCard from "../components/FeaturesSection";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import HeroSection from "../components/TopPage/HeroSection";
+import FeatureCard from "../components/TopPage/FeaturesSection";
+import Navbar from "../components/TopPage/Navbar";
+import Footer from "../components/TopPage/Footer";
 
 const Home = () => {
   return (

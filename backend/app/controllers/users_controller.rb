@@ -9,6 +9,15 @@ class UsersController < ApplicationController
     render json: @user, status: :ok
   end
 
+  # GET /current_user
+  def current
+    if current_user
+      render json: current_user, status: :ok
+    else
+      render json:{ error: 'Not Authorized' }, status: :unauthorized
+    end
+  end
+
   # PUT /users/:id
   def update
     if @user.update(user_params)

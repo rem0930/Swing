@@ -1,10 +1,10 @@
-import { Box, Heading, Text, VStack, HStack, Icon, Container, useBreakpointValue } from '@chakra-ui/react';
+import { Box,  Text, HStack, Icon, Container } from '@chakra-ui/react';
 import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import RecruitmentHeader from '../../components/RecruitmentHeader';
-import RecruitmentFooter from '../../components/RecruitmentFooter';
+import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHeader';
+import RecruitmentFooter from '../../components/RecruitmentDetails/RecruitmentFooter';
 
 const RecruitmentDetail = () => {
   const router = useRouter();
