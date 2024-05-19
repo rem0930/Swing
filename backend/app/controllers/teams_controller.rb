@@ -13,14 +13,22 @@ class TeamsController < ApplicationController
 
   # GET /teams/:id
   def show
-    team = Team.find(params[:id])
     render json: @team
+  end
+
+  # GET /team
+  def current_team
+    @team = @current_user.team
+    if @team
+      render json: @team, status: :ok
+    else
+      render json: { message: "No team found" }, status: :not_found
+    end
   end
 
   # POST /teams
   def create
     @team = @current_user.teams.new(team_params)
-
     if @team.save
       render json: @team, status: :created, location: team_url(@team)
     else

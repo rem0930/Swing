@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Box, Flex, Text, Button, Spinner } from "@chakra-ui/react";
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import RecruitmentCard from '../components/RecruitmentCard';
-import CustomCalendar from '../components/CustomCalendar';
-import EditFilterButton from '../components/EditFilterButton';
+import RecruitmentCards from '../components/Main/RecruitmentCards';
+import CustomCalendar from '../components/Main/CustomCalendar';
+import EditFilterButton from '../components/Main/EditFilterButton';
 import Layout from '../components/Layout'; // Layoutをインポート
 import { format } from 'date-fns';
 
@@ -43,10 +43,6 @@ const indexPage = () => {
     setFilteredRecruitments(filtered);
   }, [selectedDate, recruitments]);
 
-  const handleCreateRecruitment = () => {
-    router.push('/recruitments/new');
-  };
-
   return (
     <Layout>
       <Box p="5" bg="#ffffff" minH="100vh" position="relative">
@@ -61,7 +57,7 @@ const indexPage = () => {
                 <Text color="red.500">{error}</Text>
               </Box>
             ) : (
-              <RecruitmentCard recruitments={filteredRecruitments} />
+              <RecruitmentCards recruitments={filteredRecruitments} />
             )}
           </Box>
           <Box flex={{ base: "1", md: "2" }} display={{ base: "none", md: "block" }}>

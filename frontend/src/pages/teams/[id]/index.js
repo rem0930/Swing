@@ -1,74 +1,68 @@
-import { Box, Container, Text, Heading, VStack, ButtonGroup, Button } from '@chakra-ui/react';
+import { Box, Container, Spinner, Flex } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import TeamDetailHeader from '../../../components/TeamDetailHeader';
-import RecruitmentCard from '../../../components/RecruitmentCard'; // 再利用可能なコンポーネントとして作成
+import TeamProfile from '../../../components/Team/TeamProfile';
+import TeamRecruitments from '../../../components/Team/TeamRecruitments';
+import Layout from '../../../components/Layout';
 
 const TeamDetail = () => {
   const router = useRouter();
   const { id } = router.query;
   const [team, setTeam] = useState(null);
   const [recruitments, setRecruitments] = useState([]);
-  const [filteredRecruitments, setFilteredRecruitments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState('member');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:3000/teams/${id}`)
-        .then(response => {
-          setTeam(response.data);
-          return axios.get(`http://localhost:3000/recruitments?team_id=${id}`);
-        })
-        .then(response => {
-          const teamRecruitments = response.data.filter(r => r.team_id === parseInt(id));
+      const fetchTeamData = async () => {
+        try {
+          const teamResponse = await axios.get(`http://localhost:3000/teams/${id}`);
+          setTeam(teamResponse.data);
+
+          const recruitmentsResponse = await axios.get(`http://localhost:3000/recruitments?team_id=${id}`);
+          const teamRecruitments = recruitmentsResponse.data.filter(r => r.team_id === parseInt(id));
           setRecruitments(teamRecruitments);
-          setFilteredRecruitments(response.data.filter(r => r.role === 'member'));
-        })
-        .catch(error => {
+        } catch (error) {
           console.error("There was an error fetching the team or recruitments data!", error);
-        });
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      fetchTeamData();
     }
   }, [id]);
 
-  const handleRoleChange = (role) => {
-    setSelectedRole(role);
-    setFilteredRecruitments(recruitments.filter(r => r.role === role));
-  };
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
   if (!team) {
-    return <p>Loading...</p>;
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+        <Text color="red.500">チーム情報が見つかりません</Text>
+      </Box>
+    );
   }
 
   return (
-    <Container maxW="container.lg" py={8}>
-      <TeamDetailHeader team={team} />
-      <Box mt={8}>
-        <Heading size="md" mb={4}>Details</Heading>
-        <Text>{team.details}</Text>
-      </Box>
-      
-      <Box mt={8}>
-        <Heading size="md" mb={4}>Recruitments</Heading>
-        <ButtonGroup mb={4} spacing={4}>
-          <Button colorScheme={selectedRole === 'member' ? 'teal' : 'gray'} onClick={() => handleRoleChange('member')}>
-            Member
-          </Button>
-          <Button colorScheme={selectedRole === 'opponent' ? 'teal' : 'gray'} onClick={() => handleRoleChange('opponent')}>
-            Opponent
-          </Button>
-          <Button colorScheme={selectedRole === 'helper' ? 'teal' : 'gray'} onClick={() => handleRoleChange('helper')}>
-            Helper
-          </Button>
-        </ButtonGroup>
-        
-        <VStack spacing={4} align="stretch">
-          {filteredRecruitments.map(recruitment => (
-            <RecruitmentCard key={recruitment.id} recruitment={recruitment} />
-          ))}
-        </VStack>
-      </Box>
-    </Container>
+    <Layout>
+      <Container maxW="container.lg" py={8}>
+        <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
+          <Box flex={{ base: '1', md: '0.3' }}>
+            <TeamProfile team={team} />
+          </Box>
+          <Box flex={{ base: '1', md: '0.7' }}>
+            <TeamRecruitments recruitments={recruitments} />
+          </Box>
+        </Flex>
+      </Container>
+    </Layout>
   );
 };
 

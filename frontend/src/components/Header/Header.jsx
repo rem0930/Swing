@@ -32,15 +32,13 @@ const Header = () => {
                     variant="ghost"
                   />
                 </NextLink>
-                {user.hasTeam && (
-                  <NextLink href="/teams/manage">
-                    <IconButton
-                      icon={<FiUsers />}
-                      aria-label="Manage Team"
-                      variant="ghost"
-                    />
-                  </NextLink>
-                )}
+                <NextLink href="/teams/manage">
+                  <IconButton
+                    icon={<FiUsers />}
+                    aria-label="Manage Team"
+                    variant="ghost"
+                  />
+                </NextLink>
                 <NextLink href="/messages">
                   <IconButton
                     icon={<FiMessageCircle />}
@@ -82,20 +80,20 @@ const Header = () => {
                 )}
               </MenuButton>
               <MenuList>
-                <NextLink href="/profile">
-                  <MenuItem>Profile</MenuItem>
+                <NextLink href="profile/MyProfilePage">
+                  <MenuItem>プロフィール</MenuItem>
                 </NextLink>
                 <MenuDivider />
-                <MenuItem>Logout</MenuItem>
+                <MenuItem>ログアウト</MenuItem>
               </MenuList>
             </Menu>
           ) : (
             <>
               <NextLink href="/login">
-                <Button mr={4}>Login</Button>
+                <Button mr={4}>ログイン</Button>
               </NextLink>
               <NextLink href="/signup">
-                <Button colorScheme={"teal"}>Sign Up</Button>
+                <Button colorScheme={"teal"}>会員登録</Button>
               </NextLink>
             </>
           )}
@@ -105,15 +103,11 @@ const Header = () => {
       {isOpen ? (
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
-            {user && (
               <>
-                <NextLink href="/notifications">Notifications</NextLink>
-                {user.hasTeam && (
-                  <NextLink href="/teams/manage">Manage Team</NextLink>
-                )}
-                <NextLink href="/messages">Messages</NextLink>
+                <NextLink href="/notifications">お知らせ</NextLink>
+                <NextLink href="/teams/manage">チームを管理する</NextLink>
+                <NextLink href="/messages">メッセージ</NextLink>
               </>
-            )}
           </Stack>
         </Box>
       ) : null}

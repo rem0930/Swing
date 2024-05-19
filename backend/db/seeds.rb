@@ -13,7 +13,7 @@ user2 = User.create!(
   user_name: "user2"
 )
 
-user3 = User.create!(
+User.create!(
   email: "user3@example.com",
   password: "password123",
   user_name: "user3"
@@ -57,8 +57,8 @@ location3 = Location.create!(
 # サンプルリクルートメントデータ
 Recruitment.create!([
   {
-    title: 'Summer Tournament - Need Members',
-    description: 'We are looking for new members to join our team for the summer tournament.',
+    title: "Summer Tournament - Need Members",
+    description: "We are looking for new members to join our team for the summer tournament.",
     location_id: location1.id,
     event_date: DateTime.now + 30.days,
     deadline: DateTime.now + 25.days,
@@ -67,8 +67,8 @@ Recruitment.create!([
     team_id: team1.id
   },
   {
-    title: 'Friendly Match - Seeking Opponents',
-    description: 'We are organizing a friendly match and are seeking opponents.',
+    title: "Friendly Match - Seeking Opponents",
+    description: "We are organizing a friendly match and are seeking opponents.",
     location_id: location2.id,
     event_date: DateTime.now + 20.days,
     deadline: DateTime.now + 15.days,
@@ -77,8 +77,8 @@ Recruitment.create!([
     team_id: team2.id
   },
   {
-    title: 'Helper Needed for Weekend Practice',
-    description: 'We need a helper to assist with our weekend practice sessions.',
+    title: "Helper Needed for Weekend Practice",
+    description: "We need a helper to assist with our weekend practice sessions.",
     location_id: location3.id,
     event_date: DateTime.now + 10.days,
     deadline: DateTime.now + 5.days,
@@ -87,8 +87,8 @@ Recruitment.create!([
     team_id: team1.id
   },
   {
-    title: 'Fall League - Recruiting Members',
-    description: 'Join our team for the upcoming fall league!',
+    title: "Fall League - Recruiting Members",
+    description: "Join our team for the upcoming fall league!",
     location_id: location1.id,
     event_date: DateTime.now + 40.days,
     deadline: DateTime.now + 35.days,
@@ -97,8 +97,8 @@ Recruitment.create!([
     team_id: team2.id
   },
   {
-    title: 'Spring Friendly - Need Opponents',
-    description: 'We are looking for opponents for a friendly match this spring.',
+    title: "Spring Friendly - Need Opponents",
+    description: "We are looking for opponents for a friendly match this spring.",
     location_id: location2.id,
     event_date: DateTime.now + 50.days,
     deadline: DateTime.now + 45.days,
