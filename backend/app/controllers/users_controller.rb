@@ -2,19 +2,29 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :authorized_user?, only: [:show, :update, :destroy]
+  before_action :authorized_user?, only: [:update, :destroy]
+  before_action :authenticate_user, only: [:profile]
 
   # GET /users/:id
   def show
     render json: @user, status: :ok
   end
 
+  # GET /profile
+  def profile
+    if @current_user
+      render json: @current_user, status: :ok
+    else
+      render json: { error: "Not Authorized" }, status: :unauthorized
+    end
+  end
+
   # GET /current_user
   def current
-    if current_user
-      render json: current_user, status: :ok
+    if @current_user
+      render json: @current_user, status: :ok
     else
-      render json:{ error: 'Not Authorized' }, status: :unauthorized
+      render json: { error: "Not Authorized" }, status: :unauthorized
     end
   end
 
@@ -46,7 +56,7 @@ class UsersController < ApplicationController
     end
 
     def authorized_user?
-      unless @user == current_user
+      unless @user == @current_user
         render json: { error: "Not authorized to access this resource" }, status: :unauthorized
       end
     end

@@ -10,7 +10,7 @@ export const UserProvider = ({ children }) => {
     const fetchUserData = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/current_user', {
+        const response = await axios.get('http://localhost:3000/profile', {
           headers: {
             Authorization: `Bearer ${token}`,
           },

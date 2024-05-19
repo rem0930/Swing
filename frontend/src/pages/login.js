@@ -39,7 +39,7 @@ function LoginPage() {
                     duration: 5000,
                     isClosable: true,
                 });
-                router.push('/teams/');
+                router.push('/');
                 setFormData({ email: '', password: '' });
             } else {
                 throw new Error('No token received');

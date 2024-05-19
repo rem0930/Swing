@@ -9,7 +9,7 @@ class User < ApplicationRecord
   validates :user_name, presence: true
 
   # Associations
-  has_many :teams, dependent: :destroy
+  has_one :team, dependent: :destroy
 
   # JWTトークン生成メソッド
   def generate_token
