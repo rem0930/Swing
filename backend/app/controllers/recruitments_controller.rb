@@ -1,24 +1,43 @@
 # frozen_string_literal: true
 
 class RecruitmentsController < ApplicationController
+  before_action :authenticate_user, only: [:index, :create, :update, :destroy]
   before_action :set_recruitment, only: [:show, :update, :destroy]
-  skip_before_action :authenticate_user, only: [:index, :show]
+  skip_before_action :authenticate_user, only: [:show, :by_team]
 
   # GET /recruitments
   def index
-    @recruitments = Recruitment.all
+    recruitments = Recruitment.all.includes(:team)
+
+    recruitments_with_flag = recruitments.map do |recruitment|
+      is_user_team = false
+      if @current_user
+        user_team = @current_user.team
+        is_user_team = (recruitment.team_id == user_team.id) if user_team
+        Rails.logger.info "Recruitment ID: #{recruitment.id}, Team ID: #{recruitment.team_id}, User's Team ID: #{user_team&.id}"
+      end
+      RecruitmentSerializer.new(recruitment, is_user_team: is_user_team)
+    end
+
+    render json: recruitments_with_flag.map(&:as_json)
+  end
+
+  # GET /recruitments/by_team/:team_id
+  def by_team
+    team_id = params[:team_id]
+    @recruitments = Recruitment.where(team_id: params[:team_id])
     render json: @recruitments
   end
 
   # GET /recruitments/1
   def show
     recruitment = Recruitment.find(params[:id])
-    render json: recruitment
+    render json: @recruitment
   end
 
   # POST /recruitments
   def create
-    @recruitment = @team.recruitments.build(recruitment_params)
+    @recruitment = current_user.team.recruitments.build(recruitment_params)
     @recruitment.status = :open # デフォルトでopenに設定
     if @recruitment.save
       render json: @recruitment, status: :created
@@ -50,6 +69,6 @@ class RecruitmentsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def recruitment_params
-      params.require(:recruitment).permit(:title, :description, :role, :event_date, :deadline)
+      params.require(:recruitment).permit(:title, :description, :role, :event_date, :deadline, :team_id)
     end
 end

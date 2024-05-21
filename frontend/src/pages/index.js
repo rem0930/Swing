@@ -3,7 +3,7 @@ import { Box, Flex, Text, Button, Spinner } from "@chakra-ui/react";
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import RecruitmentCards from '../components/Main/RecruitmentCards';
-import CustomCalendar from '../components/Main/CustomCalendar';
+import CustomCalendar from '../components/CustomCalendar';
 import EditFilterButton from '../components/Main/EditFilterButton';
 import Layout from '../components/Layout'; // Layoutをインポート
 import { format } from 'date-fns';
@@ -17,11 +17,18 @@ const indexPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchRecruitments = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/recruitments');
+        const response = await axios.get('http://localhost:3000/recruitments',{
+          headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+          },
+      });
         setRecruitments(response.data);
         setFilteredRecruitments(response.data);
+        console.log(response.data);
       } catch (error) {
         setError("募集情報の取得中にエラーが発生しました！");
       } finally {

@@ -1,4 +1,4 @@
-import { Box, Container, Spinner, Flex } from '@chakra-ui/react';
+import { Box, Container, Spinner, Flex, Text } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -20,11 +20,10 @@ const TeamDetail = () => {
           const teamResponse = await axios.get(`http://localhost:3000/teams/${id}`);
           setTeam(teamResponse.data);
 
-          const recruitmentsResponse = await axios.get(`http://localhost:3000/recruitments?team_id=${id}`);
-          const teamRecruitments = recruitmentsResponse.data.filter(r => r.team_id === parseInt(id));
-          setRecruitments(teamRecruitments);
+          const recruitmentsResponse = await axios.get(`http://localhost:3000/recruitments/by_team/${id}`);
+          setRecruitments(recruitmentsResponse.data);
         } catch (error) {
-          console.error("There was an error fetching the team or recruitments data!", error);
+          console.error("チームまたは募集情報の取得中にエラーが発生しました！", error);
         } finally {
           setLoading(false);
         }
@@ -54,10 +53,10 @@ const TeamDetail = () => {
     <Layout>
       <Container maxW="container.lg" py={8}>
         <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
-          <Box flex={{ base: '1', md: '0.3' }}>
+          <Box flex={{ base: '1', md: '0.4' }}>
             <TeamProfile team={team} />
           </Box>
-          <Box flex={{ base: '1', md: '0.7' }}>
+          <Box flex={{ base: '1', md: '0.6' }}>
             <TeamRecruitments recruitments={recruitments} />
           </Box>
         </Flex>

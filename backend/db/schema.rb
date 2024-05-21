@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -12,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_13_110757) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_20_030117) do
   create_table "locations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "latitude", precision: 10, scale: 8, null: false
     t.decimal "longitude", precision: 11, scale: 8, null: false
@@ -101,8 +99,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_110757) do
     t.datetime "updated_at", null: false
     t.bigint "location_id"
     t.boolean "admin", default: false
+    t.bigint "team_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["location_id"], name: "index_users_on_location_id"
+    t.index ["team_id"], name: "index_users_on_team_id"
   end
 
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
@@ -111,4 +111,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_13_110757) do
   add_foreign_key "recruitments", "teams"
   add_foreign_key "teams", "users"
   add_foreign_key "users", "locations"
+  add_foreign_key "users", "teams"
 end

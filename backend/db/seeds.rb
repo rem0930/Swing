@@ -32,6 +32,8 @@ team2 = Team.create!(
   user_id: user2.id
 )
 
+
+
 # サンプルロケーションデータ
 location1 = Location.create!(
   name: "Tokyo",

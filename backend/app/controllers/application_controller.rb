@@ -9,7 +9,7 @@ class ApplicationController < ActionController::API
     def authenticate_user
       token = token_from_request_headers
       unless token
-        render json: { error: "Authorization token is missing" }, status: :unauthorized
+        render json: { error: "認証トークンがありません" }, status: :unauthorized
         return
       end
 
@@ -19,13 +19,13 @@ class ApplicationController < ActionController::API
       render_user_not_found
     rescue JWT::DecodeError => e
       log_error(e)
-      render_invalid_token("Invalid token")
+      render_invalid_token("無効なトークンです")
     rescue JWT::ExpiredSignature => e
       log_error(e)
-      render_invalid_token("Expired token")
+      render_invalid_token("トークンの有効期限が切れています")
     rescue JWT::VerificationError => e
       log_error(e)
-      render_invalid_token("Token verification failed")
+      render_invalid_token("トークンの検証に失敗しました")
     end
 
     # JWTトークン生成メソッド
@@ -49,14 +49,18 @@ class ApplicationController < ActionController::API
       @current_user = User.find(user_id)
     end
 
+    def current_user
+      @current_user
+    end
+
     # 無効なトークンエラーをレンダリングする
-    def render_invalid_token(message = "Invalid or expired token")
+    def render_invalid_token(message = "無効または期限切れのトークンです")
       render json: { error: message }, status: :unauthorized
     end
 
     # リソースが見つからないエラーをレンダリングする
     def render_not_found(resource)
-      render json: { error: "#{resource} not found" }, status: :not_found
+      render json: { error: "#{resource}が見つかりません" }, status: :not_found
     end
 
     # 権限がないエラーをレンダリングする
