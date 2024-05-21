@@ -16,19 +16,9 @@ class TeamsController < ApplicationController
     render json: @team
   end
 
-  # GET /team
-  def current_team
-    @team = @current_user.team
-    if @team
-      render json: @team, status: :ok
-    else
-      render json: { message: "No team found" }, status: :not_found
-    end
-  end
-
   # POST /teams
   def create
-    @team = @current_user.teams.new(team_params)
+    @team = current_user.teams.new(team_params)
     if @team.save
       render json: @team, status: :created, location: team_url(@team)
     else
@@ -55,9 +45,6 @@ class TeamsController < ApplicationController
   def destroy
     @team.destroy
     head :no_content
-  rescue ActiveRecord::RecordInvalid => e
-    log_error(e)
-    render_unprocessable_entity(e.record.errors.full_messages)
   end
 
   private
@@ -71,7 +58,7 @@ class TeamsController < ApplicationController
     end
 
     def check_owner
-      render_unauthorized("この操作を行う権限がありません。") unless @team.user_id == @current_user.id
+      render_unauthorized("この操作を行う権限がありません。") unless @team.user_id == current_user.id
     end
 
     def render_unprocessable_entity(errors)

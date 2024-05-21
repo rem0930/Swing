@@ -11,5 +11,7 @@ class Recruitment < ApplicationRecord
   enum status: { open: 0, closed: 1 }
   enum role: { member: 0, opponent: 1, helper: 2 }
 
-  # 必要に応じてその他のメソッドやバリデーションを追加
+  def role_in_japanese
+    I18n.t("recruitment.roles.#{role}")
+  end
 end

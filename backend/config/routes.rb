@@ -11,9 +11,9 @@ Rails.application.routes.draw do
   # get    "/current_team_member", to: "current_team_member#show"
 
   # 自分のプロフィールページ用のエンドポイント
-  get    "/profile", to: "users#profile"
+  get    '/profile', to: 'users#profile'
   # 自分のテーム情報を取得するエンドポイント
-  get    "/team",    to: "teams#current_team"
+  get    '/team',    to: 'teams#current_team'
 
   resources :users, only: [:show, :update, :destroy]
   resources :registrations, only: [:create]
@@ -23,8 +23,12 @@ Rails.application.routes.draw do
   end
   resources :emails, only: [:update]
   resources :teams do
-    resources :recruitments, only: [:create, :index]
+    resources :recruitments, only:[:create, :index]
   end
-  resources :recruitments
+  resources :recruitments do
+    collection do
+      get    '/by_team/:team_id', to: 'recruitments#by_team'
+    end
+  end
   resources :teams, only: [:show]
 end

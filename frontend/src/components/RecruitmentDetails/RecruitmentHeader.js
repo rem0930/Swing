@@ -24,41 +24,41 @@ const RecruitmentHeader = ({ team, title, profilePhoto }) => {
         bg="white"
         boxShadow={scrollY > 200 ? 'md' : 'none'}
         transition="box-shadow 0.2s"
+        p={4}
       >
-        <Flex alignItems="center" p={4}>
-          {scrollY > 200 ? (
-            <Heading size="md" isTruncated>{title}</Heading>
-          ) : (
-            <>
-              <NextLink href={`/teams/${team.id}`} passHref>
-                <Link>
-                  {profilePhoto ? (
-                    <Image
-                      borderRadius="full"
-                      boxSize="50px"
-                      src={profilePhoto}
-                      alt={`${team.name} Profile Photo`}
-                      mr={4}
-                    />
-                  ) : (
-                    <Avatar
-                      name={team.name}
-                      boxSize="50px"
-                      mr={4}
-                    />
-                  )}
-                </Link>
-              </NextLink>
-              <Box>
-                <Text fontSize="sm" color="gray.500">Hosted by {team.name}</Text>
-                <Heading size="lg" isTruncated>{title}</Heading>
-              </Box>
-            </>
-          )}
+        <Flex alignItems="left" direction="column">
+          <Heading size="lg" textAlign="left" mb={4} isTruncated>{title}</Heading>
+          <Flex alignItems="left" justifyContent="center" direction={{ base: "column", md: "row" }}>
+            <NextLink href={`/teams/${team.id}`} passHref>
+              <Link>
+                {profilePhoto ? (
+                  <Image
+                    borderRadius="full"
+                    boxSize="50px"
+                    src={profilePhoto}
+                    alt={`${team.name} Profile Photo`}
+                    mr={4}
+                    mb={{ base: 2, md: 0 }}
+                  />
+                ) : (
+                  <Avatar
+                    name={team.name}
+                    boxSize="50px"
+                    mr={4}
+                    mb={{ base: 2, md: 0 }}
+                  />
+                )}
+              </Link>
+            </NextLink>
+            <Box textAlign={{ base: "center", md: "left" }}>
+              <Text fontSize="sm" color="gray.500">Hosted by</Text>
+              <Text fontSize="md" fontWeight="bold">{team.name}</Text>
+            </Box>
+          </Flex>
         </Flex>
       </Box>
       {!isMobile && (
-        <Box height="200px" bgImage="url('/path/to/your/background.jpg')" bgSize="cover" bgPosition="center" />
+        <Box height="200px" bgSize="cover" bgPosition="center" />
       )}
     </Box>
   );
