@@ -3,7 +3,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
   before_action :authorized_user, only: [:update, :destroy]
-  before_action :authenticate_user, only: [:profile, :current]
+  before_action :authenticate_user, only: [:profile, :current, :has_team]
 
   # GET /users/:id
   def show
@@ -23,6 +23,15 @@ class UsersController < ApplicationController
   def current
     render_current_user
   end
+
+    # GET /has_team
+    def has_team
+      if current_user.team
+        render json: { has_team: true, team_id: current_user.team.id }
+      else
+        render json: { has_team: false }
+      end
+    end
 
   # PUT /users/:id
   def update
