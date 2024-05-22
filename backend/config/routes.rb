@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   # 自分のプロフィールページ用のエンドポイント
   get    '/profile', to: 'users#profile'
   # 自分のテーム情報を取得するエンドポイント
-  get    '/team',    to: 'teams#current_team'
+  get    '/has_team',    to: 'users#has_team'
 
   resources :users, only: [:show, :update, :destroy]
   resources :registrations, only: [:create]

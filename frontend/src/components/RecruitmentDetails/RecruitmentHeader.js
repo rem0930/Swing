@@ -28,7 +28,7 @@ const RecruitmentHeader = ({ team, title, profilePhoto }) => {
       >
         <Flex alignItems="left" direction="column">
           <Heading size="lg" textAlign="left" mb={4} isTruncated>{title}</Heading>
-          <Flex alignItems="left" justifyContent="center" direction={{ base: "column", md: "row" }}>
+          <Flex alignItems="left" justifyContent="left" direction={{ base: "column", md: "row" }}>
             <NextLink href={`/teams/${team.id}`} passHref>
               <Link>
                 {profilePhoto ? (
