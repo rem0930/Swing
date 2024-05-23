@@ -7,9 +7,6 @@ Rails.application.routes.draw do
   delete "/logout", to: "sessions#logout"
   # current_user エンドポイント作成
   get    "/current_user", to: "users#current"
-  # get    "/current_team", to: "current_team#show"
-  # get    "/current_team_member", to: "current_team_member#show"
-
   # 自分のプロフィールページ用のエンドポイント
   get    '/profile', to: 'users#profile'
   # 自分のテーム情報を取得するエンドポイント
@@ -29,6 +26,9 @@ Rails.application.routes.draw do
     collection do
       get    '/by_team/:team_id', to: 'recruitments#by_team'
     end
+  end
+  resources :recruitments, only: [:index, :create] do
+    resources :applications, only: [:create]
   end
   resources :teams, only: [:show]
 end

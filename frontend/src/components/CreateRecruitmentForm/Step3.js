@@ -25,10 +25,15 @@ import { templateTexts } from '../../components/CreateRecruitmentForm/Recruitmen
 
 const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isTextareaOpen,
+    onOpen: onTextareaOpen,
+    onClose: onTextareaClose,
+  } = useDisclosure();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [previewContent, setPreviewContent] = useState("");
+  const [textareaContent, setTextareaContent] = useState(formData.description || "");
 
-  // useEffectを最適化し、selectedTemplateが変更された場合のみプレビューを更新
   useEffect(() => {
     if (selectedTemplate) {
       const newDescription = templateTexts[selectedTemplate];
@@ -36,13 +41,22 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
     }
   }, [selectedTemplate]);
 
-  // handleTemplateSelectを削除し、useEffect内でプレビューを更新
   const handleUseTemplate = useCallback(() => {
     if (previewContent) {
       handleChange({ target: { name: 'description', value: previewContent } });
+      setTextareaContent(previewContent);
       onClose();
     }
   }, [previewContent, handleChange, onClose]);
+
+  const handleTextareaSave = () => {
+    handleChange({ target: { name: 'description', value: textareaContent } });
+    onTextareaClose();
+  };
+
+  useEffect(() => {
+    setTextareaContent(formData.description);
+  }, [formData.description]);
 
   return (
     <Container maxW="container.lg" height="50vh" p={4}>
@@ -56,8 +70,9 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
         <Textarea
           placeholder="募集内容詳細"
           name="description"
-          value={formData.description}
-          onChange={handleChange}
+          value={textareaContent}
+          onClick={onTextareaOpen}
+          readOnly
           flex="1"
         />
         <HStack justify="center" spacing={4}>
@@ -88,7 +103,27 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
             </ModalBody>
             <ModalFooter>
               <Button variant="ghost" onClick={onClose}>キャンセル</Button>
-              <Button colorScheme="teal" onClick={handleUseTemplate} ml={3}>テンプレートを使用</Button>
+              <Button colorScheme="teal" onClick={handleUseTemplate} ml={3}>このテンプレートを使用</Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isTextareaOpen} onClose={onTextareaClose} size="xl" isCentered>
+          <ModalOverlay />
+          <ModalContent mt="2" mb="2" ml="6" mr="6">
+            <ModalHeader>募集内容詳細を入力</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Textarea
+                placeholder="募集内容詳細"
+                value={textareaContent}
+                onChange={(e) => setTextareaContent(e.target.value)}
+                height="360px"
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button variant="ghost" onClick={onTextareaClose}>キャンセル</Button>
+              <Button colorScheme="teal" onClick={handleTextareaSave} ml={3}>保存</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>

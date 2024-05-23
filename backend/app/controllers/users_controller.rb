@@ -24,14 +24,14 @@ class UsersController < ApplicationController
     render_current_user
   end
 
-    # GET /has_team
-    def has_team
-      if current_user.team
-        render json: { has_team: true, team_id: current_user.team.id }
-      else
-        render json: { has_team: false }
-      end
+  # GET /has_team
+  def has_team
+    if current_user.team
+      render json: { has_team: true, team_id: current_user.team.id }
+    else
+      render json: { has_team: false }
     end
+  end
 
   # PUT /users/:id
   def update

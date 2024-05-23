@@ -25,21 +25,21 @@ const Header = () => {
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {user && (
               <>
-                <NextLink href="http://localhost:8000//notifications">
+                <NextLink href="http://localhost:8000/notifications">
                   <IconButton
                     icon={<FiBell />}
                     aria-label="Notifications"
                     variant="ghost"
                   />
                 </NextLink>
-                <NextLink href="http://localhost:8000//teams/manage">
+                <NextLink href="http://localhost:8000/teams/manage">
                   <IconButton
                     icon={<FiUsers />}
                     aria-label="Manage Team"
                     variant="ghost"
                   />
                 </NextLink>
-                <NextLink href="http://localhost:8000//messages">
+                <NextLink href="http://localhost:8000/messages">
                   <IconButton
                     icon={<FiMessageCircle />}
                     aria-label="Messages"
@@ -89,10 +89,10 @@ const Header = () => {
             </Menu>
           ) : (
             <>
-              <NextLink href="http://localhost:8000//login">
+              <NextLink href="http://localhost:8000/login">
                 <Button mr={4}>ログイン</Button>
               </NextLink>
-              <NextLink href="http://localhost:8000//signup">
+              <NextLink href="http://localhost:8000/signup">
                 <Button colorScheme={"teal"}>会員登録</Button>
               </NextLink>
             </>
@@ -104,9 +104,9 @@ const Header = () => {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
               <>
-                <NextLink href="http://localhost:8000//notifications">お知らせ</NextLink>
-                <NextLink href="http://localhost:8000//teams/manage">チームを管理する</NextLink>
-                <NextLink href="http://localhost:8000//messages">メッセージ</NextLink>
+                <NextLink href="http://localhost:8000/notifications">お知らせ</NextLink>
+                <NextLink href="http://localhost:8000/teams/manage">チームを管理する</NextLink>
+                <NextLink href="http://localhost:8000/messages">メッセージ</NextLink>
               </>
           </Stack>
         </Box>

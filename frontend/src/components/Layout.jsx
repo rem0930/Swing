@@ -5,9 +5,9 @@ import { UserProvider } from '../context/UserContext';
 const Layout = ({ children }) => {
   return (
     <UserProvider>
-      <Box>
+      <Box display="flex" flexDirection="column" minHeight="100vh">
         <Header />
-        <Box pt="80px">
+        <Box flex="1" pt="80px">
           {children}
         </Box>
       </Box>

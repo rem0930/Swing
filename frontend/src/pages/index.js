@@ -6,6 +6,7 @@ import RecruitmentCards from '../components/Main/RecruitmentCards';
 import CustomCalendar from '../components/CustomCalendar';
 import EditFilterButton from '../components/Main/EditFilterButton';
 import Layout from '../components/Layout'; // Layoutをインポート
+import CreateRecruitmentButton from '../components/CreateRecruitmentButton';
 import { format } from 'date-fns';
 
 const indexPage = () => {
@@ -20,12 +21,7 @@ const indexPage = () => {
     const token = localStorage.getItem('token');
     const fetchRecruitments = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/recruitments',{
-          headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-          },
-      });
+        const response = await axios.get('http://localhost:3000/recruitments');
         setRecruitments(response.data);
         setFilteredRecruitments(response.data);
         console.log(response.data);
@@ -76,6 +72,7 @@ const indexPage = () => {
         <Box display={{ base: "block", md: "none" }} position="fixed" bottom="20px" left="50%" transform="translateX(-50%)">
           <EditFilterButton onClick={() => { /* カレンダー表示のためのロジックをここに記載 */ }} />
         </Box>
+        <CreateRecruitmentButton />
       </Box>
     </Layout>
   );

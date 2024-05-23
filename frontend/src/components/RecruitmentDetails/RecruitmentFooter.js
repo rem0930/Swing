@@ -1,7 +1,7 @@
 import { Box, Button, Flex, HStack, Icon, Text } from '@chakra-ui/react';
 import { FiCalendar, FiHeart } from 'react-icons/fi';
 
-const RecruitmentFooter = ({ eventDate, onApply }) => {
+const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam }) => {
   return (
     <Flex
       as="footer"
@@ -20,9 +20,15 @@ const RecruitmentFooter = ({ eventDate, onApply }) => {
         <Icon as={FiCalendar} />
         <Text>Event Date: {new Date(eventDate).toLocaleDateString()}</Text>
       </HStack>
-      <Button colorScheme="teal" size="lg" onClick={onApply}>
-        応募する
+      {isOwnTeam ? (
+        <Button colorScheme="teal" size="lg" onClick={onApply}>
+          応募を締め切る
       </Button>
+      ) : (
+        <Button colorScheme="teal" size="lg" onClick={onApply}>
+          応募する
+        </Button>
+      )}
       <Icon as={FiHeart} boxSize={6} />
     </Flex>
   );

@@ -40,7 +40,7 @@ const RecruitmentCard = ({ recruitment }) => {
           </ChakraLink>
         </NextLink>
 
-        <Box mt="2">
+        <Box mt="2" noOfLines={2}>
           {recruitment.description}
         </Box>
 
