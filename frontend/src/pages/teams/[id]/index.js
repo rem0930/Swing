@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import TeamProfile from '../../../components/Team/TeamProfile';
 import TeamRecruitments from '../../../components/Team/TeamRecruitments';
 import Layout from '../../../components/Layout';
+import CreateRecruitmentButton from '../../../components/CreateRecruitmentButton';
 
 const TeamDetail = () => {
   const router = useRouter();
@@ -61,6 +62,7 @@ const TeamDetail = () => {
           </Box>
         </Flex>
       </Container>
+      <CreateRecruitmentButton />
     </Layout>
   );
 };

@@ -14,13 +14,34 @@ const RecruitmentDetail = () => {
   const [team, setTeam] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isOwnTeam, setIsOwnTeam] = useState(false);
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:3000/recruitments/${id}`)
+      const token = localStorage.getItem('token');
+      axios.get(`http://localhost:3000/recruitments/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then(response => {
-          setRecruitment(response.data);
-          return axios.get(`http://localhost:3000/teams/${response.data.team_id}`);
+          setRecruitment(response.data.recruitment);
+          setIsOwnTeam(response.data.is_user_team);
+          return response.data.recruitment.team_id;
+        })
+        .then(teamId => {
+          if (teamId) {
+            const token = localStorage.getItem('token');
+            return axios.get(`http://localhost:3000/teams/${teamId}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          } else {
+            throw new Error('Team ID is undefined');
+          }
         })
         .then(response => {
           setTeam(response.data);
@@ -85,7 +106,7 @@ const RecruitmentDetail = () => {
           </Box>
         </Container>
         <Box position="fixed" bottom="0" width="100%" bg="white" boxShadow="sm" py={2}>
-          <RecruitmentFooter eventDate={recruitment.event_date} onApply={() => console.log('Applying...')} />
+          <RecruitmentFooter eventDate={recruitment.event_date} onApply={() => console.log('Applying...')} isOwnTeam={isOwnTeam} />
         </Box>
       </Box>
     </Layout>

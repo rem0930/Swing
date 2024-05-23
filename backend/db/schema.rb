@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_20_030117) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_23_065641) do
+  create_table "applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "recruitment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["recruitment_id"], name: "index_applications_on_recruitment_id"
+    t.index ["user_id"], name: "index_applications_on_user_id"
+  end
+
   create_table "locations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.decimal "latitude", precision: 10, scale: 8, null: false
     t.decimal "longitude", precision: 11, scale: 8, null: false
@@ -105,6 +114,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_20_030117) do
     t.index ["team_id"], name: "index_users_on_team_id"
   end
 
+  add_foreign_key "applications", "recruitments"
+  add_foreign_key "applications", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "recruitments", "locations"

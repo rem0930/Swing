@@ -57,7 +57,7 @@ const RecruitmentCards = ({ recruitments }) => {
               overflow="hidden"
               boxShadow="lg"
               bg="white"
-              mb={2} // マージンボトムを減らして間隔を詰める
+              mb={2}
               width="100%"
             >
               <Box p="6">
@@ -83,7 +83,7 @@ const RecruitmentCards = ({ recruitments }) => {
                   </ChakraLink>
                 </NextLink>
 
-                <Box mt="2">
+                <Box mt="2" noOfLines={1}>
                   {recruitment.description}
                 </Box>
 
