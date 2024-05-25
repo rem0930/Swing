@@ -1,10 +1,9 @@
-import { Box, Flex, Heading, Image, Text, Avatar, useBreakpointValue, Link } from '@chakra-ui/react';
+import { Box, Flex, Heading, Image, Text, Avatar, Link } from '@chakra-ui/react';
 import NextLink from 'next/link';
 import { useEffect, useState } from 'react';
 
 const RecruitmentHeader = ({ team, title, profilePhoto }) => {
   const [scrollY, setScrollY] = useState(0);
-  const isMobile = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,9 +27,9 @@ const RecruitmentHeader = ({ team, title, profilePhoto }) => {
       >
         <Flex alignItems="left" direction="column">
           <Heading size="lg" textAlign="left" mb={4} isTruncated>{title}</Heading>
-          <Flex alignItems="left" justifyContent="left" direction={{ base: "column", md: "row" }}>
-            <NextLink href={`/teams/${team.id}`} passHref>
-              <Link>
+          <NextLink href={`/teams/${team.id}`} passHref>
+            <Link>
+              <Flex alignItems="center" justifyContent="left">
                 {profilePhoto ? (
                   <Image
                     borderRadius="full"
@@ -48,18 +47,15 @@ const RecruitmentHeader = ({ team, title, profilePhoto }) => {
                     mb={{ base: 2, md: 0 }}
                   />
                 )}
-              </Link>
-            </NextLink>
-            <Box textAlign={{ base: "center", md: "left" }}>
-              <Text fontSize="sm" color="gray.500">Hosted by</Text>
-              <Text fontSize="md" fontWeight="bold">{team.name}</Text>
-            </Box>
-          </Flex>
+                <Box>
+                  <Text fontSize="sm" color="gray.500">Hosted by</Text>
+                  <Text fontSize="md" fontWeight="bold">{team.name}</Text>
+                </Box>
+              </Flex>
+            </Link>
+          </NextLink>
         </Flex>
       </Box>
-      {!isMobile && (
-        <Box height="200px" bgSize="cover" bgPosition="center" />
-      )}
     </Box>
   );
 };

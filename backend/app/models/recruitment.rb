@@ -2,6 +2,7 @@
 
 class Recruitment < ApplicationRecord
   has_many :applications, dependent: :destroy
+  has_many :favorites, dependent: :destroy
   belongs_to :location
   belongs_to :team
 

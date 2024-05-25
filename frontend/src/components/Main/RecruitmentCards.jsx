@@ -1,12 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Box, Flex, Text, Badge, HStack, Icon, Link as ChakraLink, Select, Stack } from '@chakra-ui/react';
+import { Box, Flex, Text, Badge, HStack, Icon, Link as ChakraLink, Select, Stack, Checkbox } from '@chakra-ui/react';
 import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 import NextLink from 'next/link';
 
-const RecruitmentCards = ({ recruitments }) => {
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [filteredRecruitments, setFilteredRecruitments] = useState(recruitments);
-
+const RecruitmentCards = ({ recruitments, selectedRole, setSelectedRole, showOnlyOpen, setShowOnlyOpen, isMobileView }) => {
   const roleMapping = {
     member: 'メンバー募集',
     opponent: '対戦相手の募集',
@@ -20,32 +16,39 @@ const RecruitmentCards = ({ recruitments }) => {
 
   const statusColorScheme = {
     open: 'teal',
-    closed: 'glay'
+    closed: 'red'
   };
-
-  useEffect(() => {
-    if (selectedRole === 'all') {
-      setFilteredRecruitments(recruitments);
-    } else {
-      setFilteredRecruitments(recruitments.filter(recruitment => recruitment.role === selectedRole));
-    }
-  }, [selectedRole, recruitments]);
 
   return (
     <Box width="100%">
-      <Select
-        value={selectedRole}
-        onChange={(e) => setSelectedRole(e.target.value)}
-        mb={4}
-        width="100%"
-      >
-        <option value="all">全ての種類</option>
-        <option value="member">メンバー募集</option>
-        <option value="opponent">対戦相手の募集</option>
-        <option value="helper">助っ人募集</option>
-      </Select>
+      <Flex mb={4} alignItems="center">
+        {!isMobileView && (
+          <Box flex="3">
+            <Select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              width="90%"
+            >
+              <option value="all">全ての種類</option>
+              <option value="member">メンバー募集</option>
+              <option value="opponent">対戦相手の募集</option>
+              <option value="helper">助っ人募集</option>
+            </Select>
+          </Box>
+        )}
+      <Box flex="1">
+          <Checkbox
+            isChecked={showOnlyOpen}
+            onChange={(e) => setShowOnlyOpen(e.target.checked)}
+            colorScheme="teal"
+            bg="white"
+          >
+            募集中のみ表示
+          </Checkbox>
+        </Box>
+      </Flex>
       <Stack spacing={4} width="100%">
-        {filteredRecruitments.map(recruitment => {
+        {recruitments.map(recruitment => {
           const formattedEventDate = new Date(recruitment.event_date).toLocaleDateString();
           const formattedDeadline = new Date(recruitment.deadline).toLocaleDateString();
 
