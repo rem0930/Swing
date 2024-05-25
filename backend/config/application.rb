@@ -17,7 +17,7 @@ module App
     config.i18n.default_locale = :ja
 
     # ロケールファイルのパスを追加
-    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}").to_s]
     # MySQLのENUM型を有効にする
     # config.active_record.database_defaults = { enum: false }
     # Please, add to the `ignore` list any other `lib` subdirectories that do

@@ -2,8 +2,8 @@
 
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :update, :destroy]
-  before_action :authorized_user, only: [:update, :destroy]
-  before_action :authenticate_user, only: [:profile, :current, :has_team]
+  before_action :authorized_user, only: [:destroy]
+  before_action :authenticate_user, only: [:update, :profile, :current, :has_team]
 
   # GET /users/:id
   def show
@@ -36,7 +36,7 @@ class UsersController < ApplicationController
   # PUT /users/:id
   def update
     if @user.update(user_params)
-      render json: { message: "User updated successfully" }, status: :ok
+      render json: @user, status: :ok
     else
       Rails.logger.debug(@user.errors.full_messages) # エラーメッセージをログに出力
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
@@ -52,8 +52,6 @@ class UsersController < ApplicationController
   private
     def set_user
       @user = User.find(params[:id])
-    rescue ActiveRecord::RecordNotFound
-      render_user_not_found
     end
 
     def user_params
@@ -64,9 +62,5 @@ class UsersController < ApplicationController
       unless @user == @current_user
         render json: { error: "Not authorized to access this resource" }, status: :unauthorized
       end
-    end
-
-    def render_user_not_found
-      render json: { error: "User not found" }, status: :not_found
     end
 end

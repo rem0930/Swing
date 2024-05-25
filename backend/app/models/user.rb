@@ -11,6 +11,8 @@ class User < ApplicationRecord
 
   # Associations
   has_one :team, dependent: :destroy
+  has_many :applications, dependent: :destroy
+  has_many :favorites, dependent: :destroy
 
   # JWTトークン生成メソッド
   def generate_token

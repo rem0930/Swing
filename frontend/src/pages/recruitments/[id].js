@@ -1,5 +1,5 @@
-import { Box,  Text, HStack, Icon, Container, Spinner } from '@chakra-ui/react';
-import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
+import { Box, Text, HStack, Icon, Container, Spinner, useToast } from '@chakra-ui/react';
+import { FiMapPin, FiClock } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHeader';
@@ -15,6 +15,8 @@ const RecruitmentDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOwnTeam, setIsOwnTeam] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     if (id) {
@@ -45,6 +47,16 @@ const RecruitmentDetail = () => {
         })
         .then(response => {
           setTeam(response.data);
+          const token = localStorage.getItem('token');
+          return axios.get(`http://localhost:3000/applications/check?recruitment_id=${id}`, {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        })
+        .then(response => {
+          setIsApplied(response.data.is_applied);
           setLoading(false);
         })
         .catch(error => {
@@ -54,6 +66,62 @@ const RecruitmentDetail = () => {
         });
     }
   }, [id]);
+
+  const handleApply = () => {
+    const token = localStorage.getItem('token');
+    axios.post(`http://localhost:3000/applications`, { recruitment_id: id }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(() => {
+      setIsApplied(true);
+      toast({
+        title: '応募が完了しました！',
+        status:'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    })
+    .catch(error => {
+      console.error("There was an error applying for the recruitment!", error);
+      toast({
+        title: '応募中にエラーが発生しました。',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    });
+  };
+
+  const handleCloseRecruitment = () => {
+    const token = localStorage.getItem('token');
+    axios.patch(`http://localhost:3000/recruitments/${id}/close`, {}, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    .then(response => {
+      setRecruitment(response.data);
+      toast({
+        title: '募集を締め切りました。',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    })
+    .catch(error => {
+      console.error("There was an error closing the recruitment!", error);
+      toast({
+        title: '募集を締め切る際にエラーが発生しました。',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    });
+  };
 
   if (loading) {
     return (
@@ -77,7 +145,7 @@ const RecruitmentDetail = () => {
 
   return (
     <Layout>
-      <Box position="relative" minHeight="100vh">
+      <Box position="relative" minHeight="100vh" pb="80px" bg="gray.50"> {/* 背景色を少し暗く */}
         <Box position="sticky" top="0" zIndex="999" bg="white" boxShadow="sm">
           <RecruitmentHeader 
             team={team} 
@@ -85,7 +153,7 @@ const RecruitmentDetail = () => {
             profilePhoto={team.profile_photo_url || null}
           />
         </Box>
-        <Container maxW="container.lg" py={8} pb="80px">
+        <Container maxW="container.lg" py={8} bg="gray.50"> {/* 背景色を少し暗く */}
           <Box mt={8}>
             <Text mb={4}>{recruitment.description}</Text>
             
@@ -95,19 +163,20 @@ const RecruitmentDetail = () => {
             </HStack>
             
             <HStack mt="3" spacing="4">
-              <Icon as={FiCalendar} />
-              <Text>イベント日: {new Date(recruitment.event_date).toLocaleDateString()}</Text>
-            </HStack>
-            
-            <HStack mt="3" spacing="4">
               <Icon as={FiClock} />
               <Text>締切日: {new Date(recruitment.deadline).toLocaleDateString()}</Text>
             </HStack>
           </Box>
         </Container>
-        <Box position="fixed" bottom="0" width="100%" bg="white" boxShadow="sm" py={2}>
-          <RecruitmentFooter eventDate={recruitment.event_date} onApply={() => console.log('Applying...')} isOwnTeam={isOwnTeam} />
-        </Box>
+        <RecruitmentFooter 
+          eventDate={recruitment.event_date} 
+          onApply={isOwnTeam ? handleCloseRecruitment : handleApply} 
+          isOwnTeam={isOwnTeam}
+          isApplied={isApplied}
+          status={recruitment.status}
+          title={recruitment.title}
+          recruitmentId={recruitment.id}
+        />
       </Box>
     </Layout>
   );

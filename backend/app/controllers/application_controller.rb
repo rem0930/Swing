@@ -49,9 +49,7 @@ class ApplicationController < ActionController::API
       @current_user = User.find(user_id)
     end
 
-    def current_user
-      @current_user
-    end
+    attr_reader :current_user
 
     # 無効なトークンエラーをレンダリングする
     def render_invalid_token(message = "無効または期限切れのトークンです")

@@ -80,7 +80,7 @@ const Header = () => {
                 )}
               </MenuButton>
               <MenuList>
-                <NextLink href="http://localhost:8000/profile/MyProfilePage">
+                <NextLink href="http://localhost:8000/ProfilePage">
                   <MenuItem>プロフィール</MenuItem>
                 </NextLink>
                 <MenuDivider />
