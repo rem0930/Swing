@@ -7,10 +7,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "4306:3306"
+    expose:
+      - "3306"
     volumes:
       - "./docker/db:/var/lib/mysql"
+    networks:
+      - swing-net
 
   # フロントエンドアプリケーションサービス
   frontend:
@@ -18,8 +20,10 @@ services:
       context: ./frontend/
     volumes:
       - ./frontend:/usr/src/app
-    ports:
-      - '8000:8000'
+    expose:
+      - '8000'
+    networks:
+      - swing-net
 
   # バックエンドアプリケーションサービス
   backend:
@@ -27,8 +31,8 @@ services:
       context: ./backend
     volumes:
       - ./backend:/app # ソースコードをコンテナにマウント
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000"
     depends_on:
       - db # dbサービスが起動後にbackendを起動
       - redis # redisサービスが起動後にbackendを起動
@@ -37,11 +41,31 @@ services:
     env_file:
       - .env
     command: bash -c "cron && rails server -b '0.0.0.0' -p 3000"
+    networks:
+      - swing-net
 
   # Redisキャッシュサービス
   redis:
     image: "redis:latest"
-    ports:
-      - "6379:6379"
+    expose:
+      - "6379"
     volumes:
       - "./docker/redis/data:/data"
+    networks:
+      - swing-net
+
+  # networking
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - swing-net
+
+networks:
+  swing-net:

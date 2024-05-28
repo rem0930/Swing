@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Box, Text, Button, Flex, useToast } from '@chakra-ui/react';
 import Link from 'next/link';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function TeamsPage() {
     const [teams, setTeams] = useState([]);
@@ -11,7 +12,7 @@ function TeamsPage() {
         const fetchTeams = async () => {
             try {
                 // const token = localStorage.getItem('token');
-                const response = await axios.get('http://localhost:3000/teams', {
+                const response = await axios.get(`${apiUrl}/teams`, {
                     headers: {
                         'Content-Type': 'application/json',
                         // 'Authorization': `Bearer ${token}`  // トークンを添付

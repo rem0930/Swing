@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Spinner, Box } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const ManagePage = () => {
   const router = useRouter();
@@ -9,7 +10,7 @@ const ManagePage = () => {
   useEffect(() => {
     const checkTeam = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/has_team', {
+        const response = await axios.get(`${apiUrl}/has_team`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('token')}`,

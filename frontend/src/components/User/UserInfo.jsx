@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Input, Avatar, Text, Stack, VStack, Heading, useToast } from '@chakra-ui/react';
 import { useUser } from '../../context/UserContext';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const UserInfo = () => {
   const { user, setUser } = useUser();
@@ -28,7 +29,7 @@ const UserInfo = () => {
         }
       });
 
-      const response = await axios.put(`http://localhost:3000/users/${user.id}`, { user: updatedData }, {
+      const response = await axios.put(`${apiUrl}/users/${user.id}`, { user: updatedData }, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

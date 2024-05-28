@@ -7,6 +7,7 @@ import EditFilterButton from '../components/Main/EditFilterButton';
 import CreateRecruitmentButton from '../components/CreateRecruitmentButton';
 import Layout from '../components/Layout';
 import { format } from 'date-fns';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const IndexPage = () => {
   const [recruitments, setRecruitments] = useState([]);
@@ -22,7 +23,7 @@ const IndexPage = () => {
   useEffect(() => {
     const fetchRecruitments = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/recruitments');
+        const response = await axios.get(`${apiUrl}/recruitments`);
         setRecruitments(response.data);
         setFilteredRecruitments(response.data);
       } catch (error) {

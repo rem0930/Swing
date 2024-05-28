@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function CreateTeamForm() {
   const [name, setName] = useState('');
@@ -39,7 +40,7 @@ function CreateTeamForm() {
 
     try {
       const response = await axios.post(
-        'http://localhost:3000/teams',
+        `${apiUrl}/teams`,
         teamData,
         {
           headers: {

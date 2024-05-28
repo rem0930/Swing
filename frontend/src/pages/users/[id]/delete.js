@@ -11,6 +11,7 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const DeleteUser = ({ id }) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -20,7 +21,7 @@ const DeleteUser = ({ id }) => {
 
     const deleteUser = async () => {
         try {
-            const response = await fetch(`http://localhost:3000/users/${id}`, {
+            const response = await fetch(`${apiUrl}/users/${id}`, {
                 method: 'DELETE',
                 // credentials: 'include' // cookies
             });

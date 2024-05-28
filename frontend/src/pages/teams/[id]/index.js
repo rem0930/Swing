@@ -6,6 +6,7 @@ import TeamProfile from '../../../components/Team/TeamProfile';
 import TeamRecruitments from '../../../components/Team/TeamRecruitments';
 import Layout from '../../../components/Layout';
 import CreateRecruitmentButton from '../../../components/CreateRecruitmentButton';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const TeamDetail = () => {
   const router = useRouter();
@@ -18,10 +19,10 @@ const TeamDetail = () => {
     if (id) {
       const fetchTeamData = async () => {
         try {
-          const teamResponse = await axios.get(`http://localhost:3000/teams/${id}`);
+          const teamResponse = await axios.get(`${apiUrl}/teams/${id}`);
           setTeam(teamResponse.data);
 
-          const recruitmentsResponse = await axios.get(`http://localhost:3000/recruitments/by_team/${id}`);
+          const recruitmentsResponse = await axios.get(`${apiUrl}/recruitments/by_team/${id}`);
           setRecruitments(recruitmentsResponse.data);
         } catch (error) {
           console.error("チームまたは募集情報の取得中にエラーが発生しました！", error);

@@ -3,6 +3,7 @@ import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NextLink from 'next/link';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SavedJobs = () => {
   const [savedJobs, setSavedJobs] = useState([]);
@@ -29,7 +30,7 @@ const SavedJobs = () => {
     const fetchSavedJobs = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/favorites', {
+        const response = await axios.get(`${apiUrl}/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

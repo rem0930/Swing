@@ -14,6 +14,7 @@ import {
   Spinner,
   useToast,
 } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const MyProfilePage = () => {
   const [user, setUser] = useState(null);
@@ -32,7 +33,7 @@ const MyProfilePage = () => {
   const fetchUser = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('http://localhost:3000/profile', {
+      const response = await axios.get(`${apiUrl}/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -63,7 +64,7 @@ const MyProfilePage = () => {
         }
       });
 
-      const response = await axios.put(`/api/users/${user.id}`, updatedData, {
+      const response = await axios.put(`${apiUrl}/users/${user.id}`, updatedData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

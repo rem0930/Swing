@@ -12,6 +12,7 @@ import {
     useToast,
     Heading
 } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function ProfileSetup() {
     const [profileImage, setProfileImage] = useState(null);
@@ -37,7 +38,7 @@ function ProfileSetup() {
         formData.append('bio', bio);
 
         try {
-            const response = await fetch('http://localhost:3000/signup', {
+            const response = await fetch(`${apiUrl}/signup`, {
                 method: 'POST',
                 body: formData,
             });

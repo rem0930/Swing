@@ -9,6 +9,7 @@ import Step3 from '../../../../components/CreateRecruitmentForm/Step3';
 import Step4 from '../../../../components/CreateRecruitmentForm/Step4';
 import Step5 from '../../../../components/CreateRecruitmentForm/Step5';
 import Layout from '../../../../components/Layout';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const CreateRecruitmentForm = () => {
   const [step, setStep] = useState(1);
@@ -29,7 +30,7 @@ const CreateRecruitmentForm = () => {
     const fetchTeamData = async () => {
       if (id) {
         try {
-          const response = await axios.get(`http://localhost:3000/teams/${id}`);
+          const response = await axios.get(`${apiUrl}/teams/${id}`);
           setTeam(response.data);
         } catch (error) {
           console.error("There was an error fetching the team data!", error);
@@ -51,7 +52,7 @@ const CreateRecruitmentForm = () => {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`http://localhost:3000/teams/${id}/recruitments`, formData,{
+      const response = await axios.post(`${apiUrl}/teams/${id}/recruitments`, formData,{
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,

@@ -3,13 +3,14 @@ import { Box, IconButton, Tooltip } from "@chakra-ui/react";
 import { FiFeather } from "react-icons/fi";
 import { useRouter } from "next/router";
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const CreateRecruitmentButton = () => {
   const router = useRouter();
 
   const handleClick = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/has_team', {
+      const response = await axios.get(`${apiUrl}/has_team`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
