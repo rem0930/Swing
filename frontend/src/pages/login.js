@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Box, Button, VStack, Text, useToast, Center } from '@chakra-ui/react';
 import EmailInput from '../components/Input/EmailInput';
 import PasswordInput from '../components/Input/PasswordInput';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function LoginPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -20,7 +21,7 @@ function LoginPage() {
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/sessions',
+            const response = await axios.post(`${apiUrl}/sessions`,
             { email: formData.email, password: formData.password },
             {
                 headers: { 'Content-Type': 'application/json' },

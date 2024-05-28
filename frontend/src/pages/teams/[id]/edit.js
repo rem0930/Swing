@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Box, Button, FormControl, FormLabel, Input, useToast } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function EditTeam() {
     const [team, setTeam] = useState({ name: '', details: '' });
@@ -12,7 +13,7 @@ function EditTeam() {
     useEffect(() => {
         // チームデータを取得
         const fetchTeam = async () => {
-            const res = await fetch(`http://localhost:3000/teams/${id}`);
+            const res = await fetch(`${apiUrl}/teams/${id}`);
             const data = await res.json();
             setTeam(data);
         };
@@ -30,7 +31,7 @@ function EditTeam() {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/teams/${id}`, {
+            const res = await fetch(`${apiUrl}/teams/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(team),

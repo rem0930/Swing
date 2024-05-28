@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const UserContext = createContext();
 
@@ -10,7 +11,7 @@ export const UserProvider = ({ children }) => {
     const fetchUserData = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/profile', {
+        const response = await axios.get(`${apiUrl}/profile`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

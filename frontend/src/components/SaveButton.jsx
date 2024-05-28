@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IconButton, useToast } from '@chakra-ui/react';
 import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SaveButton = ({ recruitmentId }) => {
   const [isSaved, setIsSaved] = useState(false);
@@ -11,7 +12,7 @@ const SaveButton = ({ recruitmentId }) => {
     const checkSavedStatus = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get(`http://localhost:3000/favorites`, {
+        const response = await axios.get(`${apiUrl}/favorites`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -30,7 +31,7 @@ const SaveButton = ({ recruitmentId }) => {
     const token = localStorage.getItem('token');
     try {
       if (isSaved) {
-        await axios.delete(`http://localhost:3000/favorites/${recruitmentId}`, {
+        await axios.delete(`${apiUrl}/favorites/${recruitmentId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -44,7 +45,7 @@ const SaveButton = ({ recruitmentId }) => {
         });
       } else {
         await axios.post(
-          'http://localhost:3000/favorites',
+          '${apiUrl}/favorites',
           { recruitment_id: recruitmentId },
           {
             headers: {

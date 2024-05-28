@@ -12,6 +12,7 @@ import {
 import EmailInput from '../components/Input/EmailInput';
 import PasswordInput from '../components/Input/PasswordInput';
 import NameInput from '../components/Input/NameInput';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -33,7 +34,7 @@ export default function SignupPage() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:3000/registrations',
+        `${apiUrl}/registrations`,
         { user: { user_name: formData.user_name, email: formData.email, password: formData.password } },
         {
           headers: { 'Content-Type': 'application/json' },

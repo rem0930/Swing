@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function useUserData(id) {
     const [userData, setUserData] = useState({ name: '', email: '' });
@@ -12,7 +13,7 @@ function useUserData(id) {
         if (!id) return;
 
         const token = localStorage.getItem('token'); // トークンを取得
-        axios.get(`http://localhost:3000/users/${id}`, {
+        axios.get(`${apiUrl}/users/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'

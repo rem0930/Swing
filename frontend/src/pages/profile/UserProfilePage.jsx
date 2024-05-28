@@ -9,6 +9,7 @@ import {
   Heading,
   Spinner,
 } from '@chakra-ui/react';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const UserProfilePage = () => {
   const router = useRouter();
@@ -23,7 +24,7 @@ const UserProfilePage = () => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/users/${id}`);
+      const response = await axios.get(`${apiUrl}/users/${id}`);
       setUser(response.data);
     } catch (error) {
       console.error('Error fetching user data:', error);

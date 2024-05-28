@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Text, Button, VStack, useToast, Input, Center, Icon, Img } from '@chakra-ui/react';
 import { useRouter } from 'next/router';  // Next.jsのルーターフックをインポート
 import { FiCamera } from 'react-icons/fi';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function ChooseProfilePicture() {
     const [image, setImage] = useState(null);
@@ -30,7 +31,7 @@ function ChooseProfilePicture() {
         formData.append('profile_photo', imageFile); // 'profile_photo' キーでファイルを追加
 
         try {
-            const response = await fetch('http://localhost:3000/teams', {
+            const response = await fetch(`${apiUrl}/teams`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(teamData),

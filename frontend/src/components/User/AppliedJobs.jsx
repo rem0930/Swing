@@ -3,6 +3,7 @@ import { FiMapPin, FiCalendar, FiClock } from 'react-icons/fi';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import NextLink from 'next/link';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const AppliedJobs = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -29,7 +30,7 @@ const AppliedJobs = () => {
     const fetchAppliedJobs = async () => {
       const token = localStorage.getItem('token');
       try {
-        const response = await axios.get('http://localhost:3000/applications', {
+        const response = await axios.get(`${apiUrl}/applications`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -6,6 +6,7 @@ import {
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import CreateTeamForm from '../../components/Team/CreateTeamForm';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function CreateTeam() {
     const [name, setName] = useState('');
@@ -39,7 +40,7 @@ function CreateTeam() {
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/teams',
+                `${apiUrl}/teams`,
                 teamData,
                 {
                     headers: {

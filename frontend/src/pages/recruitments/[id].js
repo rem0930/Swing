@@ -6,6 +6,7 @@ import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHe
 import RecruitmentFooter from '../../components/RecruitmentDetails/RecruitmentFooter';
 import Layout from '../../components/Layout.jsx';
 import axios from 'axios';
+const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const RecruitmentDetail = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const RecruitmentDetail = () => {
   useEffect(() => {
     if (id) {
       const token = localStorage.getItem('token');
-      axios.get(`http://localhost:3000/recruitments/${id}`, {
+      axios.get(`${apiUrl}/recruitments/${id}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
@@ -35,7 +36,7 @@ const RecruitmentDetail = () => {
         .then(teamId => {
           if (teamId) {
             const token = localStorage.getItem('token');
-            return axios.get(`http://localhost:3000/teams/${teamId}`, {
+            return axios.get(`${apiUrl}/teams/${teamId}`, {
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
@@ -48,7 +49,7 @@ const RecruitmentDetail = () => {
         .then(response => {
           setTeam(response.data);
           const token = localStorage.getItem('token');
-          return axios.get(`http://localhost:3000/applications/check?recruitment_id=${id}`, {
+          return axios.get(`${apiUrl}/applications/check?recruitment_id=${id}`, {
             headers: {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${token}`,
@@ -69,7 +70,7 @@ const RecruitmentDetail = () => {
 
   const handleApply = () => {
     const token = localStorage.getItem('token');
-    axios.post(`http://localhost:3000/applications`, { recruitment_id: id }, {
+    axios.post(`${apiUrl}/applications`, { recruitment_id: id }, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -97,7 +98,7 @@ const RecruitmentDetail = () => {
 
   const handleCloseRecruitment = () => {
     const token = localStorage.getItem('token');
-    axios.patch(`http://localhost:3000/recruitments/${id}/close`, {}, {
+    axios.patch(`${apiUrl}/recruitments/${id}/close`, {}, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
