@@ -1,8 +1,29 @@
-import { Box, Flex, IconButton, useDisclosure, useColorModeValue, HStack, InputGroup, InputLeftElement, InputRightElement, Input, Avatar, Button, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  useDisclosure,
+  useColorModeValue,
+  HStack,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Input,
+  Avatar,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  Stack
+} from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { FiMapPin, FiBell, FiMessageCircle, FiUsers } from "react-icons/fi";
 import NextLink from 'next/link';
 import { useUser } from '../../context/UserContext';
+
+const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,21 +46,21 @@ const Header = () => {
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {user && (
               <>
-                <NextLink href="http://localhost:8000/notifications">
+                <NextLink href={`${frontendUrl}/notifications`}>
                   <IconButton
                     icon={<FiBell />}
                     aria-label="Notifications"
                     variant="ghost"
                   />
                 </NextLink>
-                <NextLink href="http://localhost:8000/teams/manage">
+                <NextLink href={`${frontendUrl}/teams/manage`}>
                   <IconButton
                     icon={<FiUsers />}
                     aria-label="Manage Team"
                     variant="ghost"
                   />
                 </NextLink>
-                <NextLink href="http://localhost:8000/messages">
+                <NextLink href={`${frontendUrl}/messages`}>
                   <IconButton
                     icon={<FiMessageCircle />}
                     aria-label="Messages"
@@ -80,7 +101,7 @@ const Header = () => {
                 )}
               </MenuButton>
               <MenuList>
-                <NextLink href="http://localhost:8000/ProfilePage">
+                <NextLink href={`${frontendUrl}/ProfilePage`}>
                   <MenuItem>プロフィール</MenuItem>
                 </NextLink>
                 <MenuDivider />
@@ -89,10 +110,10 @@ const Header = () => {
             </Menu>
           ) : (
             <>
-              <NextLink href="http://localhost:8000/login">
+              <NextLink href={`${frontendUrl}/login`}>
                 <Button mr={4}>ログイン</Button>
               </NextLink>
-              <NextLink href="http://localhost:8000/signup">
+              <NextLink href={`${frontendUrl}/signup`}>
                 <Button colorScheme={"teal"}>会員登録</Button>
               </NextLink>
             </>
@@ -104,9 +125,9 @@ const Header = () => {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
               <>
-                <NextLink href="http://localhost:8000/notifications">お知らせ</NextLink>
-                <NextLink href="http://localhost:8000/teams/manage">チームを管理する</NextLink>
-                <NextLink href="http://localhost:8000/messages">メッセージ</NextLink>
+                <NextLink href={`${frontendUrl}/notifications`}>お知らせ</NextLink>
+                <NextLink href={`${frontendUrl}/teams/manage`}>チームを管理する</NextLink>
+                <NextLink href={`${frontendUrl}/messages`}>メッセージ</NextLink>
               </>
           </Stack>
         </Box>
