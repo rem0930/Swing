@@ -1,14 +1,14 @@
-import { Box, Heading, Text, Button, Image, VStack, SlideFade } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, VStack, SlideFade } from "@chakra-ui/react";
 
 const HeroSection = () => {
   return (
     <Box
-    bg="teal.300"
-    color="white"
-    textAlign="center"
-    py={20}
-    px={4}
-  >
+      bg="teal.300"
+      color="white"
+      textAlign="center"
+      py={20}
+      px={4}
+    >
       <SlideFade in offsetY="20px">
         <VStack spacing={6}>
           {/* <Image src="/images/logo.png" alt="Logo" boxSize="100px" /> */}
