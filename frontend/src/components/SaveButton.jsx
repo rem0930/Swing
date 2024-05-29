@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IconButton, useToast } from '@chakra-ui/react';
 import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
 import axios from 'axios';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const SaveButton = ({ recruitmentId }) => {
@@ -45,7 +46,7 @@ const SaveButton = ({ recruitmentId }) => {
         });
       } else {
         await axios.post(
-          '${apiUrl}/favorites',
+          `${apiUrl}/favorites`,
           { recruitment_id: recruitmentId },
           {
             headers: {
