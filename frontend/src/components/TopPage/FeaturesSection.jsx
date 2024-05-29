@@ -1,7 +1,7 @@
 import { Box, Icon, Heading, Text, Stack, Flex } from "@chakra-ui/react";
 import { FaBaseballBall, FaUsers, FaShareSquare } from "react-icons/fa";
 
-const FeatureSection = ({ title, description }) => {
+const FeatureCard = ({ title, description }) => {
   const getIcon = (title) => {
     switch (title) {
       case "チームを見つける":
@@ -42,4 +42,4 @@ const FeatureSection = ({ title, description }) => {
   );
 };
 
-export default FeatureSection;
+export default FeatureCard;

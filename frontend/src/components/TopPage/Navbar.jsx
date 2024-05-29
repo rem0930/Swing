@@ -5,12 +5,10 @@ import {
   HStack,
   Link as ChakraLink,
   Button,
-  Image,
   Spacer,
   useColorModeValue,
   Input,
   IconButton,
-  VStack,
   Collapse,
 } from "@chakra-ui/react";
 import { SearchIcon, CloseIcon } from "@chakra-ui/icons";
@@ -36,9 +34,10 @@ const Navbar = () => {
       <Flex h={20} alignItems="center" justifyContent="space-between" px={10}>
         <HStack spacing={10} alignItems="center">
           <Box>
-            <NextLink href="/" passHref>
+            <NextLink href="/" passHref legacyBehavior>
               <ChakraLink>
-                {/* <Image src="/images/logo.png" alt="Logo" boxSize="60px" /> */}ロゴ
+                {/* <Image src="/images/logo.png" alt="Logo" boxSize="60px" /> */}
+                ロゴ
               </ChakraLink>
             </NextLink>
           </Box>
@@ -49,30 +48,32 @@ const Navbar = () => {
         </HStack>
         <Spacer />
         <Flex alignItems="center">
-          <NextLink href="/login" passHref>
-            <Button
-              as={ChakraLink}
-              variant="solid"
-              colorScheme="whiteAlpha"
-              color="teal.500"
-              size="md"
-              mr={4}
-              _hover={{ bg: "teal.600", color: "white" }}
-            >
-              ログイン
-            </Button>
+          <NextLink href="/login" passHref legacyBehavior>
+            <ChakraLink>
+              <Button
+                variant="solid"
+                colorScheme="whiteAlpha"
+                color="teal.500"
+                size="md"
+                mr={4}
+                _hover={{ bg: "teal.600", color: "white" }}
+              >
+                ログイン
+              </Button>
+            </ChakraLink>
           </NextLink>
-          <NextLink href="/signup" passHref>
-            <Button
-              as={ChakraLink}
-              variant="outline"
-              colorScheme="whiteAlpha"
-              color="white"
-              size="md"
-              _hover={{ bg: "teal.600", color: "white" }}
-            >
-              会員登録
-            </Button>
+          <NextLink href="/signup" passHref legacyBehavior>
+            <ChakraLink>
+              <Button
+                variant="outline"
+                colorScheme="whiteAlpha"
+                color="white"
+                size="md"
+                _hover={{ bg: "teal.600", color: "white" }}
+              >
+                会員登録
+              </Button>
+            </ChakraLink>
           </NextLink>
           <IconButton
             size="lg"
