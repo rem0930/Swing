@@ -74,6 +74,6 @@ Rails.application.configure do
 
   config.log_level = :debug
 
-  config.hosts << "backend:3000"
-  config.hosts << "54.199.165.170"
+  config.hosts << "backend"
+  config.hosts << "frontend"
 end

@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-const frontendUrl = process.env.NEXT_PUBLIC_FRONTEND_BASE_URL;
 
 const CreateRecruitmentButton = () => {
   const router = useRouter();
@@ -18,9 +17,9 @@ const CreateRecruitmentButton = () => {
       });
 
       if (response.data.has_team) {
-        router.push(`${frontendUrl}/teams/${response.data.team_id}/recruitments/new`);
+        router.push(`/teams/${response.data.team_id}/recruitments/new`);
       } else {
-        router.push(`${frontendUrl}/teams/create`);
+        router.push(`/teams/create`);
       }
     } catch (error) {
       console.error('Error checking team status', error);

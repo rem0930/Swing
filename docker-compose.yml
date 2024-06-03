@@ -1,74 +1,78 @@
-# MySQLデータベースサービス
 services:
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    expose:
-      - "3306"
-    volumes:
-      - "./docker/db:/var/lib/mysql"
-    networks:
-      - swing-net
-
-  # フロントエンドアプリケーションサービス
   frontend:
-    build:
-      context: ./frontend/
+    build: ./frontend
+    ports:
+      - '8000:8000' # フロントエンドは外部アクセスが必要
+    depends_on:
+      - backend
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost/api
     volumes:
       - ./frontend:/usr/src/app
-    expose:
-      - '8000'
-    environment:
-      - NEXT_PUBLIC_API_BASE_URL=http://backend:3000/api
-      - NEXT_PUBLIC_FRONTEND_BASE_URL=http://frontend:8000
+      - /usr/src/app/node_modules # node_modulesをホスト側と共有しない
     networks:
       - swing-net
 
-  # バックエンドアプリケーションサービス
   backend:
-    build:
-      context: ./backend
-    volumes:
-      - ./backend:/app # ソースコードをコンテナにマウント
+    build: ./backend
+    ports:
+      - '3000:3000' # バックエンドはフロントエンドとNginxからアクセスが必要
     expose:
-      - "3000"
+      - '3000' # 内部通信用にも公開
     depends_on:
-      - db # dbサービスが起動後にbackendを起動
-      - redis # redisサービスが起動後にbackendを起動
+      - db
+      - redis
     environment:
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
     env_file:
       - .env
     command: bash -c "cron && rails server -b '0.0.0.0' -p 3000"
-    networks:
-      - swing-net
-
-  # Redisキャッシュサービス
-  redis:
-    image: "redis:latest"
-    expose:
-      - "6379"
     volumes:
-      - "./docker/redis/data:/data"
+      - ./backend:/app # ソースコードをコンテナにマウント
     networks:
       - swing-net
 
-  # networking
   nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
+    image: nginx:latest
     volumes:
-      - ./nginx:/etc/nginx/conf.d
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - '80:80' # Nginx は外部アクセスが必要
     depends_on:
       - frontend
       - backend
     networks:
       - swing-net
 
+  db:
+    image: mysql:8.0
+    expose:
+      - '3306' # 他のコンテナからのアクセスを許可
+    volumes:
+      - "./docker/db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3307:3306" # ローカルホストからもアクセスできるようにポートを公開
+    networks:
+      - swing-net
+
+  redis:
+    image: redis:7.2.5
+    expose:
+      - '6379' # 他のコンテナからのアクセスを許可
+    volumes:
+      - "./docker/redis/data:/data"
+    ports:
+      - "6379:6379" # ローカルホストからもアクセスできるようにポートを公開
+    networks:
+      - swing-net
+
 networks:
   swing-net:
+
+volumes:
+  db-data:

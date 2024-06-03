@@ -1,8 +1,11 @@
 # 使用するNode.jsのバージョンを指定
-FROM node:18
+FROM node:18-alpine
 
 # コンテナ内での作業ディレクトリを設定
 WORKDIR /usr/src/app
+
+# 必要なパッケージをインストール
+RUN apk add --no-cache curl
 
 # パッケージファイルをコピー
 COPY package.json package-lock.json ./
