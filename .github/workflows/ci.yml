@@ -17,7 +17,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
 
     steps:
     - uses: actions/checkout@v2
@@ -28,6 +28,7 @@ jobs:
         ruby-version: 3.2
 
     - name: Install dependencies
+      working-directory: backend
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
@@ -39,6 +40,8 @@ jobs:
       run: |
         cp backend/config/database.yml.ci backend/config/database.yml
         docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
+      env:
+        RAILS_ENV: test
 
     - name: Run RuboCop
       run: docker-compose run --rm backend bundle exec rubocop
