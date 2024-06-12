@@ -7,9 +7,9 @@ on:
     branches: [main]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
-
     services:
       redis:
         image: redis
@@ -38,7 +38,9 @@ jobs:
 
     - name: Create .env file
       run: |
-        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > backend/.env
+        mkdir -p backend
+        touch backend/.env
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> backend/.env
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> backend/.env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> backend/.env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> backend/.env
@@ -73,4 +75,3 @@ jobs:
     - name: Clean up
       working-directory: ./backend
       run: docker-compose down --volumes
-
