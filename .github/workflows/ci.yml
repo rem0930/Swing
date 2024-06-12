@@ -28,30 +28,27 @@ jobs:
         ruby-version: 3.2
 
     - name: Install dependencies
-      working-directory: ./backend
+      working-directory: backend
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      working-directory: ./backend
       run: docker-compose build
 
     - name: Set up database
-      working-directory: ./backend
       run: |
-        cp config/database.yml.ci config/database.yml
+        cp backend/config/database.yml.ci backend/config/database.yml
         docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
+      env:
+        RAILS_ENV: test
 
     - name: Run RuboCop
-      working-directory: ./backend
       run: docker-compose run --rm backend bundle exec rubocop
 
     - name: Run tests
-      working-directory: ./backend
       run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
-      working-directory: ./backend
       run: docker-compose down --volumes
 
