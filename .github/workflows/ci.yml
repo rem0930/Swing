@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
 
     services:
       redis:
-        image: redis:7.2.5
+        image: redis
       db:
         image: mysql:8.0
         env:
@@ -47,34 +47,30 @@ jobs:
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> backend/.env
 
     - name: Install dependencies
+      working-directory: ./backend
       run: |
-        cd backend
         gem install bundler
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      run: |
-        cd backend
-        docker-compose --env-file .env build
+      working-directory: ./backend
+      run: docker-compose --env-file .env build
 
     - name: Set up database
+      working-directory: ./backend
       run: |
-        cp backend/config/database.yml.ci backend/config/database.yml
-        cd backend
+        cp config/database.yml.ci config/database.yml
         docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
 
     - name: Run RuboCop
-      run: |
-        cd backend
-        docker-compose run --rm --env-file .env backend bundle exec rubocop
+      working-directory: ./backend
+      run: docker-compose run --rm --env-file .env backend bundle exec rubocop
 
     - name: Run tests
-      run: |
-        cd backend
-        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
+      working-directory: ./backend
+      run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
-      run: |
-        cd backend
-        docker-compose down --volumes
+      working-directory: ./backend
+      run: docker-compose down --volumes
 
