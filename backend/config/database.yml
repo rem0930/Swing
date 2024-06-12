@@ -8,12 +8,12 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>_development
+  database: <%= ENV["MYSQL_DATABASE"] %>
 
 test:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>_test
+  database: <%= ENV["MYSQL_DATABASE"] %>
 
 production:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>_production
+  database: <%= ENV["MYSQL_DATABASE"] %>
