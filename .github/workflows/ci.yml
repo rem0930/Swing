@@ -2,9 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -53,7 +53,9 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      run: cd backend && docker-compose build
+      run: |
+        cd backend
+        docker-compose --env-file .env build
 
     - name: Set up database
       run: |
@@ -62,10 +64,16 @@ jobs:
         docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
 
     - name: Run RuboCop
-      run: cd backend && docker-compose run --rm --env-file .env backend bundle exec rubocop
+      run: |
+        cd backend
+        docker-compose run --rm --env-file .env backend bundle exec rubocop
 
     - name: Run tests
-      run: cd backend && docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
+      run: |
+        cd backend
+        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
-      run: cd backend && docker-compose down --volumes
+      run: |
+        cd backend
+        docker-compose down --volumes
