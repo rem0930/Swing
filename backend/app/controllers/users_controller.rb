@@ -19,11 +19,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /current_user
-  def current
-    render_current_user
-  end
-
   # GET /has_team
   def has_team
     if current_user.team

@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   use_doorkeeper
-  scope '/api' do
+  scope "/api" do
     # ユーザー認証関連のルート
     post   "/signup", to: "registrations#create"
     post   "/login",  to: "sessions#create"
