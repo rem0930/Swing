@@ -1,13 +1,13 @@
-name: Ruby Lint
+name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
 
     services:
@@ -16,17 +16,36 @@ jobs:
       db:
         image: mysql:8.0
         env:
-          MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-          MYSQL_DATABASE: ${MYSQL_DATABASE}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
 
     steps:
     - uses: actions/checkout@v2
 
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+
     - name: Build Docker image
       run: docker-compose build
 
+    - name: Set up database
+      run: |
+        cp backend/config/database.yml.ci backend/config/database.yml
+        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
+
     - name: Run RuboCop
-      run: docker-compose run backend bundle exec rubocop
+      run: docker-compose run --rm backend bundle exec rubocop
+
+    - name: Run tests
+      run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
-      run: docker-compose down
+      run: docker-compose down --volumes
+
