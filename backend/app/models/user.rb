@@ -8,6 +8,7 @@ class User < ApplicationRecord
   # バリデーション
   validates :email, presence: true, uniqueness: true
   validates :user_name, presence: true
+  validates :password, length: { minimum: 8 }, if: -> { new_record? || !password.nil? }
 
   # Associations
   has_one :team, dependent: :destroy
