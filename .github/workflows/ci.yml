@@ -55,7 +55,7 @@ jobs:
     - name: Build Docker image
       run: |
         cd backend
-        docker-compose build
+        docker-compose --env-file .env build
 
     - name: Set up database
       run: |
