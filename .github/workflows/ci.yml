@@ -17,9 +17,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
 
     steps:
     - uses: actions/checkout@v2
@@ -33,7 +31,7 @@ jobs:
       run: |
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> $GITHUB_ENV
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
         echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
@@ -41,7 +39,7 @@ jobs:
     - name: Create .env file
       run: |
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > backend/.env
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> backend/.env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> backend/.env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> backend/.env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> backend/.env
         echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> backend/.env
@@ -62,19 +60,21 @@ jobs:
     - name: Set up database
       run: |
         cp backend/config/database.yml.ci backend/config/database.yml
-        docker-compose run --rm -e RAILS_ENV=test --env-file backend/.env backend rake db:create db:schema:load
+        cd backend
+        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
 
     - name: Run RuboCop
       run: |
         cd backend
-        docker-compose run --rm backend bundle exec rubocop
+        docker-compose run --rm --env-file .env backend bundle exec rubocop
 
     - name: Run tests
       run: |
         cd backend
-        docker-compose run --rm -e RAILS_ENV=test --env-file backend/.env backend bundle exec rspec
+        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
       run: |
         cd backend
         docker-compose down --volumes
+
