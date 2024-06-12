@@ -36,15 +36,15 @@ jobs:
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
         echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
 
-    - name: Create .env.ci file
+    - name: Create .env file
       run: |
-        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > backend/.env.ci
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> backend/.env.ci
-        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> backend/.env.ci
-        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> backend/.env.ci
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> backend/.env.ci
-        echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> backend/.env.ci
-        echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> backend/.env.ci
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" > backend/.env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> backend/.env
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> backend/.env
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> backend/.env
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> backend/.env
+        echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> backend/.env
+        echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> backend/.env
 
     - name: Install dependencies
       run: |
@@ -53,21 +53,18 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      run: |
-        cd backend
-        docker-compose build
+      run: docker-compose --env-file backend/.env build
 
     - name: Set up database
       run: |
-        cd backend
-        cp config/database.yml.ci config/database.yml
-        docker-compose run --rm -e RAILS_ENV=test --env-file .env.ci backend rake db:create db:schema:load
+        cp backend/config/database.yml.ci backend/config/database.yml
+        docker-compose run --rm -e RAILS_ENV=test --env-file backend/.env backend rake db:create db:schema:load
 
     - name: Run RuboCop
-      run: docker-compose run --rm --env-file backend/.env.ci backend bundle exec rubocop
+      run: docker-compose run --rm --env-file backend/.env backend bundle exec rubocop
 
     - name: Run tests
-      run: docker-compose run --rm -e RAILS_ENV=test --env-file backend/.env.ci backend bundle exec rspec
+      run: docker-compose run --rm -e RAILS_ENV=test --env-file backend/.env backend bundle exec rspec
 
     - name: Clean up
       run: docker-compose down --volumes
