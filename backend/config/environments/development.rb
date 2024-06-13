@@ -76,4 +76,8 @@ Rails.application.configure do
 
   config.hosts << "backend"
   config.hosts << "frontend"
+  config.hosts << "swi-ng.com"
+
+  # エラーを無効にする設定
+  config.action_controller.raise_on_missing_callback_actions = false
 end
