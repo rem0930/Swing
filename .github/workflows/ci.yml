@@ -38,6 +38,7 @@ jobs:
 
     - name: Create .env file
       run: |
+        touch .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
@@ -53,7 +54,6 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      working-directory: ./backend
       run: docker-compose --env-file .env build
 
     - name: Set up database
