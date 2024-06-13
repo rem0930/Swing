@@ -2,14 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
-
     services:
       redis:
         image: redis
@@ -17,7 +17,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DATABASE }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
 
     steps:
     - uses: actions/checkout@v2
@@ -27,28 +27,49 @@ jobs:
       with:
         ruby-version: 3.2
 
+    - name: Set up environment variables
+      run: |
+        echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> $GITHUB_ENV
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
+
+    - name: Create .env file
+      run: |
+        touch .env
+        echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
+        echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
+        echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+        echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
+        echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
+
     - name: Install dependencies
-      working-directory: backend
+      working-directory: ./backend
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      run: docker-compose build
+      run: docker-compose --env-file .env build
 
     - name: Set up database
+      working-directory: ./backend
       run: |
-        cp backend/config/database.yml.ci backend/config/database.yml
+        cp config/database.yml.ci config/database.yml
         docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
-      env:
-        RAILS_ENV: test
 
     - name: Run RuboCop
-      run: docker-compose run --rm backend bundle exec rubocop
+      working-directory: ./backend
+      run: docker-compose run --rm --env-file .env backend bundle exec rubocop
 
     - name: Run tests
+      working-directory: ./backend
       run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
 
     - name: Clean up
+      working-directory: ./backend
       run: docker-compose down --volumes
-
