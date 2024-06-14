@@ -37,8 +37,24 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
         script: |
+          export COMPOSE_HTTP_TIMEOUT=600
           cd Swing
           docker-compose down
           docker-compose pull
-          docker-compose up -d
+          
+          # 起動ログを確認するために各コンテナを順次起動
+          docker-compose up -d db
+          docker-compose logs db
 
+          docker-compose up -d redis
+          docker-compose logs redis
+
+          docker-compose up -d backend
+          docker-compose logs backend
+
+          docker-compose up -d frontend
+          docker-compose logs frontend
+          
+          docker-compose up -d nginx
+          docker-compose logs nginx
+  
