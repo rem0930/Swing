@@ -54,8 +54,8 @@ services:
     expose:
       - '3306' # 他のコンテナからのアクセスを許可
     volumes:
-      - "./docker/db:/var/lib/mysql"
-      - "./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf"
+      - "db-data:/var/lib/mysql" # Dockerボリュームの使用
+      - "./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
