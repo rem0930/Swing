@@ -24,8 +24,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest ./frontend
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/swing-backend:latest ./backend
+        docker build --cache-from ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest ./frontend
+        docker build --cache-from ${{ secrets.DOCKER_USERNAME }}/swing-backend:latest ./backend
         docker push ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/swing-backend:latest
 
@@ -57,4 +57,3 @@ jobs:
           
           docker-compose up -d nginx
           docker-compose logs nginx
-  

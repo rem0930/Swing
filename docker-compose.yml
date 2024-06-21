@@ -15,10 +15,8 @@ services:
 
   backend:
     build: ./backend
-    ports:
-      - '3000:3000' # バックエンドはフロントエンドとNginxからアクセスが必要
     expose:
-      - '3000' # 内部通信用にも公開
+      - '3000' # 内部通信用に公開
     depends_on:
       - db
       - redis
@@ -61,8 +59,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "3307:3306" # ローカルホストからもアクセスできるようにポートを公開
     networks:
       - swing-net
 
@@ -72,8 +68,6 @@ services:
       - '6379' # 他のコンテナからのアクセスを許可
     volumes:
       - "./docker/redis/data:/data"
-    ports:
-      - "6379:6379" # ローカルホストからもアクセスできるようにポートを公開
     networks:
       - swing-net
 
