@@ -25,7 +25,7 @@ function LoginPage() {
             { email: formData.email, password: formData.password },
             {
                 headers: { 'Content-Type': 'application/json' },
-                // withCredentials: true, // Cookieを送信するために必要
+                withCredentials: true, // Cookieを送信するために必要
             });
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
