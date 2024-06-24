@@ -1,8 +1,9 @@
+# config/routes.rb
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
   use_doorkeeper
-  scope "/api" do
+  namespace :api do
     # ユーザー認証関連のルート
     post   "/signup", to: "registrations#create"
     post   "/login",  to: "sessions#create"
@@ -18,10 +19,6 @@ Rails.application.routes.draw do
     resources :users, only: [:show, :update, :destroy]
     resources :registrations, only: [:create]
     resources :sessions, only: [:create, :destroy]
-    resource :passwords, only: [:update] do
-      post :reset, on: :collection
-    end
-    resources :users, only: [:show, :update, :destroy]
     resource :passwords, only: [:update] do
       post :reset, on: :collection
     end
