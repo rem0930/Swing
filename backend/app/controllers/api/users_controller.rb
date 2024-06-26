@@ -4,7 +4,7 @@ module Api
   class UsersController < ApplicationController
     before_action :set_user, only: [:show, :update, :destroy]
     before_action :authorized_user, only: [:destroy]
-    before_action :authenticate_user, only: [:update, :profile, :current, :has_team]
+    before_action :authenticate_user, only: [:update, :profile, :current, :has_team, :update_profile_photo, :delete_profile_photo]
 
     # GET /users/:id
     def show
@@ -36,6 +36,25 @@ module Api
       else
         Rails.logger.debug(@user.errors.full_messages) # エラーメッセージをログに出力
         render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    # PATCH /users/update_profile_photo
+    def update_profile_photo
+      if @current_user.update(profile_photo: params[:profile_photo])
+        render json: @current_user, status: :ok
+      else
+        render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /users/delete_profile_photo
+    def delete_profile_photo
+      @current_user.remove_profile_photo!
+      if @current_user.save
+        render json: { message: "Profile photo deleted successfully" }, status: :ok
+      else
+        render json: { errors: @current_user.errors.full_messages }, status: :unprocessable_entity
       end
     end
 

@@ -1,4 +1,3 @@
-# config/routes.rb
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
@@ -16,7 +15,13 @@ Rails.application.routes.draw do
     # 自分のチーム情報を取得
     get    "/has_team", to: "users#has_team"
 
-    resources :users, only: [:show, :update, :destroy]
+    resources :users, only: [:show, :update, :destroy] do
+      collection do
+        patch 'update_profile_photo'
+        delete 'delete_profile_photo'
+      end
+    end
+
     resources :registrations, only: [:create]
     resources :sessions, only: [:create, :destroy]
     resource :passwords, only: [:update] do
@@ -25,6 +30,10 @@ Rails.application.routes.draw do
     resources :emails, only: [:update]
 
     resources :teams, only: [:show, :index, :create, :update, :destroy] do
+      collection do
+        patch 'update_profile_photo'
+        delete 'delete_profile_photo'
+      end
       resources :recruitments, only: [:create, :index]
     end
 
