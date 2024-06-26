@@ -3,7 +3,7 @@
 module Api
   class TeamsController < ApplicationController
     skip_before_action :authenticate_user, only: [:index, :show]
-    before_action :set_team, only: [:show, :update, :destroy]
+    before_action :set_team, only: [:show, :update, :destroy, :update_profile_photo, :delete_profile_photo]
     before_action :check_owner, only: [:update, :destroy]
 
     # GET /teams
@@ -40,6 +40,27 @@ module Api
     rescue ActiveRecord::RecordInvalid => e
       log_error(e)
       render_unprocessable_entity(e.record.errors.full_messages)
+    end
+
+    # PATCH /teams/update_profile_photo
+    def update_profile_photo
+      @team = Team.find(params[:id])
+      if @team.update(profile_photo: params[:profile_photo])
+        render json: @team, status: :ok
+      else
+        render json: { errors: @team.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /teams/delete_profile_photo
+    def delete_profile_photo
+      @team = Team.find(params[:id])
+      @team.remove_profile_photo!
+      if @team.save
+        render json: { message: "Profile photo deleted successfully" }, status: :ok
+      else
+        render json: { errors: @team.errors.full_messages }, status: :unprocessable_entity
+      end
     end
 
     # DELETE /teams/:id

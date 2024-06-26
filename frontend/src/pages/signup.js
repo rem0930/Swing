@@ -38,7 +38,7 @@ export default function SignupPage() {
         { user: { user_name: formData.user_name, email: formData.email, password: formData.password } },
         {
           headers: { 'Content-Type': 'application/json' },
-          // withCredentials: true, // Cookieを送信するために必要
+          withCredentials: true, // Cookieを送信するために必要
         },
       );
 
@@ -49,13 +49,12 @@ export default function SignupPage() {
         console.log('Token saved to localStorage:', localStorage.getItem('token'));
 
         toast({
-          title: 'アカウント作成成功',
-          description: 'サインアップに成功しました。',
+          description: 'アカウントの作成に成功しました。',
           status: 'success',
           duration: 5000,
           isClosable: true,
         });
-        router.push('/teams'); // サインアップ成功後にログインページへリダイレクト
+        router.push('/ChooseProfilePicture');
         setFormData({ user_name: '', email: '', password: '' });
       } else {
         throw new Error('No token received');
@@ -64,8 +63,8 @@ export default function SignupPage() {
       const errorMessage =
         error.response?.data?.errors?.join(', ') || 'サインアップに失敗しました。';
       toast({
-        title: 'アカウント作成失敗',
-        description: errorMessage,
+        title: 'アカウントの作成に失敗しました。',
+        description: 'もう一度作り直してください。',
         status: 'error',
         duration: 5000,
         isClosable: true,
