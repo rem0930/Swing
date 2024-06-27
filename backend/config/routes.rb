@@ -2,7 +2,7 @@
 
 Rails.application.routes.draw do
   use_doorkeeper
-  scope "/api" do
+  namespace :api do
     # ユーザー認証関連のルート
     post   "/signup", to: "registrations#create"
     post   "/login",  to: "sessions#create"
@@ -15,19 +15,25 @@ Rails.application.routes.draw do
     # 自分のチーム情報を取得
     get    "/has_team", to: "users#has_team"
 
-    resources :users, only: [:show, :update, :destroy]
+    resources :users, only: [:show, :update, :destroy] do
+      collection do
+        patch 'update_profile_photo'
+        delete 'delete_profile_photo'
+      end
+    end
+
     resources :registrations, only: [:create]
     resources :sessions, only: [:create, :destroy]
-    resource :passwords, only: [:update] do
-      post :reset, on: :collection
-    end
-    resources :users, only: [:show, :update, :destroy]
     resource :passwords, only: [:update] do
       post :reset, on: :collection
     end
     resources :emails, only: [:update]
 
     resources :teams, only: [:show, :index, :create, :update, :destroy] do
+      collection do
+        patch 'update_profile_photo'
+        delete 'delete_profile_photo'
+      end
       resources :recruitments, only: [:create, :index]
     end
 

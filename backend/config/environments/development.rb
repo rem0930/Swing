@@ -72,10 +72,14 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
+  # Cookieを使用するための設定
+  config.action_dispatch.cookies_serializer = :json
+
   config.log_level = :debug
 
   config.hosts << "backend"
   config.hosts << "frontend"
+  config.hosts << "nginx"
   config.hosts << "swi-ng.com"
 
   # エラーを無効にする設定

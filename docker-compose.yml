@@ -7,6 +7,10 @@ services:
       - backend
     environment:
       - NEXT_PUBLIC_API_BASE_URL=https://swi-ng.com/api
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET=${AWS_BUCKET}
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules # node_modulesをホスト側と共有しない
@@ -15,10 +19,8 @@ services:
 
   backend:
     build: ./backend
-    ports:
-      - '3000:3000' # バックエンドはフロントエンドとNginxからアクセスが必要
     expose:
-      - '3000' # 内部通信用にも公開
+      - '3000' # 内部通信用に公開
     depends_on:
       - db
       - redis
@@ -54,15 +56,13 @@ services:
     expose:
       - '3306' # 他のコンテナからのアクセスを許可
     volumes:
-      - "./docker/db:/var/lib/mysql"
-      - "./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf"
+      - "db-data:/var/lib/mysql" # Dockerボリュームの使用
+      - "./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    ports:
-      - "3307:3306" # ローカルホストからもアクセスできるようにポートを公開
     networks:
       - swing-net
 
@@ -72,8 +72,6 @@ services:
       - '6379' # 他のコンテナからのアクセスを許可
     volumes:
       - "./docker/redis/data:/data"
-    ports:
-      - "6379:6379" # ローカルホストからもアクセスできるようにポートを公開
     networks:
       - swing-net
 

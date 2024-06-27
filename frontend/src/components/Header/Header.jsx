@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Flex,
@@ -26,8 +27,10 @@ import { useUser } from '../../context/UserContext';
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useUser();
-  const userProfilePhoto = user ? user.profile_photo : null;
+  const userProfilePhotoUrl = user ? user.profile_photo_url : null;
   const userName = user ? user.user_name : "John Doe";
+
+  console.log('User Profile Photo URL:', userProfilePhotoUrl); // デバッグ情報を追加
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} position="fixed" width="100%" zIndex="1000" boxShadow="md">
@@ -87,8 +90,8 @@ const Header = () => {
           {user ? (
             <Menu>
               <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"} minW={0}>
-                {userProfilePhoto ? (
-                  <Avatar size={"sm"} src={userProfilePhoto} />
+                {userProfilePhotoUrl ? (
+                  <Avatar size={"sm"} src={userProfilePhotoUrl} />
                 ) : (
                   <Avatar
                     name={userName}
