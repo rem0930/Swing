@@ -7,6 +7,10 @@ services:
       - backend
     environment:
       - NEXT_PUBLIC_API_BASE_URL=https://swi-ng.com/api
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_BUCKET=${AWS_BUCKET}
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules # node_modulesをホスト側と共有しない

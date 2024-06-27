@@ -47,6 +47,7 @@ gem "active_model_serializers"
 
 gem 'carrierwave'
 gem 'fog-aws'
+gem 'aws-sdk-s3'
 
 gem "dotenv-rails", groups: [:development, :test]
 
