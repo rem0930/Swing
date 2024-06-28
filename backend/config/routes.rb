@@ -30,7 +30,8 @@ Rails.application.routes.draw do
     resources :emails, only: [:update]
 
     resources :teams, only: [:show, :index, :create, :update, :destroy] do
-      collection do
+      member do
+        get 'owner_check'
         patch 'update_profile_photo'
         delete 'delete_profile_photo'
       end
