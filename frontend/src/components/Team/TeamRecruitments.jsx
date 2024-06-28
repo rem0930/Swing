@@ -75,7 +75,7 @@ const TeamRecruitments = ({ recruitments }) => {
     <Box>
       <Tabs variant="soft-rounded" colorScheme="teal">
         <TabList>
-          <Tab>全ての募集</Tab>
+          <Tab>作成した全ての募集</Tab>
           <Tab>メンバー募集</Tab>
           <Tab>対戦相手募集</Tab>
           <Tab>助っ人募集</Tab>

@@ -131,6 +131,7 @@ const EditProfile = ({ user, setIsEditing }) => {
           style={{ display: 'none' }}
         />
       </Box>
+      <FormLabel htmlFor="user_name">ユーザー名</FormLabel>
       <Input
         fontSize="xl"
         fontWeight="bold"
@@ -146,9 +147,9 @@ const EditProfile = ({ user, setIsEditing }) => {
       </Box>
       <Stack direction="row" spacing={4}>
         <Button colorScheme="teal" onClick={handleSave}>
-          Save
+          保存
         </Button>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button onClick={handleCancel}>キャンセル</Button>
       </Stack>
     </>
   );

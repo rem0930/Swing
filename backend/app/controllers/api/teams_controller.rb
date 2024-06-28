@@ -3,8 +3,8 @@
 module Api
   class TeamsController < ApplicationController
     skip_before_action :authenticate_user, only: [:index, :show]
-    before_action :set_team, only: [:show, :update, :destroy, :update_profile_photo, :delete_profile_photo]
-    before_action :check_owner, only: [:update, :destroy]
+    before_action :set_team, only: [:show, :update, :destroy, :update_profile_photo, :delete_profile_photo, :owner_check]
+    before_action :check_owner, only: [:update, :destroy, :update_profile_photo, :delete_profile_photo]
 
     # GET /teams
     def index
@@ -15,6 +15,11 @@ module Api
     # GET /teams/:id
     def show
       render json: @team
+    end
+
+    # GET /teams/:id/owner_check
+    def owner_check
+      render json: { is_owner: @team.user_id == current_user.id }
     end
 
     # POST /teams
@@ -42,9 +47,8 @@ module Api
       render_unprocessable_entity(e.record.errors.full_messages)
     end
 
-    # PATCH /teams/update_profile_photo
+    # PATCH /teams/:id/update_profile_photo
     def update_profile_photo
-      @team = Team.find(params[:id])
       if @team.update(profile_photo: params[:profile_photo])
         render json: @team, status: :ok
       else
@@ -52,9 +56,8 @@ module Api
       end
     end
 
-    # DELETE /teams/delete_profile_photo
+    # DELETE /teams/:id/delete_profile_photo
     def delete_profile_photo
-      @team = Team.find(params[:id])
       @team.remove_profile_photo!
       if @team.save
         render json: { message: "Profile photo deleted successfully" }, status: :ok
@@ -76,7 +79,7 @@ module Api
       end
 
       def team_params
-        params.require(:team).permit(:name, :details, :profile_photo, :background_photo)
+        params.require(:team).permit(:name, :details, :profile_photo)
       end
 
       def check_owner
