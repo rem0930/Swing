@@ -23,14 +23,17 @@ import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { FiMapPin, FiBell, FiMessageCircle, FiUsers } from "react-icons/fi";
 import NextLink from 'next/link';
 import { useUser } from '../../context/UserContext';
+import useLogout from '../../pages/logout';
+import { useRouter } from 'next/router';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useUser();
-  const userProfilePhotoUrl = user ? user.profile_photo_url : null;
-  const userName = user ? user.user_name : "John Doe";
+  const logout = useLogout();
+  const router = useRouter();
 
-  console.log('User Profile Photo URL:', userProfilePhotoUrl); // デバッグ情報を追加
+  const userProfilePhotoUrl = user?.profile_photo_url;
+  const userName = user?.user_name ?? "John Doe";
 
   return (
     <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} position="fixed" width="100%" zIndex="1000" boxShadow="md">
@@ -106,7 +109,7 @@ const Header = () => {
                   <MenuItem>プロフィール</MenuItem>
                 </NextLink>
                 <MenuDivider />
-                <MenuItem>ログアウト</MenuItem>
+                <MenuItem onClick={logout}>ログアウト</MenuItem>
               </MenuList>
             </Menu>
           ) : (
