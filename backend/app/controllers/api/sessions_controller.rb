@@ -22,7 +22,7 @@ module Api
     end
 
     def logout
-      # ログアウト処理（クライアント側でトークンを削除する）
+      current_user.invalidate_token if current_user
       render json: { message: "Successfully logged out" }, status: :ok
     end
   end

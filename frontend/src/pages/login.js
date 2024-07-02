@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { Box, Button, VStack, Text, useToast, Center } from '@chakra-ui/react';
+import { Box, Button, VStack, Text, useToast, Center, Divider, HStack, Link } from '@chakra-ui/react';
 import EmailInput from '../components/Input/EmailInput';
 import PasswordInput from '../components/Input/PasswordInput';
+import { useUser } from '../context/UserContext';
+import NextLink from 'next/link';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function LoginPage() {
@@ -12,6 +15,7 @@ function LoginPage() {
     const [touched, setTouched] = useState({ email: false, password: false });
     const toast = useToast();
     const router = useRouter();
+    const { login } = useUser();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -28,10 +32,7 @@ function LoginPage() {
                 withCredentials: true, // Cookieを送信するために必要
             });
             if (response.data.token) {
-                localStorage.setItem('token', response.data.token);
-
-                // コンソールにトークン保存の確認メッセージを出力
-                console.log('Token saved to localStorage:', localStorage.getItem('token'));
+                await login(response.data.token, response.data.user); // UserContextのlogin関数を使用
 
                 toast({
                     title: "Login Successful",
@@ -86,6 +87,23 @@ function LoginPage() {
                         ログイン
                     </Button>
                 </VStack>
+
+                <Divider my={6} />
+
+                <VStack spacing={3}>
+                    <Text>アカウントをお持ちでない方</Text>
+                    <NextLink href="/signup" passHref>
+                        <Button as="a" variant="outline" colorScheme="teal" w="full">
+                            新規会員登録
+                        </Button>
+                    </NextLink>
+                </VStack>
+
+                <HStack justifyContent="center" mt={4}>
+                    <NextLink href="/forgot-password" passHref>
+                        <Link color="teal.500">パスワードをお忘れの方</Link>
+                    </NextLink>
+                </HStack>
             </Box>
         </Center>
     );
