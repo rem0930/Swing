@@ -1,58 +1,53 @@
 import React, { useState } from 'react';
 import { Box, Text, Button, VStack, useToast, Input, Center, Icon, Img } from '@chakra-ui/react';
-import { useRouter } from 'next/router';  // Next.jsのルーターフックをインポート
 import { FiCamera } from 'react-icons/fi';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-function ChooseProfilePicture() {
-    const [image, setImage] = useState(null);
-    const [imageFile, setImageFile] = useState(null); // ファイルオブジェクトの状態管理
+function ProfilePicture({ teamId }) {
+    const [profileImage, setProfileImage] = useState(null);
+    const [profileImageFile, setProfileImageFile] = useState(null);
     const toast = useToast();
-    const router = useRouter();  // useRouterフックの使用
+    const router = useRouter();
 
-    // 画像ファイルが選択された時のハンドラ
-    const handleImageChange = (e) => {
+    const handleProfileImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImageFile(file); // ファイルオブジェクトを保存
+            setProfileImageFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
-                setImage(reader.result);
+                setProfileImage(reader.result);
             };
             reader.readAsDataURL(file);
         }
     };
 
-    // 画像アップロードの処理
     const handleUpload = async () => {
-        if (!imageFile) return; // ファイルがない場合は何もしない
+        if (!profileImageFile) return;
 
         const formData = new FormData();
-        formData.append('profile_photo', imageFile); // 'profile_photo' キーでファイルを追加
+        formData.append('profile_photo', profileImageFile);
 
         try {
-            const response = await fetch(`${apiUrl}/teams`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(teamData),
-                credentials: 'include' // cookies
+            const response = await axios.patch(`${apiUrl}/teams/${teamId}/update_profile_photo`, formData, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
             });
-            if (!response.ok) {
-                throw new Error('プロフィール画像のアップロードに失敗しました。。');
-            }
-            const data = await response.json();
             toast({
-                title: 'プロフィール更新完了',
+                title: '更新完了',
                 description: 'プロフィール画像が設定されました。',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
             });
-            router.push('/teams');  // routerを使用してページ遷移
+            router.push('/teams/manage'); // アップロード成功後にリダイレクト
         } catch (error) {
             toast({
                 title: '画像のアップロードに失敗しました。',
-                description: error.message,
+                description: 'もう一度お試しください。',
                 status: 'error',
                 duration: 9000,
                 isClosable: true,
@@ -65,8 +60,8 @@ function ChooseProfilePicture() {
             <VStack spacing={5} maxWidth="500px" w="full" p={8} bg="white" borderRadius="lg" boxShadow="2xl">
                 <Text fontSize="2xl" fontWeight="bold" color="teal.500" textAlign="center">プロフィール画像を設定！</Text>
                 <Box position="relative" w="150px" h="150px" borderRadius="full" overflow="hidden" bg="teal.500">
-                    {image ? (
-                        <Img src={image} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                    {profileImage ? (
+                        <Img src={profileImage} alt="Profile" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     ) : (
                         <Center w="full" h="full">
                             <Icon as={FiCamera} w={8} h={8} color="white" />
@@ -75,7 +70,7 @@ function ChooseProfilePicture() {
                     <Input
                         type="file"
                         accept="image/*"
-                        onChange={handleImageChange}
+                        onChange={handleProfileImageChange}
                         position="absolute"
                         top="0"
                         left="0"
@@ -85,11 +80,16 @@ function ChooseProfilePicture() {
                         cursor="pointer"
                     />
                 </Box>
-                <Button colorScheme="teal" onClick={handleUpload} isDisabled={!image} w="65%">画像をアップロード</Button>
-                <Button colorScheme="gray" onClick={() => router.push('/')} w="65%">あとで設定する</Button>
+                <Button colorScheme="teal" onClick={handleUpload} isDisabled={!profileImageFile} w="65%">画像をアップロード</Button>
+                <Button colorScheme="gray" onClick={() => router.push('/teams/manage')} w="65%">あとで設定する</Button>
             </VStack>
         </Center>
     );
 }
 
-export default ChooseProfilePicture;
+export async function getServerSideProps(context) {
+    const { teamId } = context.query;
+    return { props: { teamId } };
+}
+
+export default ProfilePicture;

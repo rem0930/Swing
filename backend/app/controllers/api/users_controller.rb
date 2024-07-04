@@ -22,7 +22,7 @@ module Api
 
     # GET /has_team
     def has_team
-      if current_user.team
+      if current_user.team.present?
         render json: { has_team: true, team_id: current_user.team.id }
       else
         render json: { has_team: false }

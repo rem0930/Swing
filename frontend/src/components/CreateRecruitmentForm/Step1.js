@@ -1,4 +1,4 @@
-import { VStack, Radio, RadioGroup, Stack, Button, Text, Box, Heading } from '@chakra-ui/react';
+import { VStack, Radio, RadioGroup, Stack, Button, Box, Heading } from '@chakra-ui/react';
 
 const Step1 = ({ formData, setFormData, handleNext }) => {
   return (

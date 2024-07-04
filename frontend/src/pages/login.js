@@ -28,8 +28,7 @@ function LoginPage() {
             const response = await axios.post(`${apiUrl}/sessions`,
             { email: formData.email, password: formData.password },
             {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true, // Cookieを送信するために必要
+                headers: { 'Content-Type': 'application/json' }
             });
             if (response.data.token) {
                 await login(response.data.token, response.data.user); // UserContextのlogin関数を使用
