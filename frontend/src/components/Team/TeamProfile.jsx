@@ -1,5 +1,5 @@
 import {
-  Box, Flex, Heading, Image, Text, Avatar, Button, useDisclosure, Input, Textarea, IconButton, useToast
+  Box, Flex, Heading, Text, Avatar, Button, useDisclosure, Input, Textarea, IconButton, useToast
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -56,7 +56,7 @@ const TeamProfile = ({ team }) => {
         duration: 3000,
         isClosable: true,
       });
-      router.push('/teams');
+      router.push('/');
     } catch (error) {
       console.error('チームの削除中にエラーが発生しました:', error);
       toast({

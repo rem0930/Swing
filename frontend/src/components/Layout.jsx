@@ -7,7 +7,7 @@ const Layout = ({ children }) => {
     <UserProvider>
       <Box display="flex" flexDirection="column" minHeight="100vh">
         <Header />
-        <Box flex="1" pt="80px">
+        <Box flex="1" pt="64px" bg="gray.100">
           {children}
         </Box>
       </Box>

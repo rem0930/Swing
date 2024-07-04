@@ -36,8 +36,16 @@ const Header = () => {
   const userName = user?.user_name ?? "John Doe";
 
   return (
-    <Box bg={useColorModeValue("gray.100", "gray.900")} px={4} position="fixed" width="100%" zIndex="1000" boxShadow="md">
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+    <Box
+      bg={useColorModeValue("gray.100", "gray.900")}
+      px={4}
+      position="fixed"
+      width="100%"
+      zIndex="1000"
+      boxShadow="md"
+      h= "64px"
+    >
+      <Flex h="64px" alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
           size={"md"}
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}

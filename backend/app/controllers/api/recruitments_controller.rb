@@ -26,15 +26,13 @@ module Api
 
     # GET /recruitments/1
     def show
-      begin
-        @recruitment
-      rescue ActiveRecord::RecordNotFound
+      if @recruitment.nil?
         render json: { error: "Recruitment not found" }, status: :not_found
         return
       end
 
-      user_team = @current_user.team
-      is_user_team = (@recruitment.team_id == user_team.id)
+      user_team = @current_user&.team
+      is_user_team = user_team ? (@recruitment.team_id == user_team.id) : false
 
       render json: { recruitment: RecruitmentSerializer.new(@recruitment), is_user_team: is_user_team }
     end

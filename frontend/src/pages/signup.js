@@ -50,8 +50,7 @@ export default function SignupPage() {
         `${apiUrl}/registrations`,
         { user: { user_name: formData.user_name, email: formData.email, password: formData.password } },
         {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' }
         },
       );
 

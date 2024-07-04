@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
@@ -7,67 +7,11 @@ import {
   Input,
   Textarea,
   useColorModeValue,
-  useToast
 } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
-const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-function CreateTeamForm() {
-  const [name, setName] = useState('');
-  const [details, setDetails] = useState('');
+function CreateTeamForm({ onSubmit, name, setName, details, setDetails }) {
   const formBackgroundColor = useColorModeValue('gray.100', 'gray.700');
   const textColor = useColorModeValue('gray.800', 'white');
-  const toast = useToast();
-  const router = useRouter();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      toast({
-        title: '認証エラー',
-        description: 'トークンが存在しません。ログインしてください。',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    const teamData = { name, details };
-
-    try {
-      const response = await axios.post(
-        `${apiUrl}/teams`,
-        teamData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (response.status === 201) {
-        toast({
-          title: 'success',
-          description:'チームの作成に成功しました！',
-          duration: 5000,
-          isClosable: true,
-        });
-        router.push('/teams/manage');
-      }
-    } catch (error) {
-      toast({
-        title: 'チームの作成に失敗しました',
-        description: error.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    }
-  };
 
   return (
     <Box
@@ -80,12 +24,13 @@ function CreateTeamForm() {
       mx="auto"
       my={12}
     >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <FormControl isRequired>
           <FormLabel htmlFor="name" color={textColor}>チーム名</FormLabel>
           <Input
             id="name"
             placeholder=""
+            value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </FormControl>
