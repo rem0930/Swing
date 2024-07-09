@@ -25,7 +25,7 @@ module Api
     # POST /teams
     def create
       if current_user.team.present?
-        render json: { error: 'ユーザーはすでにチームを持っています。' }, status: :unprocessable_entity
+        render json: { error: "ユーザーはすでにチームを持っています。" }, status: :unprocessable_entity
         return
       end
 

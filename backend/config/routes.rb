@@ -17,8 +17,8 @@ Rails.application.routes.draw do
 
     resources :users, only: [:show, :update, :destroy] do
       collection do
-        patch 'update_profile_photo'
-        delete 'delete_profile_photo'
+        patch "update_profile_photo"
+        delete "delete_profile_photo"
       end
     end
 
@@ -31,9 +31,9 @@ Rails.application.routes.draw do
 
     resources :teams, only: [:show, :index, :create, :update, :destroy] do
       member do
-        get 'owner_check'
-        patch 'update_profile_photo'
-        delete 'delete_profile_photo'
+        get "owner_check"
+        patch "update_profile_photo"
+        delete "delete_profile_photo"
       end
       resources :recruitments, only: [:create, :index]
     end

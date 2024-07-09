@@ -26,7 +26,7 @@ module Api
     def index
       @favorites = current_user.favorites.order(created_at: :desc).includes(:recruitment)
 
-      render json: @favorites.to_json(include: { recruitment: { only: [:id, :title, :description, :event_date, :deadline, :location_id, :role, :status] } })
+      render json: @favorites.to_json(include: { recruitment: { only: [:id, :title, :description, :event_date, :deadline, :address, :latitude, :longitude, :role, :status] } })
     end
 
     # DELETE /favorites/:id

@@ -17,7 +17,7 @@ module Api
           render json: { error: "Invalid password" }, status: :unauthorized
         end
       else
-        render json: { error: "Email not found" }, status: :unauthorized
+        render json: { error: "Email not found" }, status: :not_found
       end
     end
 

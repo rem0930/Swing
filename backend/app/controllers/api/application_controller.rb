@@ -70,6 +70,14 @@ module Api
         Rails.logger.error("#{error.class}: #{error.message}")
       end
 
+      def set_current_user
+        token = token_from_request_headers
+        if token
+          user_id = decode_token(token)
+          find_current_user(user_id)
+        end
+      end
+
       attr_reader :current_user
   end
 end
