@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProfilePhotoUploader < CarrierWave::Uploader::Base
   storage :fog
 

@@ -30,6 +30,8 @@ gem "bcrypt", "~> 3.1.7"
 gem "jwt"
 gem "doorkeeper"
 
+gem "geocoder", "~> 1.8"
+
 gem "whenever", require: false
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[windows jruby]
@@ -45,9 +47,9 @@ gem "rack-cors"
 
 gem "active_model_serializers"
 
-gem 'carrierwave'
-gem 'fog-aws'
-gem 'aws-sdk-s3'
+gem "carrierwave"
+gem "fog-aws"
+gem "aws-sdk-s3"
 
 gem "dotenv-rails", groups: [:development, :test]
 

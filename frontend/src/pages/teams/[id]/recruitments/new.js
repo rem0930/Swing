@@ -8,6 +8,7 @@ import Step2 from '../../../../components/CreateRecruitmentForm/Step2';
 import Step3 from '../../../../components/CreateRecruitmentForm/Step3';
 import Step4 from '../../../../components/CreateRecruitmentForm/Step4';
 import Step5 from '../../../../components/CreateRecruitmentForm/Step5';
+import Step6 from '../../../../components/CreateRecruitmentForm/Step6';
 import Layout from '../../../../components/Layout';
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -90,7 +91,8 @@ const CreateRecruitmentForm = () => {
             {step === 2 && <Step2 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
             {step === 3 && <Step3 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
             {step === 4 && <Step4 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
-            {step === 5 && <Step5 formData={formData} handleBack={handleBack} handleSubmit={handleSubmit} />}
+            {step === 5 && <Step5 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
+            {step === 6 && <Step6 formData={formData} handleBack={handleBack} handleSubmit={handleSubmit} />}
         </Box>
       </Flex>
     </Layout>

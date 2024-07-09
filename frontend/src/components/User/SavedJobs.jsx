@@ -110,7 +110,7 @@ const SavedJobs = () => {
 
               <HStack mt="3" spacing="4">
                 <Icon as={FiMapPin} />
-                <Text>{recruitment.location_id}</Text>
+                <Text>場所: {recruitment.address}</Text>
               </HStack>
               
               <HStack mt="3" spacing="4">

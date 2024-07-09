@@ -75,10 +75,5 @@ RSpec.describe User, type: :model do
     it "has many favorites" do
       expect(User.reflect_on_association(:favorites).macro).to eq(:has_many)
     end
-
-    it "belongs to location optionally" do
-      expect(User.reflect_on_association(:location).macro).to eq(:belongs_to)
-      expect(User.reflect_on_association(:location).options[:optional]).to be_truthy
-    end
   end
 end

@@ -29,6 +29,7 @@ const RecruitmentDetail = () => {
         },
       })
         .then(response => {
+          console.log(response.data); // ここでログを確認
           setRecruitment(response.data.recruitment);
           setIsOwnTeam(response.data.is_user_team);
           return response.data.recruitment.team_id;
@@ -39,7 +40,7 @@ const RecruitmentDetail = () => {
             return axios.get(`${apiUrl}/teams/${teamId}`, {
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
               },
             });
           } else {
@@ -49,12 +50,16 @@ const RecruitmentDetail = () => {
         .then(response => {
           setTeam(response.data);
           const token = localStorage.getItem('token');
-          return axios.get(`${apiUrl}/applications/check?recruitment_id=${id}`, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          if (token) {
+            return axios.get(`${apiUrl}/applications/check?recruitment_id=${id}`, {
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+              },
+            });
+          } else {
+            return { data: { is_applied: false } };
+          }
         })
         .then(response => {
           setIsApplied(response.data.is_applied);
@@ -70,6 +75,17 @@ const RecruitmentDetail = () => {
 
   const handleApply = () => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: 'ログインが必要です',
+        description: 'この操作を行うにはログインしてください。',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      router.push('/login'); // ログインページへのリダイレクト
+      return;
+    }
     axios.post(`${apiUrl}/applications`, { recruitment_id: id }, {
       headers: {
         'Content-Type': 'application/json',
@@ -86,18 +102,40 @@ const RecruitmentDetail = () => {
       });
     })
     .catch(error => {
+      if (error.response && error.response.status === 401) {
+        toast({
+          title: 'ログインが必要です',
+          description: 'この操作を行うにはログインしてください。',
+          status: 'warning',
+          duration: 3000,
+          isClosable: true,
+        });
+        router.push('/login'); // ログインページへのリダイレクト
+      } else {
+        toast({
+          title: '応募中にエラーが発生しました。',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
       console.error("There was an error applying for the recruitment!", error);
-      toast({
-        title: '応募中にエラーが発生しました。',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
     });
   };
 
   const handleCloseRecruitment = () => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: 'ログインが必要です',
+        description: 'この操作を行うにはログインしてください。',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      router.push('/login'); // ログインページへのリダイレクト
+      return;
+    }
     axios.patch(`${apiUrl}/recruitments/${id}/close`, {}, {
       headers: {
         'Content-Type': 'application/json',
@@ -114,13 +152,24 @@ const RecruitmentDetail = () => {
       });
     })
     .catch(error => {
+      if (error.response && error.response.status === 401) {
+        toast({
+          title: 'ログインが必要です',
+          description: 'この操作を行うにはログインしてください。',
+          status: 'warning',
+          duration: 3000,
+          isClosable: true,
+        });
+        router.push('/login'); // ログインページへのリダイレクト
+      } else {
+        toast({
+          title: '募集を締め切る際にエラーが発生しました。',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      }
       console.error("There was an error closing the recruitment!", error);
-      toast({
-        title: '募集を締め切る際にエラーが発生しました。',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
     });
   };
 
@@ -160,7 +209,7 @@ const RecruitmentDetail = () => {
             
             <HStack mt="3">
               <Icon as={FiMapPin} />
-              <Text>{recruitment.location_id}</Text>
+              <Text>場所: {recruitment.address}</Text>
             </HStack>
             
             <HStack mt="3" spacing="4">

@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_09_020744) do
   create_table "applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "recruitment_id", null: false
@@ -29,15 +29,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
     t.datetime "updated_at", null: false
     t.index ["recruitment_id"], name: "index_favorites_on_recruitment_id"
     t.index ["user_id"], name: "index_favorites_on_user_id"
-  end
-
-  create_table "locations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.decimal "latitude", precision: 10, scale: 8, null: false
-    t.decimal "longitude", precision: 11, scale: 8, null: false
-    t.string "address"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "name", null: false
   end
 
   create_table "oauth_access_grants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -85,7 +76,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
   create_table "recruitments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
-    t.bigint "location_id", null: false
     t.datetime "event_date"
     t.datetime "deadline"
     t.integer "status", default: 0
@@ -93,7 +83,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "team_id", null: false
-    t.index ["location_id"], name: "index_recruitments_on_location_id"
+    t.string "address"
+    t.decimal "latitude", precision: 10, scale: 6
+    t.decimal "longitude", precision: 10, scale: 6
     t.index ["team_id"], name: "fk_rails_3ea6102900"
   end
 
@@ -117,10 +109,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
     t.text "bio"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "location_id"
     t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["location_id"], name: "index_users_on_location_id"
   end
 
   add_foreign_key "applications", "recruitments"
@@ -129,8 +119,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_25_051921) do
   add_foreign_key "favorites", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "recruitments", "locations"
   add_foreign_key "recruitments", "teams"
   add_foreign_key "teams", "users"
-  add_foreign_key "users", "locations"
 end

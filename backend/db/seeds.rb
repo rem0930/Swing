@@ -22,46 +22,24 @@ User.create!(
 # サンプルチームデータ
 team1 = Team.create!(
   name: "Tokyo Tigers",
-  details: "A team based in Tokyo.",
+  details: "東京を拠点とするチームです。",
   user_id: user1.id
 )
 
 team2 = Team.create!(
   name: "Shibuya Owls",
-  details: "A team based in Osaka.",
+  details: "渋谷を拠点とするチームです。",
   user_id: user2.id
-)
-
-
-
-# サンプルロケーションデータ
-location1 = Location.create!(
-  name: "Tokyo",
-  latitude: 35.6895,
-  longitude: 139.6917,
-  address: "Tokyo, Japan"
-)
-
-location2 = Location.create!(
-  name: "Shinjuku",
-  latitude: 35.6938,
-  longitude: 139.7034,
-  address: "Shinjuku, Tokyo, Japan"
-)
-
-location3 = Location.create!(
-  name: "Shibuya",
-  latitude: 35.6580,
-  longitude: 139.7017,
-  address: "Shibuya, Tokyo, Japan"
 )
 
 # サンプルリクルートメントデータ
 Recruitment.create!([
   {
-    title: "Summer Tournament - Need Members",
-    description: "We are looking for new members to join our team for the summer tournament.",
-    location_id: location1.id,
+    title: "夏のトーナメント - メンバー募集",
+    description: "夏のトーナメントに向けて新しいメンバーを募集しています。初心者歓迎、経験者優遇！一緒に楽しく練習しましょう。",
+    address: "東京都渋谷区",
+    latitude: 35.6895,
+    longitude: 139.6917,
     event_date: DateTime.now + 30.days,
     deadline: DateTime.now + 25.days,
     status: 0,
@@ -69,9 +47,11 @@ Recruitment.create!([
     team_id: team1.id
   },
   {
-    title: "Friendly Match - Seeking Opponents",
-    description: "We are organizing a friendly match and are seeking opponents.",
-    location_id: location2.id,
+    title: "フレンドリーマッチ - 対戦相手募集",
+    description: "フレンドリーマッチを開催予定です。対戦相手を募集しています。気軽にご参加ください！",
+    address: "東京都新宿区",
+    latitude: 35.6938,
+    longitude: 139.7034,
     event_date: DateTime.now + 20.days,
     deadline: DateTime.now + 15.days,
     status: 0,
@@ -79,9 +59,11 @@ Recruitment.create!([
     team_id: team2.id
   },
   {
-    title: "Helper Needed for Weekend Practice",
-    description: "We need a helper to assist with our weekend practice sessions.",
-    location_id: location3.id,
+    title: "7/19 - 助っ人募集",
+    description: "週末の練習を手伝ってくれるヘルパーを募集しています。経験は問いません。楽しくサポートしてください。",
+    address: "東京都渋谷区宇田川町",
+    latitude: 35.6580,
+    longitude: 139.7017,
     event_date: DateTime.now + 10.days,
     deadline: DateTime.now + 5.days,
     status: 0,
@@ -89,9 +71,11 @@ Recruitment.create!([
     team_id: team1.id
   },
   {
-    title: "Fall League - Recruiting Members",
-    description: "Join our team for the upcoming fall league!",
-    location_id: location1.id,
+    title: "秋のリーグ戦 - メンバー募集",
+    description: "秋のリーグ戦に参加するためのメンバーを募集しています。経験者大歓迎、一緒に優勝を目指しましょう！",
+    address: "東京都港区",
+    latitude: 35.6895,
+    longitude: 139.6917,
     event_date: DateTime.now + 40.days,
     deadline: DateTime.now + 35.days,
     status: 0,
@@ -99,9 +83,11 @@ Recruitment.create!([
     team_id: team2.id
   },
   {
-    title: "Spring Friendly - Need Opponents",
-    description: "We are looking for opponents for a friendly match this spring.",
-    location_id: location2.id,
+    title: "春のフレンドリー - 対戦相手募集",
+    description: "春のフレンドリーマッチの対戦相手を募集しています。楽しくプレーしましょう！",
+    address: "東京都千代田区",
+    latitude: 35.6938,
+    longitude: 139.7034,
     event_date: DateTime.now + 50.days,
     deadline: DateTime.now + 45.days,
     status: 0,

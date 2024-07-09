@@ -3,14 +3,15 @@
 module Api
   class RecruitmentsController < ApplicationController
     before_action :set_recruitment, only: [:show, :update, :destroy, :close]
-    before_action :authenticate_user, except: [:index, :by_team]
+    before_action :authenticate_user, except: [:index, :by_team, :show]
+    before_action :set_current_user, only: [:show]
 
     # GET /recruitments
     def index
       status = params[:status]
       role = params[:role]
 
-      recruitments = Recruitment.order(created_at: :desc).includes(:team, :location)
+      recruitments = Recruitment.order(created_at: :desc).includes(:team)
       recruitments = recruitments.where(status: status) if status.present?
       recruitments = recruitments.where(role: role) if role.present?
 
@@ -34,13 +35,17 @@ module Api
       user_team = @current_user&.team
       is_user_team = user_team ? (@recruitment.team_id == user_team.id) : false
 
+      Rails.logger.info "Current User ID: #{@current_user&.id}"
+      Rails.logger.info "User Team ID: #{user_team&.id}"
+      Rails.logger.info "Recruitment Team ID: #{@recruitment.team_id}"
+      Rails.logger.info "is_user_team: #{is_user_team}"
+
       render json: { recruitment: RecruitmentSerializer.new(@recruitment), is_user_team: is_user_team }
     end
 
     # POST /recruitments
     def create
       recruitment = current_user.team.recruitments.build(recruitment_params)
-      recruitment.location_id = 1
       if recruitment.save
         render json: recruitment, status: :created
       else
@@ -87,7 +92,18 @@ module Api
 
       # Only allow a list of trusted parameters through.
       def recruitment_params
-        params.require(:recruitment).permit(:title, :description, :role, :event_date, :deadline, :location_id, :team_id)
+        params.require(:recruitment).permit(
+          :title,
+          :description,
+          :event_date,
+          :deadline,
+          :status,
+          :role,
+          :team_id,
+          :address,
+          :latitude,
+          :longitude
+        )
       end
   end
 end
