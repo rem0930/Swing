@@ -70,12 +70,16 @@ module Api
         Rails.logger.error("#{error.class}: #{error.message}")
       end
 
+      # トークンが存在する場合にユーザーを設定する
       def set_current_user
         token = token_from_request_headers
         if token
           user_id = decode_token(token)
           find_current_user(user_id)
         end
+      rescue ActiveRecord::RecordNotFound, JWT::DecodeError, JWT::ExpiredSignature, JWT::VerificationError => e
+        log_error(e)
+        @current_user = nil
       end
 
       attr_reader :current_user
