@@ -1,11 +1,15 @@
-import { Box, Text, HStack, Icon, Container, Spinner, useToast } from '@chakra-ui/react';
-import { FiMapPin, FiClock } from 'react-icons/fi';
+import { Box, Text, HStack, Icon, Container, Spinner, useToast, Heading, Flex, useDisclosure } from '@chakra-ui/react';
+import { FiClock } from 'react-icons/fi';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHeader';
 import RecruitmentFooter from '../../components/RecruitmentDetails/RecruitmentFooter';
 import Layout from '../../components/Layout.jsx';
+import GoogleMapComponent from '../../components/RecruitmentDetails/GoogleMapComponent';
 import axios from 'axios';
+import LoginModal from '../../components/LoginModal';
+import SignupModal from '../../components/SignupModal';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const RecruitmentDetail = () => {
@@ -19,6 +23,21 @@ const RecruitmentDetail = () => {
   const [isApplied, setIsApplied] = useState(false);
   const toast = useToast();
 
+  const loginModalRef = useRef();
+  const signupModalRef = useRef();
+
+  const openLoginModal = useCallback(() => {
+    if (loginModalRef.current) {
+      loginModalRef.current.onOpen();
+    }
+  }, []);
+
+  const openSignupModal = useCallback(() => {
+    if (signupModalRef.current) {
+      signupModalRef.current.onOpen();
+    }
+  }, []);
+
   useEffect(() => {
     if (id) {
       const token = localStorage.getItem('token');
@@ -29,7 +48,6 @@ const RecruitmentDetail = () => {
         },
       })
         .then(response => {
-          console.log(response.data); // ここでログを確認
           setRecruitment(response.data.recruitment);
           setIsOwnTeam(response.data.is_user_team);
           return response.data.recruitment.team_id;
@@ -83,7 +101,7 @@ const RecruitmentDetail = () => {
         duration: 3000,
         isClosable: true,
       });
-      router.push('/login'); // ログインページへのリダイレクト
+      openLoginModal();  // ログインモーダルを開く
       return;
     }
     axios.post(`${apiUrl}/applications`, { recruitment_id: id }, {
@@ -110,7 +128,8 @@ const RecruitmentDetail = () => {
           duration: 3000,
           isClosable: true,
         });
-        router.push('/login'); // ログインページへのリダイレクト
+        openLoginModal();  // ログインモーダルを開く
+      return;
       } else {
         toast({
           title: '応募中にエラーが発生しました。',
@@ -133,7 +152,7 @@ const RecruitmentDetail = () => {
         duration: 3000,
         isClosable: true,
       });
-      router.push('/login'); // ログインページへのリダイレクト
+      openLoginModal();  // ログインモーダルを開く
       return;
     }
     axios.patch(`${apiUrl}/recruitments/${id}/close`, {}, {
@@ -160,7 +179,8 @@ const RecruitmentDetail = () => {
           duration: 3000,
           isClosable: true,
         });
-        router.push('/login'); // ログインページへのリダイレクト
+        openLoginModal();  // ログインモーダルを開く
+        return;
       } else {
         toast({
           title: '募集を締め切る際にエラーが発生しました。',
@@ -204,19 +224,23 @@ const RecruitmentDetail = () => {
           />
         </Box>
         <Container maxW="container.lg" py={8} bg="gray.50"> {/* 背景色を少し暗く */}
-          <Box mt={8}>
-            <Text mb={4}>{recruitment.description}</Text>
-            
-            <HStack mt="3">
-              <Icon as={FiMapPin} />
-              <Text>場所: {recruitment.address}</Text>
-            </HStack>
-            
-            <HStack mt="3" spacing="4">
-              <Icon as={FiClock} />
-              <Text>締切日: {new Date(recruitment.deadline).toLocaleDateString()}</Text>
-            </HStack>
-          </Box>
+          <Flex>
+            <Box flex="6" ml={4}>
+              <Heading fontSize="lg" fontWeight="bold" mb={4}>詳細</Heading>
+              <Text whiteSpace="pre-line" mb={4}>{recruitment.description}</Text>
+              
+              <HStack mt="3" spacing="4">
+                <Icon as={FiClock} />
+                <Text>締切日: {new Date(recruitment.deadline).toLocaleDateString()}</Text>
+              </HStack>
+            </Box>
+            <Box flex="4" ml={4}>
+              <GoogleMapComponent
+                latitude={recruitment.latitude}
+                longitude={recruitment.longitude}
+              />
+            </Box>
+          </Flex>
         </Container>
         <RecruitmentFooter 
           eventDate={recruitment.event_date} 
@@ -224,10 +248,13 @@ const RecruitmentDetail = () => {
           isOwnTeam={isOwnTeam}
           isApplied={isApplied}
           status={recruitment.status}
-          title={recruitment.title}
+          address={recruitment.address}
           recruitmentId={recruitment.id}
+          openLoginModal={openLoginModal}  // openLoginModalを渡す
         />
       </Box>
+      <LoginModal ref={loginModalRef} openSignupModal={openSignupModal} />
+      <SignupModal ref={signupModalRef} openLoginModal={openLoginModal} />
     </Layout>
   );
 };

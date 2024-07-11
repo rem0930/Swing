@@ -11,6 +11,9 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_REGION=${AWS_REGION}
       - AWS_BUCKET=${AWS_BUCKET}
+      - NEXT_PUBLIC_GEOCODING_API_KEY=${NEXT_PUBLIC_GEOCODING_API_KEY}
+      - NEXT_PUBLIC_GEOCODING_API_KEY=${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      - NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules # node_modulesをホスト側と共有しない

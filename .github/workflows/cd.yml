@@ -57,6 +57,11 @@ jobs:
           export AWS_REGION=${{ secrets.AWS_REGION }}
           export AWS_BUCKET=${{ secrets.AWS_BUCKET }}
           
+          # Set Google Maps API environment variables
+          export NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}
+          export NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
+          export NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}
+          
           # 起動ログを確認するために各コンテナを順次起動
           docker-compose up -d db
           docker-compose logs db

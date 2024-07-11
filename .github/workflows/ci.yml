@@ -35,6 +35,9 @@ jobs:
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
         echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
+        echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> $GITHUB_ENV
+        echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
+        echo "NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}" >> $GITHUB_ENV
 
     - name: Create .env file
       run: |
@@ -46,6 +49,9 @@ jobs:
         echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
+        echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> .env
+        echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env
+        echo "NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}" >> .env
 
     - name: Cache Ruby gems
       uses: actions/cache@v2

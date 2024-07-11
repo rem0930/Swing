@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Box,
   Flex,
@@ -25,12 +25,29 @@ import NextLink from 'next/link';
 import { useUser } from '../../context/UserContext';
 import useLogout from '../../pages/logout';
 import { useRouter } from 'next/router';
+import LoginModal from '../LoginModal';
+import SignupModal from '../SignupModal';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useUser();
   const logout = useLogout();
   const router = useRouter();
+
+  const loginModalRef = useRef();
+  const signupModalRef = useRef();
+
+  const openLoginModal = () => {
+    if (loginModalRef.current) {
+      loginModalRef.current.onOpen();
+    }
+  };
+
+  const openSignupModal = () => {
+    if (signupModalRef.current) {
+      signupModalRef.current.onOpen();
+    }
+  };
 
   const userProfilePhotoUrl = user?.profile_photo_url;
   const userName = user?.user_name ?? "John Doe";
@@ -122,12 +139,8 @@ const Header = () => {
             </Menu>
           ) : (
             <>
-              <NextLink href="/login">
-                <Button mr={4}>ログイン</Button>
-              </NextLink>
-              <NextLink href="/signup">
-                <Button colorScheme={"teal"}>会員登録</Button>
-              </NextLink>
+              <LoginModal ref={loginModalRef} openSignupModal={openSignupModal} />  {/* ログインモーダルを使用 */}
+              <SignupModal ref={signupModalRef} openLoginModal={openLoginModal} />  {/* サインアップモーダルを使用 */}
             </>
           )}
         </Flex>
