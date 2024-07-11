@@ -48,6 +48,7 @@ jobs:
         script: |
           export COMPOSE_HTTP_TIMEOUT=600
           cd Swing
+          git pull origin main
           docker-compose down
           docker-compose pull
 
