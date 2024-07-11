@@ -8,7 +8,7 @@ const Step4 = ({ formData, setFormData, handleBack, handleNext }) => {
 
   useEffect(() => {
     const apiKey = process.env.NEXT_PUBLIC_GEOCODING_API_KEY;
-    console.log('Google Maps API Key:', apiKey ? 'Set correctly' : 'Not set');
+    // console.log('Google Maps API Key:', apiKey ? 'Set correctly' : 'Not set');
   }, []);
 
   const handleAddressChange = (e) => setAddress(e.target.value);

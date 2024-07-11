@@ -21,7 +21,7 @@ const IndexPage = () => {
   const isMobileView = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
-    console.log(apiUrl)
+    // console.log(apiUrl)
     const fetchRecruitments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/recruitments`);
