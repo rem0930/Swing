@@ -22,7 +22,7 @@ const useLogout = () => {
       });
 
       // ログインページにリダイレクト
-      router.push('/login');
+      router.push('/');
     }
   };
 

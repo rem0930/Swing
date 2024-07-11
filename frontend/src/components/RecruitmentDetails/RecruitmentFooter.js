@@ -1,8 +1,8 @@
-import { Box, Button, Flex, HStack, Icon, Text, VStack, Spacer } from '@chakra-ui/react';
-import { FiCalendar } from 'react-icons/fi';
+import { Button, Flex, HStack, Icon, Text, VStack } from '@chakra-ui/react';
+import { FiCalendar, FiMapPin } from 'react-icons/fi';
 import SaveButton from '../SaveButton';
 
-const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam, isApplied, status, recruitmentId, title }) => {
+const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam, isApplied, status, recruitmentId, address, openLoginModal }) => {
   return (
     <Flex
       as="footer"
@@ -19,15 +19,18 @@ const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam, isApplied, status, r
       alignItems="center"
       height="80px" // フッターの高さを固定
     >
-      <VStack align="start">
+      <VStack align="start" spacing={1}>
         <HStack>
           <Icon as={FiCalendar} />
           <Text>開催日時: {new Date(eventDate).toLocaleDateString()}</Text>
         </HStack>
-        <Text fontWeight="bold">{title}</Text>
+        <HStack>
+          <Icon as={FiMapPin} />
+          <Text>場所: {address || '未設定'}</Text>
+        </HStack>
       </VStack>
       <HStack spacing={4}>
-        <SaveButton recruitmentId={recruitmentId} />
+        <SaveButton recruitmentId={recruitmentId} openLoginModal={openLoginModal} />
         {status === 'closed' ? (
           <Button colorScheme="gray" size="lg" isDisabled>
             募集終了
@@ -42,7 +45,7 @@ const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam, isApplied, status, r
           </Button>
         ) : (
           <Button colorScheme="teal" size="lg" onClick={onApply}>
-            応募する
+            応募
           </Button>
         )}
       </HStack>

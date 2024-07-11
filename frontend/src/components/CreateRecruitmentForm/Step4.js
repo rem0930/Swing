@@ -1,26 +1,50 @@
-import { useState } from 'react';
-import { VStack, FormControl, FormLabel, Input, Button, Heading, useToast } from '@chakra-ui/react';
+import { useState, useEffect } from 'react';
+import { VStack, FormControl, Input, Button, Heading, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 
 const Step4 = ({ formData, setFormData, handleBack, handleNext }) => {
-  const [location, setLocation] = useState(formData.location || '');
+  const [address, setAddress] = useState(formData.address || '');
   const toast = useToast();
 
-  const handleLocationChange = (e) => setLocation(e.target.value);
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_GEOCODING_API_KEY;
+    console.log('Google Maps API Key:', apiKey ? 'Set correctly' : 'Not set');
+  }, []);
+
+  const handleAddressChange = (e) => setAddress(e.target.value);
 
   const handleNextStep = async () => {
-    const apiKey = 'YOUR_GOOGLE_MAPS_API_KEY';  // ここにGoogle Maps APIキーを設定
-    try {
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${apiKey}`);
-      const { lat, lng } = response.data.results[0].geometry.location;
-      const address = response.data.results[0].formatted_address;
-
-      setFormData({ ...formData, location: address, latitude: lat, longitude: lng });
-      handleNext();
-    } catch (error) {
+    const apiKey = process.env.NEXT_PUBLIC_GEOCODING_API_KEY;
+    if (!apiKey) {
+      console.error('Google Maps API Key is not set');
       toast({
-        title: 'Error',
-        description: 'Failed to get location data. Please try again.',
+        title: 'エラー',
+        description: 'APIキーが設定されていません。',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
+    try {
+      const encodedAddress = encodeURIComponent(address);
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}&key=${apiKey}`);
+      if (response.data.status === 'OK') {
+        const { lat, lng } = response.data.results[0].geometry.location;
+        const address = response.data.results[0].formatted_address;
+
+        setFormData({ ...formData, address: address, latitude: lat, longitude: lng });
+        handleNext();
+      } else {
+        console.error('Geocoding failed:', response.data);
+        throw new Error('Geocoding failed');
+      }
+    } catch (error) {
+      console.error('Error fetching address data:', error.response ? error.response.data : error.message);
+      toast({
+        title: 'エラー',
+        description: '位置情報の取得に失敗しました。再試行してください。',
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -32,11 +56,10 @@ const Step4 = ({ formData, setFormData, handleBack, handleNext }) => {
     <VStack spacing={4}>
       <Heading as="h2" size="lg">場所を設定</Heading>
       <FormControl>
-        <FormLabel>住所や地名を入力</FormLabel>
         <Input
           type="text"
-          value={location}
-          onChange={handleLocationChange}
+          value={address}
+          onChange={handleAddressChange}
           placeholder="住所や地名を入力"
         />
       </FormControl>

@@ -48,7 +48,7 @@ const Navbar = () => {
         </HStack>
         <Spacer />
         <Flex alignItems="center">
-          <NextLink href="/login" passHref legacyBehavior>
+          <NextLink href="/" passHref legacyBehavior>
             <ChakraLink>
               <Button
                 variant="solid"

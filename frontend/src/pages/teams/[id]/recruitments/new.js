@@ -90,7 +90,7 @@ const CreateRecruitmentForm = () => {
             {step === 1 && <Step1 formData={formData} setFormData={setFormData} handleNext={handleNext} />}
             {step === 2 && <Step2 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
             {step === 3 && <Step3 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
-            {step === 4 && <Step4 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
+            {step === 4 && <Step4 formData={formData} setFormData={setFormData} handleBack={handleBack} handleNext={handleNext} />}
             {step === 5 && <Step5 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
             {step === 6 && <Step6 formData={formData} handleBack={handleBack} handleSubmit={handleSubmit} />}
         </Box>

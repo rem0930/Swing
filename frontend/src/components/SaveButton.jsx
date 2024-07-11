@@ -5,7 +5,7 @@ import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-const SaveButton = ({ recruitmentId }) => {
+const SaveButton = ({ recruitmentId, openLoginModal }) => {
   const [isSaved, setIsSaved] = useState(false);
   const toast = useToast();
 
@@ -30,6 +30,18 @@ const SaveButton = ({ recruitmentId }) => {
 
   const handleSave = async () => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      toast({
+        title: 'ログインが必要です',
+        description: 'この操作を行うにはログインしてください。',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      openLoginModal();  // ログインモーダルを開く
+    return;
+    }
+
     try {
       if (isSaved) {
         await axios.delete(`${apiUrl}/favorites/${recruitmentId}`, {
@@ -79,7 +91,10 @@ const SaveButton = ({ recruitmentId }) => {
       onClick={handleSave}
       variant="ghost"
       aria-label="Save Recruitment"
-      size="2xl"
+      height="50px"
+      width="50px"
+      fontSize="35px" // アイコンのサイズを大き
+      mx={2} // 水平方向のマージンを追加してボタン間のスペースを確保
     />
   );
 };
