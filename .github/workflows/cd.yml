@@ -46,6 +46,7 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         port: 22
         script: |
+          set -e  # エラーが発生した場合にスクリプトを終了
           export COMPOSE_HTTP_TIMEOUT=600
           cd Swing
           git pull origin main
@@ -63,18 +64,14 @@ jobs:
           export NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
           export NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}
           
-          # 起動ログを確認するために各コンテナを順次起動
+           # コンテナの起動
           docker-compose up -d db
-          docker-compose logs db
-
           docker-compose up -d redis
-          docker-compose logs redis
-
           docker-compose up -d backend
-          docker-compose logs backend
-
-          docker-compose up -d frontend
-          docker-compose logs frontend
           
+          # マイグレーションとアセットプリコンパイル
+          docker-compose exec -T backend rails db:migrate
+          docker-compose exec -T backend rails assets:precompile
+          
+          docker-compose up -d frontend
           docker-compose up -d nginx
-          docker-compose logs nginx
