@@ -1,0 +1,47 @@
+# ベースイメージ
+FROM ruby:3.2-slim AS base
+
+# 必要な環境変数を設定
+ENV RAILS_ENV=production
+# ENV BUNDLE_WITHOUT=development:test
+# ENV BUNDLE_PATH=/bundle
+
+# 作業ディレクトリを設定
+WORKDIR /app
+
+# 必要なパッケージをインストール
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    cron \
+    build-essential \
+    libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# GemfileとGemfile.lockをコピーして、バンドルインストールを実行
+COPY Gemfile Gemfile.lock ./
+RUN bundle install --jobs 4 --retry 3 --without development test
+
+# アプリケーションのソースコードをコピー
+COPY . .
+
+# アセットのプリコンパイル
+# RUN bundle exec rails assets:precompile
+
+# wheneverの設定を行う
+RUN bundle exec whenever --update-crontab
+
+# 古いPIDファイルを削除する
+RUN rm -f tmp/pids/server.pid
+
+# エントリーポイントスクリプトの設定
+COPY entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# 非rootユーザーを作成
+RUN adduser --disabled-password --gecos '' rails
+USER rails
+
+# エントリーポイントとコマンドを設定
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["bash", "-c", "cron && bundle exec rails server -b 0.0.0.0 -p 3000"]
