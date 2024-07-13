@@ -1,5 +1,5 @@
 # ベースイメージ
-FROM ruby:3.2-slim AS base
+FROM ruby:3.2
 
 # 必要な環境変数を設定
 ENV RAILS_ENV=production \
