@@ -71,7 +71,7 @@ jobs:
         bundle install --jobs 4 --retry 3
 
     - name: Build Docker image
-      run: docker-compose --env-file .env build
+      run: docker-compose --env-file .env build --progress=plain
 
     - name: Set up database
       working-directory: ./backend

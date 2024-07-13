@@ -13,6 +13,7 @@ WORKDIR /app
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     default-mysql-client \
+    default-libmysqlclient-dev \
     cron \
     build-essential \
     libpq-dev && \
