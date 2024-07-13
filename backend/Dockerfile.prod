@@ -1,5 +1,5 @@
 # ベースイメージ
-FROM ruby:3.2
+FROM ruby:3.2.4 AS builder
 
 # 必要な環境変数を設定
 ENV RAILS_ENV=production \
@@ -14,7 +14,6 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     default-mysql-client \
     default-libmysqlclient-dev \
-    cron \
     build-essential \
     libpq-dev && \
     rm -rf /var/lib/apt/lists/*
@@ -26,11 +25,35 @@ RUN bundle install --jobs 4 --retry 3 --deployment
 # アプリケーションのソースコードをコピー
 COPY . .
 
+# アセットのプリコンパイル
+RUN bundle exec rails assets:precompile
+
+# 実行用イメージ
+FROM ruby:3.2.4-slim
+
+ENV RAILS_ENV=production
+
+WORKDIR /app
+
+# 必要なランタイム依存関係をインストール
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    cron && \
+    rm -rf /var/lib/apt/lists/*
+
+# ビルダーステージからファイルをコピー
+COPY --from=builder /app /app
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+
 # wheneverの設定を行う
 RUN bundle exec whenever --update-crontab
 
 # 古いPIDファイルを削除する
 RUN rm -f tmp/pids/server.pid
+
+# ヘルスチェックを追加
+HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
 
 # エントリーポイントとコマンドを設定
 CMD ["bash", "-c", "cron && bundle exec rails server -b 0.0.0.0 -p 3000"]
