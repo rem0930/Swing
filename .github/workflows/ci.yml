@@ -7,9 +7,13 @@ on:
     branches: [main]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+    
+    # 環境変数の追加
+    env:
+      ENVIRONMENT: ${{ github.ref == 'refs/heads/main' && 'production' || 'development' }}
+
     services:
       redis:
         image: redis
@@ -67,23 +71,48 @@ jobs:
         gem install bundler
         bundle install --jobs 4 --retry 3
 
+    # Docker-compose ファイルとDockerfileの選択
     - name: Build Docker image
-      run: docker-compose --env-file .env build
+      run: |
+        if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+          docker-compose --env-file .env -f docker-compose.yml build
+        else
+          docker-compose --env-file .env -f docker-compose.dev.yml build
+        fi
 
     - name: Set up database
       working-directory: ./backend
       run: |
         cp config/database.yml.ci config/database.yml
-        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
+        if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+          docker-compose -f ../docker-compose.yml run --rm -e RAILS_ENV=test --env-file ../.env backend rake db:create db:schema:load
+        else
+          docker-compose -f ../docker-compose.dev.yml run --rm -e RAILS_ENV=test --env-file ../.env backend rake db:create db:schema:load
+        fi
 
     - name: Run RuboCop
       working-directory: ./backend
-      run: docker-compose run --rm --env-file .env backend bundle exec rubocop
+      run: |
+        if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+          docker-compose -f ../docker-compose.yml run --rm --env-file ../.env backend bundle exec rubocop
+        else
+          docker-compose -f ../docker-compose.dev.yml run --rm --env-file ../.env backend bundle exec rubocop
+        fi
 
     - name: Run tests
       working-directory: ./backend
-      run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
+      run: |
+        if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+          docker-compose -f ../docker-compose.yml run --rm -e RAILS_ENV=test --env-file ../.env backend bundle exec rspec
+        else
+          docker-compose -f ../docker-compose.dev.yml run --rm -e RAILS_ENV=test --env-file ../.env backend bundle exec rspec
+        fi
 
     - name: Clean up
       working-directory: ./backend
-      run: docker-compose down --volumes
+      run: |
+        if [ "${{ env.ENVIRONMENT }}" = "production" ]; then
+          docker-compose -f ../docker-compose.yml down --volumes
+        else
+          docker-compose -f ../docker-compose.dev.yml down --volumes
+        fi
