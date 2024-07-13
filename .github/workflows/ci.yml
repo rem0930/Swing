@@ -72,6 +72,7 @@ jobs:
 
     - name: Reinstall mysql2 gem
       run: |
+        cd backend
         bundle config build.mysql2 --with-mysql-dir=/usr/lib/x86_64-linux-gnu
         bundle install
         bundle exec gem uninstall mysql2
