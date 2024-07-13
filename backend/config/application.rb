@@ -23,6 +23,6 @@ module App
 
     config.autoload_paths += %W(#{config.root}/app/uploaders)
 
-    config.host << "https://swi-ng.com/"
+    config.hosts << "https://swi-ng.com/"
   end
 end
