@@ -70,6 +70,13 @@ jobs:
         bundle config set --local deployment 'true'
         bundle install --jobs 4 --retry 3
 
+    - name: Reinstall mysql2 gem
+      run: |
+        bundle config build.mysql2 --with-mysql-dir=/usr/lib/x86_64-linux-gnu
+        bundle install
+        bundle exec gem uninstall mysql2
+        bundle exec gem install mysql2 -v '0.5.6' -- --with-mysql-dir=/usr/lib/x86_64-linux-gnu
+
     - name: Build Docker image
       run: docker-compose --env-file .env build --progress=plain
 
