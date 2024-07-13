@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { Box, Button, FormControl, FormLabel, Input, Avatar, Stack, useToast, IconButton, Icon } from '@chakra-ui/react';
+import React, { useState, useRef } from 'react';
+import { Box, Button, FormControl, FormLabel, Input, Avatar, Stack, useToast, IconButton, Text } from '@chakra-ui/react';
 import { useUser } from '../../context/UserContext';
 import axios from 'axios';
 import { FiCamera } from 'react-icons/fi';  // 編集アイコンとして使用
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
 
 const EditProfile = ({ user, setIsEditing }) => {
   const { setUser } = useUser();
@@ -13,6 +15,8 @@ const EditProfile = ({ user, setIsEditing }) => {
     bio: user.bio,
     profile_photo_file: null,
   });
+  const [fileError, setFileError] = useState('');
+  const fileInputRef = useRef(null);
   const toast = useToast();
 
   const handleChange = (e) => {
@@ -23,6 +27,12 @@ const EditProfile = ({ user, setIsEditing }) => {
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        setFileError('別の写真を選択してください。');
+        e.target.value = null; // ファイル選択をリセット
+        return;
+      }
+      setFileError('');
       setFormData((prev) => ({ ...prev, profile_photo_file: file }));
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -43,7 +53,10 @@ const EditProfile = ({ user, setIsEditing }) => {
       const response = await axios.patch(`${apiUrl}/users/update_profile_photo`, formDataObj, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
         },
+        maxContentLength: MAX_FILE_SIZE,
+        maxBodyLength: MAX_FILE_SIZE,
       });
       setUser(response.data);
       toast({
@@ -93,6 +106,7 @@ const EditProfile = ({ user, setIsEditing }) => {
       console.error('Error updating profile:', error);
       toast({
         title: 'プロフィールの更新に失敗しました。',
+        description: error.response?.data?.message || 'エラーが発生しました。もう一度お試しください。',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -121,15 +135,16 @@ const EditProfile = ({ user, setIsEditing }) => {
           left="50%"
           transform="translate(-50%, -50%)"
           aria-label="Edit Profile Photo"
-          onClick={() => document.getElementById('profile_photo_input').click()}
+          onClick={() => fileInputRef.current.click()}
         />
         <Input
           type="file"
           accept="image/*"
-          id="profile_photo_input"
+          ref={fileInputRef}
           onChange={handleProfileImageChange}
           style={{ display: 'none' }}
         />
+        {fileError && <Text color="red.500">{fileError}</Text>}
       </Box>
       <FormLabel htmlFor="user_name">ユーザー名</FormLabel>
       <Input

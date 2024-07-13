@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Box, Text, Button, VStack, useToast, Input, Center, Icon, Img } from '@chakra-ui/react';
 import { FiCamera } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
 
 function ProfilePicture({ teamId }) {
     const [profileImage, setProfileImage] = useState(null);
     const [profileImageFile, setProfileImageFile] = useState(null);
+    const [fileError, setFileError] = useState('');
     const toast = useToast();
     const router = useRouter();
+    const fileInputRef = useRef(null);
 
     const handleProfileImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > MAX_FILE_SIZE) {
+                setFileError('他の画像を選択してください。');
+                e.target.value = ''; // ファイル選択をリセット
+                return;
+            }
+            setFileError('');
             setProfileImageFile(file);
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -33,8 +42,11 @@ function ProfilePicture({ teamId }) {
         try {
             const response = await axios.patch(`${apiUrl}/teams/${teamId}/update_profile_photo`, formData, {
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'multipart/form-data',
+                },
+                maxContentLength: MAX_FILE_SIZE,
+                maxBodyLength: MAX_FILE_SIZE,
             });
             toast({
                 title: '更新完了',
@@ -47,12 +59,23 @@ function ProfilePicture({ teamId }) {
         } catch (error) {
             toast({
                 title: '画像のアップロードに失敗しました。',
-                description: 'もう一度お試しください。',
+                description: error.response?.data?.message || 'エラーが発生しました。もう一度お試しください。',
                 status: 'error',
                 duration: 9000,
                 isClosable: true,
             });
         }
+    };
+
+    const handleFileButtonClick = () => {
+        toast({
+            title: "エラー",
+            description: "他の画像を選択してください。",
+            status: "info",
+            duration: 3000,
+            isClosable: true,
+        });
+        fileInputRef.current.click();
     };
 
     return (
@@ -70,6 +93,7 @@ function ProfilePicture({ teamId }) {
                     <Input
                         type="file"
                         accept="image/*"
+                        ref={fileInputRef}
                         onChange={handleProfileImageChange}
                         position="absolute"
                         top="0"
@@ -80,6 +104,7 @@ function ProfilePicture({ teamId }) {
                         cursor="pointer"
                     />
                 </Box>
+                {fileError && <Text color="red.500">{fileError}</Text>}
                 <Button colorScheme="teal" onClick={handleUpload} isDisabled={!profileImageFile} w="65%">画像をアップロード</Button>
                 <Button colorScheme="gray" onClick={() => router.push('/teams/manage')} w="65%">あとで設定する</Button>
             </VStack>
