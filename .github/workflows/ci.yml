@@ -43,7 +43,7 @@ jobs:
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
+        echo "MYSQL_HOST=127.0.0.1" >> $GITHUB_ENV
         echo "MYSQL_PORT=3306" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
@@ -79,7 +79,7 @@ jobs:
         echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+        echo "MYSQL_HOST=127.0.0.1" >> .env
         echo "MYSQL_PORT=3306" >> .env
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
@@ -137,7 +137,7 @@ jobs:
     - name: Debug database connection
       run: |
         echo "Attempting to connect to MySQL..."
-        mysql -h${{ secrets.MYSQL_HOST }} -P3306 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e "SHOW DATABASES;"
+        mysql -h127.0.0.1 -P3306 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e "SHOW DATABASES;"
         echo "Checking database.yml..."
         cat config/database.yml
         echo "Checking environment variables..."
