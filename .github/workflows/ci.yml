@@ -77,7 +77,7 @@ jobs:
       working-directory: ./backend
       run: |
         cp config/database.yml.ci config/database.yml
-        docker-compose -f ../docker-compose.yml run --rm -e RAILS_ENV=test backend rake db:create db:schema:load
+        docker-compose -f ../docker-compose.yml run --rm -e RAILS_ENV=test backend exec rake db:create db:schema:load
 
     - name: Run RuboCop
       working-directory: ./backend
