@@ -2,7 +2,8 @@ test:
   adapter: mysql2
   encoding: utf8mb4
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  database: <%= ENV['MYSQL_DATABASE'] %>
+  database: <%= ENV['MYSQL_TEST_DATABASE'] || ENV['MYSQL_DATABASE'] %>
   username: <%= ENV['MYSQL_USER'] %>
   password: <%= ENV['MYSQL_PASSWORD'] %>
   host: db
+  port: 3306
