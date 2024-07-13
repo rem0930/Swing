@@ -5,5 +5,5 @@ test:
   database: <%= ENV['MYSQL_TEST_DATABASE'] || ENV['MYSQL_DATABASE'] %>
   username: <%= ENV['MYSQL_USER'] %>
   password: <%= ENV['MYSQL_PASSWORD'] %>
-  host: db
+  host: 127.0.0.1
   port: 3306
