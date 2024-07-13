@@ -71,7 +71,7 @@ jobs:
           
           # マイグレーションとアセットプリコンパイル
           docker-compose exec -T backend rails db:migrate
-          docker-compose exec -T backend rails assets:precompile
+          # docker-compose exec -T backend rails assets:precompile
           
           docker-compose up -d frontend
           docker-compose up -d nginx
