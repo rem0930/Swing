@@ -81,7 +81,7 @@ jobs:
         echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-        echo "MYSQL_HOST=127.0.0.1" >> .env
+        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}"" >> .env
         echo "MYSQL_PORT=3306" >> .env
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
@@ -133,8 +133,7 @@ jobs:
     - name: Set up database
       working-directory: ./backend
       run: |
-        cp config/database.yml.ci config/database.yml
-        bundle exec rake db:create db:schema:load
+        bundle exec rails db:create db:schema:load RAILS_ENV=test
 
     - name: Debug database connection
       run: |
