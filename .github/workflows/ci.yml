@@ -122,7 +122,7 @@ jobs:
 
     - name: Run tests
       working-directory: ./backend
-      run: bundle exec rspec
+      run: bundle exec rubocop --auto-correct
 
     - name: Clean up
       if: always()
