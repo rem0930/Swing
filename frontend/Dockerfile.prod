@@ -1,8 +1,11 @@
-# ベースイメージ
-FROM node:18-alpine AS base
+# 使用するNode.jsのバージョンを指定
+FROM node:18-alpine
 
-# 作業ディレクトリの設定
-WORKDIR /app
+# コンテナ内での作業ディレクトリを設定
+WORKDIR /usr/src/app
+
+# 必要なパッケージをインストール
+RUN apk add --no-cache curl
 
 # パッケージファイルをコピー
 COPY package.json package-lock.json ./
@@ -10,21 +13,14 @@ COPY package.json package-lock.json ./
 # 依存関係のインストール
 RUN npm ci
 
-# ソースコードをコピー
+# アプリケーションのソースコードをコピー
 COPY . .
 
+# アプリケーションのビルド
 RUN npm run build
 
-# 本番用の最小構成を作成
-FROM node:18-alpine AS production
-WORKDIR /app
-
-# 環境変数を設定
-ENV NODE_ENV=production
-
-# ポートを公開
+# アプリケーションがリスニングするポートを宣言
 EXPOSE 3000
 
-# サーバを起動
-CMD ["node", ".next/standalone/server.js"]
-
+# アプリケーションの起動コマンド
+CMD ["npm", "run", "start"]
