@@ -20,7 +20,7 @@ COPY . .
 RUN npm run build
 
 # アプリケーションがリスニングするポートを宣言
-EXPOSE 3000
+EXPOSE 8000
 
 # アプリケーションの起動コマンド
 CMD ["npm", "run", "start"]
