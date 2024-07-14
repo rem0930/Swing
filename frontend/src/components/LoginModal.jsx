@@ -132,4 +132,6 @@ const LoginModal = forwardRef(({ openSignupModal }, ref) => {
   );
 });
 
+LoginModal.displayName = 'LoginModal';
+
 export default LoginModal;
