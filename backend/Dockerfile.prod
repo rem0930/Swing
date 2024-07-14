@@ -3,7 +3,8 @@ FROM ruby:3.2
 
 # 必要な環境変数を設定
 ENV RAILS_ENV=production \
-    BUNDLE_WITHOUT=development:test
+    BUNDLE_WITHOUT=development:test \
+    BUNDLE_DEPLOYMENT=1
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -19,11 +20,13 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # GemfileとGemfile.lockをコピーして、バンドルインストールを実行
-COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 4 --retry 3 --path vendor/bundle
+COPY backend/Gemfile backend/Gemfile.lock ./
+RUN bundle install --jobs 4 --retry 3 --deployment
+
+# アプリケーションのソースコードをコピー
+COPY backend ./
 
 # wheneverの設定を行う
-COPY . .
 RUN bundle exec whenever --update-crontab
 
 # 古いPIDファイルを削除する
