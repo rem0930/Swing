@@ -21,10 +21,5 @@ RUN bundle exec whenever --update-crontab
 # 古いPIDファイルを削除する
 RUN rm -f tmp/pids/server.pid
 
-# エントリーポイントスクリプトの設定
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
-
 # CRONを起動し、Railsサーバーも起動
 CMD ["bash", "-c", "cron && rails server -b 0.0.0.0 -p 3000"]

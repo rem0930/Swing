@@ -12,11 +12,15 @@ jobs:
     services:
       redis:
         image: redis
+        ports:
+          - 6379:6379
       mysql:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         ports:
           - 3306:3306
         options: >-
@@ -50,20 +54,20 @@ jobs:
         echo "NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}" >> $GITHUB_ENV
         echo "LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH" >> $GITHUB_ENV
         echo "CPATH=/usr/include/mysql:/usr/include:$CPATH" >> $GITHUB_ENV
-    
+
     - name: Install MySQL client and development libraries
       run: |
         sudo apt-get update
         sudo apt-get install -y default-mysql-client libmysqlclient-dev
         sudo apt-get install -y libmysql++-dev
-    
+
     - name: Install dependencies
       working-directory: ./backend
       run: |
         bundle config build.mysql2 --with-mysql-config=/usr/bin/mysql_config
         bundle config set --local deployment 'true'
         bundle install --jobs 4 --retry 3
-        
+
     - name: Create .env file
       run: |
         touch .env
@@ -79,7 +83,7 @@ jobs:
         echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> .env
         echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> .env
         echo "NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}" >> .env
-    
+
     - name: Cache Ruby gems
       uses: actions/cache@v2
       with:

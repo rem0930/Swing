@@ -62,18 +62,16 @@ services:
 
   db:
     image: mysql:8.0
-    ports:
-      - '3306:3306'
     expose:
       - '3306'
     volumes:
       - "db-data:/var/lib/mysql"
       - "./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE = ${MYSQL_DATABASE}
+      - MYSQL_USER = ${MYSQL_USER}
+      - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
     networks:
       - swing-net
 
