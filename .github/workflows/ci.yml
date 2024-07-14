@@ -40,7 +40,8 @@ jobs:
         echo "BUNDLE_WITHOUT=development" >> $GITHUB_ENV
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> $GITHUB_ENV
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
         echo "MYSQL_HOST=127.0.0.1" >> $GITHUB_ENV
@@ -76,7 +77,8 @@ jobs:
       run: |
         touch .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+        echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
         echo "MYSQL_HOST=127.0.0.1" >> .env
@@ -124,7 +126,7 @@ jobs:
       run: |
         echo "MYSQL_HOST: $MYSQL_HOST"
         echo "MYSQL_PORT: $MYSQL_PORT"
-        echo "MYSQL_DATABASE: $MYSQL_DATABASE"
+        echo "MYSQL_TEST_DATABASE: $MYSQL_TEST_DATABASE"
         echo "MYSQL_USER: $MYSQL_USER"
         cat config/database.yml || true
 

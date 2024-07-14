@@ -12,7 +12,9 @@ development:
 
 test:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>
+  database: database: <%= ENV['MYSQL_TEST_DATABASE'] || ENV['MYSQL_DATABASE'] %>
+  host: 127.0.0.1
+  port: 3306
 
 production:
   <<: *default
