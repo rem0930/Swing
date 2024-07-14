@@ -62,9 +62,3 @@ jobs:
           docker-compose up -d db
           docker-compose up -d redis
           docker-compose up -d backend
-          
-          # マイグレーションとアセットプリコンパイル
-          docker-compose exec -T backend rails db:migrate
-          
-          docker-compose up -d frontend
-          docker-compose up -d nginx
