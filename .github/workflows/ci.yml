@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+
   build:
     runs-on: ubuntu-latest
     services:
@@ -20,7 +21,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h localhost"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -111,11 +112,24 @@ jobs:
         ps aux | grep mysql || true
         echo "Listening ports:"
         sudo netstat -tlnp || true
+
     - name: Check MySQL service
       run: |
         sudo systemctl status mysql || true
         sudo netstat -tlnp | grep mysql || true
         sudo docker ps | grep mysql || true
+
+    - name: Wait for MySQL to be ready
+      run: |
+        for i in {1..30}; do
+          if mysqladmin ping -h db --silent; then
+            echo "MySQL is up and running"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 1
+        done
+
     - name: Check MySQL connection info
       run: |
         echo "MYSQL_HOST: $MYSQL_HOST"
