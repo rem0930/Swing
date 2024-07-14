@@ -2,9 +2,11 @@
 FROM ruby:3.2
 
 # 必要な環境変数を設定
-ENV RAILS_ENV=production \
-    BUNDLE_WITHOUT=development:test \
-    BUNDLE_DEPLOYMENT=1
+ENV RAILS_ENV=production
+ENV BUNDLE_WITHOUT=development:test
+ENV BUNDLE_DEPLOYMENT=1
+ENV BUNDLE_PATH=/usr/local/bundle
+ENV BUNDLE_APP_CONFIG=/usr/local/bundle/config
 
 # 作業ディレクトリを設定
 WORKDIR /app
@@ -20,17 +22,20 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/*
 
 # GemfileとGemfile.lockをコピーして、バンドルインストールを実行
-COPY backend/Gemfile backend/Gemfile.lock ./
+COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 4 --retry 3 --deployment
 
+# 必要なRailsおよびその他の依存関係をインストール
+RUN gem install rails
+
 # アプリケーションのソースコードをコピー
-COPY backend ./
+COPY . ./
 
 # wheneverの設定を行う
 RUN bundle exec whenever --update-crontab
 
 # 古いPIDファイルを削除する
-RUN rm -f tmp/pids/server.pid
+RUN rm -f /app/tmp/pids/server.pid
 
 # エントリーポイントとコマンドを設定
 CMD ["bash", "-c", "cron && bundle exec rails server -b 0.0.0.0 -p 3000"]

@@ -6,19 +6,21 @@ WORKDIR /app
 
 # 依存関係のインストール
 FROM base AS deps
-COPY frontend/package.json frontend/package-lock.json ./
+COPY package.json package-lock.json ./
 RUN npm ci
 
 # ビルド
 FROM base AS build
 COPY --from=deps /app /app
-COPY frontend .
+COPY . ./
 RUN npm run build
 
 # 実行環境のセットアップ
 FROM node:18-alpine AS production
 WORKDIR /app
 COPY --from=build /app /app
+COPY --from=build /app/.next /app/.next
+COPY --from=build /app/public /app/public
 ENV NODE_ENV=production
 EXPOSE 3000
-CMD ["npm", "start"]
+CMD ["node", ".next/standalone/server.js"]

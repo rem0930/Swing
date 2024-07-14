@@ -5,3 +5,4 @@ docker/db/*
 
 docker/redis/data/
 .env
+*.log

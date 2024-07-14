@@ -7,7 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 function App({ Component, pageProps }) {
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  // console.log('API Key:', googleMapsApiKey); // デバッグ用
+  console.log('API Key:', googleMapsApiKey); // デバッグ用
 
   if (!googleMapsApiKey) {
     console.error('Google Maps API key is not set');
