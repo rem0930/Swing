@@ -1,6 +1,7 @@
 .env
 .env.development
 docker/db/*
+!docker/db/my.cnf
 
 docker/redis/data/
 .env

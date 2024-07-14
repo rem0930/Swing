@@ -7,18 +7,27 @@ on:
     branches: [main]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     services:
       redis:
         image: redis
-      db:
+        ports:
+          - 6379:6379
+      mysql:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
           MYSQL_DATABASE: ${{ secrets.MYSQL_TEST_DATABASE }}
-
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
     - uses: actions/checkout@v2
 
@@ -26,27 +35,49 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.2
+        bundler-cache: true
 
     - name: Set up environment variables
       run: |
+        echo "RAILS_ENV=test" >> $GITHUB_ENV
+        echo "BUNDLE_WITHOUT=development" >> $GITHUB_ENV
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> $GITHUB_ENV
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> $GITHUB_ENV
+        echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> $GITHUB_ENV
+        echo "MYSQL_HOST=127.0.0.1" >> $GITHUB_ENV
+        echo "MYSQL_PORT=3306" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}" >> $GITHUB_ENV
+        echo "LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LIBRARY_PATH" >> $GITHUB_ENV
+        echo "CPATH=/usr/include/mysql:/usr/include:$CPATH" >> $GITHUB_ENV
+
+    - name: Install MySQL client and development libraries
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y default-mysql-client libmysqlclient-dev
+        sudo apt-get install -y libmysql++-dev
+
+    - name: Install dependencies
+      working-directory: ./backend
+      run: |
+        bundle config build.mysql2 --with-mysql-config=/usr/bin/mysql_config
+        bundle config set --local deployment 'true'
+        bundle install --jobs 4 --retry 3
 
     - name: Create .env file
       run: |
         touch .env
         echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-        echo "MYSQL_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
+        echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+        echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-        echo "MYSQL_HOST=${{ secrets.MYSQL_HOST }}" >> .env
+        echo "MYSQL_HOST=127.0.0.1" >> .env
+        echo "MYSQL_PORT=3306" >> .env
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
         echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> .env
@@ -61,29 +92,40 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    - name: Install dependencies
-      working-directory: ./backend
+    - name: Wait for MySQL to be ready
       run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
+        for i in {1..30}; do
+          if mysqladmin ping -h 127.0.0.1 --silent; then
+            echo "MySQL is up and running"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 1
+        done
 
-    - name: Build Docker image
-      run: docker-compose --env-file .env build
+    - name: Check MySQL connection info
+      run: |
+        echo "MYSQL_HOST: $MYSQL_HOST"
+        echo "MYSQL_PORT: $MYSQL_PORT"
+        echo "MYSQL_TEST_DATABASE: $MYSQL_TEST_DATABASE"
+        echo "MYSQL_USER: $MYSQL_USER"
+        cat backend/config/database.yml || true
 
     - name: Set up database
       working-directory: ./backend
       run: |
-        cp config/database.yml.ci config/database.yml
-        docker-compose run --rm -e RAILS_ENV=test --env-file .env backend rake db:create db:schema:load
+        bundle exec rails db:create db:schema:load RAILS_ENV=test
 
     - name: Run RuboCop
       working-directory: ./backend
-      run: docker-compose run --rm --env-file .env backend bundle exec rubocop
+      run: bundle exec rubocop
 
     - name: Run tests
       working-directory: ./backend
-      run: docker-compose run --rm -e RAILS_ENV=test --env-file .env backend bundle exec rspec
+      run: bundle exec rubocop --auto-correct
 
     - name: Clean up
+      if: always()
       working-directory: ./backend
-      run: docker-compose down --volumes
+      run: |
+        bundle exec rake db:drop RAILS_ENV=test || true

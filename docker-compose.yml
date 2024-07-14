@@ -1,11 +1,14 @@
 services:
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
     ports:
       - '8000:8000'
     depends_on:
       - backend
     environment:
+      - NODE_ENV=production
       - NEXT_PUBLIC_API_BASE_URL=https://swi-ng.com/api
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
@@ -21,7 +24,9 @@ services:
       - swing-net
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
     expose:
       - '3000'
     depends_on:
@@ -63,10 +68,10 @@ services:
       - "db-data:/var/lib/mysql"
       - "./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD = ${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE = ${MYSQL_DATABASE}
+      - MYSQL_USER = ${MYSQL_USER}
+      - MYSQL_PASSWORD = ${MYSQL_PASSWORD}
     networks:
       - swing-net
 
@@ -84,3 +89,4 @@ networks:
 
 volumes:
   db-data:
+  redis-data:

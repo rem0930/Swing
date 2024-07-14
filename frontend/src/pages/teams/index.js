@@ -31,7 +31,7 @@ function TeamsPage() {
         };
 
         fetchTeams();
-    }, []);
+    }, [toast]);
 
     return (
         <Box p={5}>
