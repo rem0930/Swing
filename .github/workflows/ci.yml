@@ -20,7 +20,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping"
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -43,7 +43,7 @@ jobs:
         echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> $GITHUB_ENV
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> $GITHUB_ENV
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> $GITHUB_ENV
-        echo "MYSQL_HOST=db" >> $GITHUB_ENV
+        echo "MYSQL_HOST=127.0.0.1" >> $GITHUB_ENV
         echo "MYSQL_PORT=3306" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}" >> $GITHUB_ENV
         echo "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" >> $GITHUB_ENV
@@ -57,14 +57,6 @@ jobs:
         sudo apt-get install -y default-mysql-client libmysqlclient-dev
         sudo apt-get install -y libmysql++-dev
     
-    - name: Debug MySQL configuration
-      run: |
-        echo "MySQL configuration:"
-        mysql_config --cflags
-        mysql_config --libs
-        echo "MySQL include directory:"
-        ls -l /usr/include/mysql || true
-
     - name: Install dependencies
       working-directory: ./backend
       run: |
@@ -80,7 +72,7 @@ jobs:
         echo "MYSQL_TEST_DATABASE=${{ secrets.MYSQL_TEST_DATABASE }}" >> .env
         echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
         echo "MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}" >> .env
-        echo "MYSQL_HOST=db" >> .env
+        echo "MYSQL_HOST=127.0.0.1" >> .env
         echo "MYSQL_PORT=3306" >> .env
         echo "RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}" >> .env
         echo "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" >> .env
@@ -96,26 +88,17 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gems-
 
-    - name: Install dependencies
-      working-directory: ./backend
+    - name: Wait for MySQL to be ready
       run: |
-        bundle config build.mysql2 --with-mysql-dir=/usr/lib/x86_64-linux-gnu
-        bundle config set --local deployment 'true'
-        bundle install --jobs 4 --retry 3
+        for i in {1..30}; do
+          if mysqladmin ping -h 127.0.0.1 --silent; then
+            echo "MySQL is up and running"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 1
+        done
 
-    - name: Debug MySQL
-      run: |
-        echo "MySQL service status:"
-        sudo service mysql status || true
-        echo "MySQL processes:"
-        ps aux | grep mysql || true
-        echo "Listening ports:"
-        sudo netstat -tlnp || true
-    - name: Check MySQL service
-      run: |
-        sudo systemctl status mysql || true
-        sudo netstat -tlnp | grep mysql || true
-        sudo docker ps | grep mysql || true
     - name: Check MySQL connection info
       run: |
         echo "MYSQL_HOST: $MYSQL_HOST"
@@ -128,15 +111,6 @@ jobs:
       working-directory: ./backend
       run: |
         bundle exec rails db:create db:schema:load RAILS_ENV=test
-
-    - name: Debug database connection
-      run: |
-        echo "Attempting to connect to MySQL..."
-        mysql -hdb -P3306 -uroot -p${{ secrets.MYSQL_ROOT_PASSWORD }} -e "SHOW DATABASES;"
-        echo "Checking database.yml..."
-        cat backend/config/database.yml
-        echo "Checking environment variables..."
-        env | grep MYSQL
 
     - name: Run RuboCop
       working-directory: ./backend
