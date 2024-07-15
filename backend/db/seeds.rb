@@ -83,8 +83,8 @@ Recruitment.create!([
     team_id: team2.id
   },
   {
-    title: "春のフレンドリー - 対戦相手募集",
-    description: "春のフレンドリーマッチの対戦相手を募集しています。楽しくプレーしましょう！",
+    title: "夏のフレンドリーマッチ - 対戦相手募集",
+    description: "夏のフレンドリーマッチの対戦相手を募集しています。楽しくプレーしましょう！",
     address: "東京都千代田区",
     latitude: 35.6938,
     longitude: 139.7034,
