@@ -12,16 +12,6 @@ ADD Gemfile /app/Gemfile
 ADD Gemfile.lock /app/Gemfile.lock
 RUN gem update && bundle install
 
-# 環境変数ファイルをビルド時にコピー
-ARG RAILS_MASTER_KEY
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCES_KEY
-ARG AWS_REGION
-ARG AWS_BUCKET
-
-# 環境変数ファイルをコピー
-COPY .env .env
-
 # アプリケーションのソースコードをコピー
 ADD . /app
 

@@ -3,6 +3,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
+      args:
+        NEXT_PUBLIC_GEOCODING_API_KEY: ${NEXT_PUBLIC_GEOCODING_API_KEY}
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+        NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: ${NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
     ports:
       - '8000:8000'
     depends_on:
@@ -20,7 +24,6 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
-      - ./frontend/.env:/usr/src/app/.env
     networks:
       - swing-net
 
@@ -43,7 +46,6 @@ services:
     command: bash -c "rm -f /app/tmp/pids/server.pid && cron && rails server -b '0.0.0.0' -p 3000"
     volumes:
       - ./backend:/app
-      - ./backend/.env:/app/.env
     networks:
       - swing-net
 

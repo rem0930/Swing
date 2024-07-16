@@ -24,9 +24,13 @@ jobs:
 
     - name: Build and push frontend Docker image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest ./frontend
+       docker build -t ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest \
+          --build-arg NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }} \
+          --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }} \
+          --build-arg NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }} \
+          ./frontend
         docker push ${{ secrets.DOCKER_USERNAME }}/swing-frontend:latest
-
+    
     - name: Build and push backend Docker image
       run: |
         docker build -t ${{ secrets.DOCKER_USERNAME }}/swing-backend:latest ./backend
@@ -57,6 +61,8 @@ jobs:
           export NEXT_PUBLIC_GEOCODING_API_KEY=${{ secrets.NEXT_PUBLIC_GEOCODING_API_KEY }}
           export NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}
           export NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID }}
+
+          export RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
           
           # コンテナの起動
           docker-compose up -d db

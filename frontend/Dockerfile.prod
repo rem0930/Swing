@@ -10,25 +10,22 @@ RUN apk add --no-cache curl
 # パッケージファイルをコピー
 COPY package.json package-lock.json ./
 
-# 依存関係のインストール
-RUN npm ci
-
-# 環境変数ファイルをコピー
-COPY .env .env
-
-# 環境変数ファイルをビルド時にコピー
+# 環境変数をビルド時に渡すためのARGを設定
 ARG NEXT_PUBLIC_GEOCODING_API_KEY
 ARG NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 ARG NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID
 
-# アプリケーションのソースコードをコピー
+# ARGからENVに設定
+ENV NEXT_PUBLIC_GEOCODING_API_KEY=$NEXT_PUBLIC_GEOCODING_API_KEY
+ENV NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+ENV NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=$NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID
+
+# 依存関係のインストール
+RUN npm ci
+
 COPY . .
 
-# 環境変数を設定してビルドを実行
-RUN NEXT_PUBLIC_GEOCODING_API_KEY=$NEXT_PUBLIC_GEOCODING_API_KEY \
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=$NEXT_PUBLIC_GOOGLE_MAPS_API_KEY \
-    NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID=$NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID \
-    npm run build
+RUN npm run build
 
 # アプリケーションがリスニングするポートを宣言
 EXPOSE 8000
