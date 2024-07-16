@@ -19,6 +19,9 @@ ARG AWS_SECRET_ACCES_KEY
 ARG AWS_REGION
 ARG AWS_BUCKET
 
+# 環境変数ファイルをコピー
+COPY .env .env
+
 # アプリケーションのソースコードをコピー
 ADD . /app
 
