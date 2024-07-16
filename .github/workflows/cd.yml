@@ -41,7 +41,7 @@ jobs:
         port: 22
         script: |
           set -e  # エラーが発生した場合にスクリプトを終了
-          export COMPOSE_HTTP_TIMEOUT=600
+          export COMPOSE_HTTP_TIMEOUT=1200
           cd Swing
           git pull origin main
           docker-compose down
