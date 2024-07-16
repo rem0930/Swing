@@ -20,6 +20,7 @@ services:
     volumes:
       - ./frontend:/usr/src/app
       - /usr/src/app/node_modules
+      - ./frontend/.env:/usr/src/app/.env
     networks:
       - swing-net
 
@@ -42,6 +43,7 @@ services:
     command: bash -c "rm -f /app/tmp/pids/server.pid && cron && rails server -b '0.0.0.0' -p 3000"
     volumes:
       - ./backend:/app
+      - ./backend/.env:/app/.env
     networks:
       - swing-net
 
