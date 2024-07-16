@@ -1,41 +1,26 @@
-# ベースイメージ
 FROM ruby:3.2
 
-# 必要な環境変数を設定
-ENV RAILS_ENV=production
-ENV BUNDLE_WITHOUT=development:test
-ENV BUNDLE_DEPLOYMENT=1
-ENV BUNDLE_PATH=/usr/local/bundle
-ENV BUNDLE_APP_CONFIG=/usr/local/bundle/config
-
-# 作業ディレクトリを設定
+# 必要なディレクトリを作成
+RUN mkdir /app
 WORKDIR /app
 
-# 必要なパッケージをインストール
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends \
-    default-mysql-client \
-    default-libmysqlclient-dev \
-    cron \
-    build-essential \
-    libpq-dev && \
-    rm -rf /var/lib/apt/lists/*
+# 必要なライブラリをインストール
+RUN apt-get update -qq && apt-get install -y default-mysql-client cron
 
 # GemfileとGemfile.lockをコピーして、バンドルインストールを実行
-COPY Gemfile Gemfile.lock ./
-RUN bundle install --jobs 4 --retry 3 --deployment
-
-# 必要なRailsおよびその他の依存関係をインストール
-RUN gem install rails
+ADD Gemfile /app/Gemfile
+ADD Gemfile.lock /app/Gemfile.lock
+RUN gem update && bundle install
 
 # アプリケーションのソースコードをコピー
-COPY . ./
+ADD . /app
 
 # wheneverの設定を行う
 RUN bundle exec whenever --update-crontab
 
 # 古いPIDファイルを削除する
-RUN rm -f /app/tmp/pids/server.pid
+RUN rm -f tmp/pids/server.pid
+
 
 # エントリーポイントとコマンドを設定
 CMD ["bash", "-c", "cron && bundle exec rails server -b 0.0.0.0 -p 3000"]
