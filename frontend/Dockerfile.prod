@@ -13,6 +13,11 @@ COPY package.json package-lock.json ./
 # 依存関係のインストール
 RUN npm ci
 
+# 環境変数ファイルをビルド時にコピー
+ARG NEXT_PUBLIC_GEOCODING_API_KEY
+ARG NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+ARG NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID
+
 # アプリケーションのソースコードをコピー
 COPY . .
 
