@@ -4,5 +4,6 @@ docker/db/*
 !docker/db/my.cnf
 
 docker/redis/data/
-.env
+.env*s
 *.log
+
