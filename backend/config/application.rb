@@ -24,5 +24,6 @@ module App
     config.autoload_paths += %W(#{config.root}/app/uploaders)
 
     config.hosts << "https://swi-ng.com/"
+    config.hosts << "54.249.6.3"
   end
 end
