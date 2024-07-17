@@ -12,6 +12,11 @@ COPY Gemfile /app/Gemfile
 COPY Gemfile.lock /app/Gemfile.lock
 RUN gem update && bundle install
 
+# GemfileとGemfile.lockをコピーして、バンドルインストールを実行
+COPY Gemfile /app/Gemfile
+COPY Gemfile.lock /app/Gemfile.lock
+RUN gem update && bundle install
+
 # アプリケーションのソースコードをコピー
 ADD . /app
 
@@ -20,7 +25,6 @@ RUN bundle exec whenever --update-crontab
 
 # 古いPIDファイルを削除する
 RUN rm -f tmp/pids/server.pid
-
 
 # エントリーポイントとコマンドを設定
 CMD ["bash", "-c", "cron && bundle exec rails server -b 0.0.0.0 -p 3000"]

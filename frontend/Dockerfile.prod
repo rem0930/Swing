@@ -15,11 +15,7 @@ RUN npm ci
 
 COPY . .
 
-# 環境変数の確認
-RUN printenv NEXT_PUBLIC_GEOCODING_API_KEY
-RUN printenv NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-RUN printenv NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID
-
+# ビルドコマンドの実行
 RUN npm run build
 
 # アプリケーションがリスニングするポートを宣言

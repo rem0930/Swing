@@ -3,19 +3,16 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.prod
-      args:
-        NEXT_PUBLIC_GEOCODING_API_KEY: ${NEXT_PUBLIC_GEOCODING_API_KEY}
-        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-        NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: ${NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
     ports:
       - '8000:8000'
+    environment:
+      NEXT_PUBLIC_GEOCODING_API_KEY: ${NEXT_PUBLIC_GEOCODING_API_KEY}
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: ${NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+      NODE_ENV: ${NODE_ENV}    
     depends_on:
       - backend
-    env_file:
-      - .env.production
-    volumes:
-      - ./frontend:/usr/src/app
-      - /usr/src/app/node_modules
     networks:
       - swing-net
 
@@ -29,12 +26,12 @@ services:
       - db
       - redis
     environment:
-      - RAILS_ENV=production
-      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_BUCKET=${AWS_BUCKET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET: ${AWS_BUCKET}
+      RAILS_ENV: ${RAILS_ENV}
+      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
     networks:
       - swing-net
 
@@ -60,13 +57,13 @@ services:
     expose:
       - '3306'
     volumes:
-      - "db-data:/var/lib/mysql"
-      - "./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf"
+      - db-data:/var/lib/mysql
+      - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    - MYSQL_DATABASE=${MYSQL_DATABASE}
-    - MYSQL_USER=${MYSQL_USER}
-    - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
       - swing-net
 
@@ -75,7 +72,7 @@ services:
     expose:
       - '6379'
     volumes:
-      - "./docker/redis/data:/data"
+      - redis-data:/data
     networks:
       - swing-net
 
