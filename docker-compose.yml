@@ -1,37 +1,31 @@
+version: '3.8'
 services:
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
+    image: rem0930/frontend:latest
     ports:
       - '8000:8000'
     environment:
-      NEXT_PUBLIC_GEOCODING_API_KEY: ${NEXT_PUBLIC_GEOCODING_API_KEY}
-      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
-      NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID: ${NEXT_PUBLIC_GOOGLE_MAPS_MAP_ID}
-      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
-      NODE_ENV: ${NODE_ENV}    
+      - NODE_ENV=production
     depends_on:
       - backend
     networks:
       - swing-net
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.prod
+    image: rem0930/backend:latest
     expose:
       - '3000'
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAYS2NWYHSZGUDU772
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=ap-northeast-1
+      - AWS_BUCKET=swing-bucket
+      - RAILS_ENV=production
+      - RAILS_MASTER_KEY=111d3ac5bd46fb18972634f567641474
+      - DATABASE_URL=mysql2://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
     depends_on:
       - db
       - redis
-    environment:
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
-      AWS_REGION: ${AWS_REGION}
-      AWS_BUCKET: ${AWS_BUCKET}
-      RAILS_ENV: ${RAILS_ENV}
-      RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
     networks:
       - swing-net
 
@@ -45,7 +39,7 @@ services:
       - /etc/letsencrypt/ssl-dhparams.pem:/etc/nginx/ssl/ssl-dhparams.pem
     ports:
       - '80:80'
-      - "443:443"
+      - '443:443'
     depends_on:
       - frontend
       - backend
@@ -60,15 +54,15 @@ services:
       - db-data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    - MYSQL_DATABASE=${MYSQL_DATABASE}
+    - MYSQL_USER=${MYSQL_USER}
+    - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks:
       - swing-net
 
   redis:
-    image: redis:7.2.5
+    image: redis:latest
     expose:
       - '6379'
     volumes:
