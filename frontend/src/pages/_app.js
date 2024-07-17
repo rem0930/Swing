@@ -10,15 +10,22 @@ function App({ Component, pageProps }) {
 
   if (!googleMapsApiKey) {
     console.error('Google Maps API key is not set');
-    return null; // または適切なエラーメッセージを表示
+    // 開発環境ではエラーメッセージを表示し、本番環境ではより控えめなメッセージを表示
+    return process.env.NODE_ENV === 'development' 
+      ? <div>Error: Google Maps API key is not set</div>
+      : <div>Sorry, there was an error loading the application. Please try again later.</div>;
   }
 
   return (
     <ChakraProvider theme={customTheme}>
       <UserProvider>
-        <APIProvider apiKey={googleMapsApiKey}>
+        {Component.needsGoogleMaps ? (
+          <APIProvider apiKey={googleMapsApiKey}>
+            <Component {...pageProps} />
+          </APIProvider>
+        ) : (
           <Component {...pageProps} />
-        </APIProvider>
+        )}
       </UserProvider>
     </ChakraProvider>
   );
