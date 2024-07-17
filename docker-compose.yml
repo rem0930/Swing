@@ -22,7 +22,6 @@ services:
       - AWS_BUCKET=swing-bucket
       - RAILS_ENV=production
       - RAILS_MASTER_KEY=111d3ac5bd46fb18972634f567641474
-      - DATABASE_URL=mysql2://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}
     depends_on:
       - db
       - redis
@@ -54,10 +53,11 @@ services:
       - db-data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-    - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    - MYSQL_DATABASE=${MYSQL_DATABASE}
-    - MYSQL_USER=${MYSQL_USER}
-    - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=0606araki!
+      - MYSQL_DATABASE=swing
+      - MYSQL_USER=rem0930
+      - MYSQL_PASSWORD=StrongPassword123!
+      - MYSQL_HOST: db
     networks:
       - swing-net
 

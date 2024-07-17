@@ -79,6 +79,11 @@ jobs:
                 - AWS_BUCKET=${{ secrets.AWS_BUCKET }}
                 - RAILS_ENV=${{ secrets.RAILS_ENV }}
                 - RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
+                - MYSQL_USER=${{ secrets.MYSQL_USER }}
+                - MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+                - MYSQL_HOST=${{ secrets.MYSQL_HOST }}
+                - MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+                - MYSQL_PORT=${{ secrets.MYSQL_PORT }}
               depends_on:
                 - db
                 - redis
