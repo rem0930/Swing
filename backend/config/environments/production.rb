@@ -56,4 +56,7 @@ Rails.application.configure do
 
   config.hosts << "54.249.6.3"
   config.hosts << "https://swi-ng.com/"
+  config.hosts << "swi-ng.com"
+  config.hosts << "swing_backend_1"
+  config.hosts << "backend"
 end
