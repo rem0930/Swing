@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 function ProfilePicture({ teamId }) {
     const [profileImage, setProfileImage] = useState(null);

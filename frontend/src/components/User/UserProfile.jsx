@@ -16,8 +16,8 @@ const UserProfile = () => {
   }
 
   return (
-    <Box maxW="1200px" mx="auto" mt={8} p={4}>
-      <Grid templateColumns={{ base: '1fr', md: '1fr 2fr' }} gap={6}>
+    <Box maxW="1200px" mx="auto" mt={8} p={4} m={4}>
+      <Grid templateColumns={{ base: '1fr', md: '1fr 2fr' }} gap={8}>
         <GridItem>
           <UserInfo />
         </GridItem>

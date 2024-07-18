@@ -1,11 +1,15 @@
 import React, { useState, useRef } from 'react';
-import { Box, Button, FormControl, FormLabel, Input, Avatar, Stack, useToast, IconButton, Text } from '@chakra-ui/react';
+import {
+  Box, Button, FormControl, FormLabel, Input, Avatar, Stack, useToast, IconButton, Text,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton,
+  Textarea, VStack
+} from '@chakra-ui/react';
 import { useUser } from '../../context/UserContext';
 import axios from 'axios';
-import { FiCamera } from 'react-icons/fi';  // 編集アイコンとして使用
+import { FiCamera } from 'react-icons/fi';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-const MAX_FILE_SIZE = 3 * 1024 * 1024;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const EditProfile = ({ user, setIsEditing }) => {
   const { setUser } = useUser();
@@ -18,6 +22,7 @@ const EditProfile = ({ user, setIsEditing }) => {
   const [fileError, setFileError] = useState('');
   const fileInputRef = useRef(null);
   const toast = useToast();
+  const [isOpen, setIsOpen] = useState(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +34,7 @@ const EditProfile = ({ user, setIsEditing }) => {
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
         setFileError('別の写真を選択してください。');
-        e.target.value = null; // ファイル選択をリセット
+        e.target.value = null;
         return;
       }
       setFileError('');
@@ -121,52 +126,69 @@ const EditProfile = ({ user, setIsEditing }) => {
       bio: user.bio,
       profile_photo_file: null,
     });
+    setIsOpen(false);
     setIsEditing(false);
   };
 
   return (
-    <>
-      <Box position="relative" display="inline-block">
-        <Avatar size="xl" name={user.user_name} src={formData.profile_photo} opacity={formData.profile_photo_file ? 0.6 : 1} />
-        <IconButton
-          icon={<FiCamera />}
-          position="absolute"
-          top="50%"
-          left="50%"
-          transform="translate(-50%, -50%)"
-          aria-label="Edit Profile Photo"
-          onClick={() => fileInputRef.current.click()}
-        />
-        <Input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleProfileImageChange}
-          style={{ display: 'none' }}
-        />
-        {fileError && <Text color="red.500">{fileError}</Text>}
-      </Box>
-      <FormLabel htmlFor="user_name">ユーザー名</FormLabel>
-      <Input
-        fontSize="xl"
-        fontWeight="bold"
-        value={formData.user_name}
-        name="user_name"
-        onChange={handleChange}
-      />
-      <Box w="100%">
-        <FormControl>
-          <FormLabel htmlFor="bio">Bio</FormLabel>
-          <Input id="bio" value={formData.bio} name="bio" onChange={handleChange} />
-        </FormControl>
-      </Box>
-      <Stack direction="row" spacing={4}>
-        <Button colorScheme="teal" onClick={handleSave}>
-          保存
-        </Button>
-        <Button onClick={handleCancel}>キャンセル</Button>
-      </Stack>
-    </>
+    <Modal isOpen={isOpen} onClose={handleCancel} size="xl">
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>プロフィールを編集</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <VStack spacing={4} align="center">
+            <Box position="relative" display="inline-block">
+              <Avatar size="2xl" name={user.user_name} src={formData.profile_photo} opacity={formData.profile_photo_file ? 0.6 : 1} />
+              <IconButton
+                icon={<FiCamera />}
+                position="absolute"
+                bottom="0"
+                right="0"
+                aria-label="Edit Profile Photo"
+                onClick={() => fileInputRef.current.click()}
+              />
+              <Input
+                type="file"
+                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleProfileImageChange}
+                style={{ display: 'none' }}
+              />
+            </Box>
+            {fileError && <Text color="red.500">{fileError}</Text>}
+
+            <FormControl>
+              <FormLabel htmlFor="user_name">ユーザー名</FormLabel>
+              <Input
+                id="user_name"
+                value={formData.user_name}
+                name="user_name"
+                onChange={handleChange}
+              />
+            </FormControl>
+
+            <FormControl>
+              <FormLabel htmlFor="bio">Bio</FormLabel>
+              <Textarea
+                id="bio"
+                value={formData.bio}
+                name="bio"
+                onChange={handleChange}
+                rows={5}
+              />
+            </FormControl>
+          </VStack>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button colorScheme="teal" mr={3} onClick={handleSave}>
+            保存
+          </Button>
+          <Button variant="ghost" onClick={handleCancel}>キャンセル</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 };
 
