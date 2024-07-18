@@ -5,7 +5,7 @@ services:
     ports:
       - '8000:8000'
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV}
     depends_on:
       - backend
     networks:
@@ -62,7 +62,6 @@ services:
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_HOST: db
     networks:
       - swing-net
 
