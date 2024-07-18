@@ -16,7 +16,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onDelete }) => {
             </Text>
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="teal" mr={3} onClick={onClose}>
               キャンセル
             </Button>
             <Button colorScheme="red" onClick={onDelete}>

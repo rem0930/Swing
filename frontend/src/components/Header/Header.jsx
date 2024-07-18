@@ -2,22 +2,23 @@ import React, { useRef } from 'react';
 import {
   Box,
   Flex,
-  IconButton,
+  Button,
   useDisclosure,
-  useColorModeValue,
+  IconButton,
   HStack,
+  VStack,
   InputGroup,
   InputLeftElement,
   InputRightElement,
   Input,
   Avatar,
-  Button,
   Menu,
   MenuButton,
   MenuList,
   MenuItem,
   MenuDivider,
-  Stack
+  Stack,
+  Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { FiMapPin, FiBell, FiMessageCircle, FiUsers } from "react-icons/fi";
@@ -54,13 +55,13 @@ const Header = () => {
 
   return (
     <Box
-      bg={useColorModeValue("gray.100", "gray.900")}
+      bg="white"
       px={4}
       position="fixed"
       width="100%"
       zIndex="1000"
       boxShadow="md"
-      h= "64px"
+      h="64px"
     >
       <Flex h="64px" alignItems={"center"} justifyContent={"space-between"}>
         <IconButton
@@ -70,36 +71,7 @@ const Header = () => {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <HStack spacing={8} alignItems={"center"}>
-          <Box><NextLink href="/">Swing</NextLink></Box>
-          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-            {user && (
-              <>
-                <NextLink href="/notifications">
-                  <IconButton
-                    icon={<FiBell />}
-                    aria-label="Notifications"
-                    variant="ghost"
-                  />
-                </NextLink>
-                <NextLink href="/teams/manage">
-                  <IconButton
-                    icon={<FiUsers />}
-                    aria-label="Manage Team"
-                    variant="ghost"
-                  />
-                </NextLink>
-                <NextLink href="messages">
-                  <IconButton
-                    icon={<FiMessageCircle />}
-                    aria-label="Messages"
-                    variant="ghost"
-                  />
-                </NextLink>
-              </>
-            )}
-          </HStack>
-        </HStack>
+        <Box><NextLink href="/">Swing</NextLink></Box>
         <Flex flex={1} justifyContent={"center"} maxW="800px" mx={4}>
           <InputGroup>
             <InputLeftElement pointerEvents="none">
@@ -114,6 +86,32 @@ const Header = () => {
             <Input type="text" placeholder="地域、都市名" borderLeftRadius={0} />
           </InputGroup>
         </Flex>
+        <HStack spacing={8} alignItems={"center"}>
+          <HStack as={"nav"} spacing={1} display={{ base: "none", md: "flex" }}>
+            {user && (
+              <>
+                <NextLink href="/notifications">
+                  <Button variant="ghost" flexDirection="column" alignItems="center">
+                    <FiBell />
+                    <Text fontSize="xs" mt={1}>通知</Text>
+                  </Button>
+                </NextLink>
+                <NextLink href="/teams/manage">
+                  <Button variant="ghost" flexDirection="column" alignItems="center">
+                    <FiUsers />
+                    <Text fontSize="xs" mt={1}>チームを管理</Text>
+                  </Button>
+                </NextLink>
+                <NextLink href="/messages">
+                  <Button variant="ghost" flexDirection="column" alignItems="center">
+                    <FiMessageCircle />
+                    <Text fontSize="xs" mt={1}>メッセージ</Text>
+                  </Button>
+                </NextLink>
+              </>
+            )}
+          </HStack>
+        </HStack>
         <Flex alignItems={"center"}>
           {user ? (
             <Menu>
@@ -134,11 +132,21 @@ const Header = () => {
                   <MenuItem>プロフィール</MenuItem>
                 </NextLink>
                 <MenuDivider />
+                <NextLink href="/teams/manage">
+                  <MenuItem>チームを管理</MenuItem>
+                </NextLink>
+                <MenuDivider />
                 <MenuItem onClick={logout}>ログアウト</MenuItem>
               </MenuList>
             </Menu>
           ) : (
             <>
+              <Button onClick={openLoginModal} variant="outline" color="black" bg="gray.200">
+                ログイン
+              </Button>
+              <Button onClick={openSignupModal} variant="solid" ml={2} color="white" bg="teal.500">
+                新規登録
+              </Button>
               <LoginModal ref={loginModalRef} openSignupModal={openSignupModal} />  {/* ログインモーダルを使用 */}
               <SignupModal ref={signupModalRef} openLoginModal={openLoginModal} />  {/* サインアップモーダルを使用 */}
             </>
@@ -151,7 +159,6 @@ const Header = () => {
           <Stack as={"nav"} spacing={4}>
               <>
                 <NextLink href="/notifications">お知らせ</NextLink>
-                <NextLink href="/teams/manage">チームを管理する</NextLink>
                 <NextLink href="/messages">メッセージ</NextLink>
               </>
           </Stack>

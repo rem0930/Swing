@@ -34,13 +34,13 @@ module Api
 
       user_team = @current_user&.team
       is_user_team = user_team ? (@recruitment.team_id == user_team.id) : false
+      is_applied = @current_user ? @recruitment.applications.exists?(user: @current_user) : false
 
-      Rails.logger.info "Current User ID: #{@current_user&.id}"
-      Rails.logger.info "User Team ID: #{user_team&.id}"
-      Rails.logger.info "Recruitment Team ID: #{@recruitment.team_id}"
-      Rails.logger.info "is_user_team: #{is_user_team}"
-
-      render json: { recruitment: RecruitmentSerializer.new(@recruitment), is_user_team: is_user_team }
+      render json: {
+        recruitment: RecruitmentSerializer.new(@recruitment),
+        is_user_team: is_user_team,
+        is_applied: is_applied
+      }
     end
 
     # POST /recruitments

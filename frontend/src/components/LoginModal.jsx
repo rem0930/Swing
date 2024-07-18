@@ -82,8 +82,6 @@ const LoginModal = forwardRef(({ openSignupModal }, ref) => {
 
   return (
     <>
-      <Button onClick={onOpen}>ログイン</Button>
-
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay bg="blackAlpha.800" />
         <ModalContent>

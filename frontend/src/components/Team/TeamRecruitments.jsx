@@ -79,7 +79,7 @@ const TeamRecruitments = ({ recruitments }) => {
   return (
     <Box>
       <Tabs variant="soft-rounded" colorScheme="teal">
-        <TabList>
+        <TabList ml={5}>
           <Tab>全ての募集</Tab>
           <Tab>メンバー募集</Tab>
           <Tab>対戦相手募集</Tab>

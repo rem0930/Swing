@@ -2,7 +2,7 @@ import { Box, Input, Textarea, Button, Flex, Avatar, IconButton, Text, useToast 
 import { useState, useRef } from 'react';
 import { FiCamera } from 'react-icons/fi';
 
-const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 const EditTeamForm = ({ teamData, onSave, onCancel }) => {
   const [updatedTeamData, setUpdatedTeamData] = useState(teamData);

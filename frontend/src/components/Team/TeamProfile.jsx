@@ -1,5 +1,6 @@
 import {
-  Box, Flex, Heading, Text, Avatar, Button, useDisclosure, Input, Textarea, IconButton, useToast
+  Box, Flex, Heading, Text, Avatar, Button, useDisclosure, Input, Textarea, useToast,
+  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton
 } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -11,12 +12,13 @@ const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const TeamProfile = ({ team }) => {
   const [isOwner, setIsOwner] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   const [teamData, setTeamData] = useState({
     ...team,
     profile_photo_url: team.profile_photo_url || team.profile_photo,
   });
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [showFullBio, setShowFullBio] = useState(false);
+  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
   const router = useRouter();
   const toast = useToast();
 
@@ -37,10 +39,6 @@ const TeamProfile = ({ team }) => {
 
     checkOwner();
   }, [team.id]);
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
 
   const handleDelete = async () => {
     try {
@@ -85,7 +83,7 @@ const TeamProfile = ({ team }) => {
         },
       });
       setTeamData(response.data);
-      setIsEditing(false);
+      onEditClose();
       toast({
         title: 'チーム情報が更新されました。',
         status: 'success',
@@ -116,45 +114,71 @@ const TeamProfile = ({ team }) => {
   };
 
   return (
-    <Box borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" bg="white">
+    <Box maxWidth="600px" margin="auto" borderWidth="1px" borderRadius="lg" overflow="hidden" boxShadow="md" bg="white">
       <Box
-        height="150px"
-        bgImage={teamData.background_photo ? `url(${teamData.background_photo})` : null}
+        height="160px"
+        bgImage={`src`}
         bgSize="cover"
         bgPosition="center"
         bgColor={!teamData.background_photo ? "gray.200" : "transparent"}
       />
-      <Flex justify="left" mt={-12} ml={4} position="relative">
-        <Box position="relative">
-          <Avatar
-            size="xl"
-            name={teamData.name}
-            src={teamData.profile_photo_url}
-            opacity={isEditing ? 0.6 : 1}
-          />
-          {isEditing && (
-            <IconButton
-              icon={<FiCamera />}
-              position="absolute"
-              top="50%"
-              left="50%"
-              transform="translate(-50%, -50%)"
-              aria-label="Edit Profile Photo"
-              onClick={() => document.getElementById('profile_photo_input').click()}
-            />
-          )}
-        </Box>
-        <Input
-          type="file"
-          accept="image/*"
-          id="profile_photo_input"
-          onChange={handleProfileImageChange}
-          style={{ display: 'none' }}
+      <Flex direction="column" align="left" mt={-16} position="relative" px={4}>
+        <Avatar
+          size="xl"
+          name={teamData.name}
+          src={teamData.profile_photo_url}
+          border="4px solid white"
         />
       </Flex>
-      <Box textAlign="left" mt={1} p={4}>
-        {isEditing ? (
-          <>
+      <Box textAlign="left" p={4}>
+        <Heading size="l" mb={4}>{teamData.name}</Heading>
+        <Text mt={2} whiteSpace="pre-wrap" maxWidth="600px" margin="auto">
+          {showFullBio ? teamData.details : `${teamData.details.slice(0, 100)}...`}
+        </Text>
+        {teamData.details.length > 100 && (
+          <Button variant="link" colorScheme="teal" onClick={() => setShowFullBio(!showFullBio)}>
+            {showFullBio ? '折りたたむ' : 'もっと読む'}
+          </Button>
+        )}
+        {isOwner && (
+          <Flex justify="left" gap={4} mt={6}>
+            <Button colorScheme="teal" onClick={onEditOpen}>
+              編集
+            </Button>
+            <Button colorScheme="gray" onClick={onDeleteOpen}>
+              削除
+            </Button>
+          </Flex>
+        )}
+      </Box>
+
+      <Modal isOpen={isEditOpen} onClose={onEditClose} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>チーム情報の編集</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Flex direction="column" align="left" mb={4}>
+              <Avatar
+                size="xl"
+                name={teamData.name}
+                src={teamData.profile_photo_url}
+                mb={2}
+              />
+              <Button
+                leftIcon={<FiCamera />}
+                onClick={() => document.getElementById('profile_photo_input').click()}
+              >
+                プロフィール画像を変更
+              </Button>
+              <Input
+                type="file"
+                accept="image/*"
+                id="profile_photo_input"
+                onChange={handleProfileImageChange}
+                style={{ display: 'none' }}
+              />
+            </Flex>
             <Input
               name="name"
               value={teamData.name}
@@ -168,37 +192,21 @@ const TeamProfile = ({ team }) => {
               onChange={(e) => setTeamData({ ...teamData, details: e.target.value })}
               placeholder="チーム詳細"
               mb={3}
+              minHeight="200px"
             />
-            <Flex justify="center" gap={4}>
-              <Button colorScheme="teal" onClick={handleSave}>
-                保存
-              </Button>
-              <Button onClick={() => setIsEditing(false)}>
-                キャンセル
-              </Button>
-            </Flex>
-          </>
-        ) : (
-          <>
-            <Heading size="md">{teamData.name}</Heading>
-            <Text mt={2}>{teamData.details}</Text>
-            {isOwner && (
-              <Flex justify="left" gap={4} p={4}>
-                <Button colorScheme="teal" onClick={handleEdit}>
-                  編集
-                </Button>
-                <Button colorScheme="red" onClick={onOpen}>
-                  削除
-                </Button>
-              </Flex>
-            )}
-          </>
-        )}
-      </Box>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="teal" mr={3} onClick={handleSave}>
+              保存
+            </Button>
+            <Button variant="ghost" onClick={onEditClose}>キャンセル</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       <DeleteConfirmationModal
-        isOpen={isOpen}
-        onClose={onClose}
+        isOpen={isDeleteOpen}
+        onClose={onDeleteClose}
         onDelete={handleDelete}
       />
     </Box>
