@@ -16,17 +16,12 @@ services:
     expose:
       - '3000'
     environment:
-      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_REGION=${AWS_REGION}
-      - AWS_BUCKET=${AWS_BUCKET}
-      - RAILS_ENV=${RAILS_ENV}
-      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_PORT=${MYSQL_PORT}
+      - AWS_ACCESS_KEY_ID=AKIAYS2NWYHSZGUDU772
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=ap-northeast-1
+      - AWS_BUCKET=swing-bucket
+      - RAILS_ENV=production
+      - RAILS_MASTER_KEY=111d3ac5bd46fb18972634f567641474
     depends_on:
       - db
       - redis
@@ -58,6 +53,7 @@ services:
       - db-data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
+      - MYSQL_HOST: db
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_DATABASE=${MYSQL_DATABASE}
       - MYSQL_USER=${MYSQL_USER}
