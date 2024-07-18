@@ -20,8 +20,8 @@ jobs:
     - name: Login to Docker Hub
       uses: docker/login-action@v1
       with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+        username: "${{ secrets.DOCKERHUB_USERNAME }}"
+        password: "${{ secrets.DOCKERHUB_TOKEN }}"
 
     - name: Build and push frontend Docker images
       uses: docker/build-push-action@v2
@@ -47,9 +47,9 @@ jobs:
     - name: Deploy to EC2
       uses: appleboy/ssh-action@v0.1.3 # バージョンを固定
       with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        host: "${{ secrets.HOST }}"
+        username: "${{ secrets.USERNAME }}"
+        key: "${{ secrets.SSH_PRIVATE_KEY }}"
         script: |
           set -e
 
@@ -64,7 +64,7 @@ jobs:
               ports:
                 - '8000:8000'
               environment:
-                - NODE_ENV=${{ secrets.NODE_ENV }}
+                - NODE_ENV=\${NODE_ENV}
               depends_on:
                 - backend
               networks:
@@ -75,17 +75,17 @@ jobs:
               expose:
                 - '3000'
               environment:
-                - AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-                - AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-                - AWS_REGION=${{ secrets.AWS_REGION }}
-                - AWS_BUCKET=${{ secrets.AWS_BUCKET }}
-                - RAILS_ENV=${{ secrets.RAILS_ENV }}
-                - RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
-                - MYSQL_USER=${{ secrets.MYSQL_USER }}
-                - MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-                - MYSQL_HOST=${{ secrets.MYSQL_HOST }}
-                - MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-                - MYSQL_PORT=${{ secrets.MYSQL_PORT }}
+                - AWS_ACCESS_KEY_ID=\${AWS_ACCESS_KEY_ID}
+                - AWS_SECRET_ACCESS_KEY=\${AWS_SECRET_ACCESS_KEY}
+                - AWS_REGION=\${AWS_REGION}
+                - AWS_BUCKET=\${AWS_BUCKET}
+                - RAILS_ENV=\${RAILS_ENV}
+                - RAILS_MASTER_KEY=\${RAILS_MASTER_KEY}
+                - MYSQL_USER=\${MYSQL_USER}
+                - MYSQL_PASSWORD=\${MYSQL_PASSWORD}
+                - MYSQL_HOST=\${MYSQL_HOST}
+                - MYSQL_DATABASE=\${MYSQL_DATABASE}
+                - MYSQL_PORT=\${MYSQL_PORT}
               depends_on:
                 - db
                 - redis
@@ -117,10 +117,10 @@ jobs:
                 - db-data:/var/lib/mysql
                 - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
               environment:
-                - MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}
-                - MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-                - MYSQL_USER=${{ secrets.MYSQL_USER }}
-                - MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+                - MYSQL_ROOT_PASSWORD=\${MYSQL_ROOT_PASSWORD}
+                - MYSQL_DATABASE=\${MYSQL_DATABASE}
+                - MYSQL_USER=\${MYSQL_USER}
+                - MYSQL_PASSWORD=\${MYSQL_PASSWORD}
               networks:
                 - swing-net
 
