@@ -22,6 +22,11 @@ services:
       - AWS_BUCKET=${AWS_BUCKET}
       - RAILS_ENV=${RAILS_ENV}
       - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_PORT=${MYSQL_PORT}
     depends_on:
       - db
       - redis
