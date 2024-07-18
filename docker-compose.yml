@@ -5,7 +5,7 @@ services:
     ports:
       - '8000:8000'
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=${NODE_ENV}
     depends_on:
       - backend
     networks:
@@ -53,11 +53,11 @@ services:
       - db-data:/var/lib/mysql
       - ./docker/db/my.cnf:/etc/mysql/conf.d/my.cnf
     environment:
-      - MYSQL_ROOT_PASSWORD=0606araki!
-      - MYSQL_DATABASE=swing
-      - MYSQL_USER=rem0930
-      - MYSQL_PASSWORD=StrongPassword123!
       - MYSQL_HOST: db
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     networks:
       - swing-net
 
