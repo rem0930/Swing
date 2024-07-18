@@ -22,12 +22,14 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { FiMapPin, FiBell, FiMessageCircle, FiUsers } from "react-icons/fi";
-import NextLink from 'next/link';
 import { useUser } from '../../context/UserContext';
-import useLogout from '../../pages/logout';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
+
+import useLogout from '../../pages/logout';
 import LoginModal from '../LoginModal';
 import SignupModal from '../SignupModal';
+import Logo from '../Logo';
 
 const Header = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,7 +73,11 @@ const Header = () => {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <Box><NextLink href="/">Swing</NextLink></Box>
+        <Box>
+          <NextLink href="/">
+            <Logo />
+          </NextLink>
+        </Box>
         <Flex flex={1} justifyContent={"center"} maxW="800px" mx={4}>
           <InputGroup>
             <InputLeftElement pointerEvents="none">
@@ -130,10 +136,6 @@ const Header = () => {
               <MenuList>
                 <NextLink href="/ProfilePage">
                   <MenuItem>プロフィール</MenuItem>
-                </NextLink>
-                <MenuDivider />
-                <NextLink href="/teams/manage">
-                  <MenuItem>チームを管理</MenuItem>
                 </NextLink>
                 <MenuDivider />
                 <MenuItem onClick={logout}>ログアウト</MenuItem>

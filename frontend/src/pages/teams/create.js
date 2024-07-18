@@ -15,6 +15,8 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Layout from '../../components/Layout';
 import CreateTeamForm from '../../components/Team/CreateTeamForm';
+import Logo from '../../components/Logo';
+
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 function CreateTeam() {

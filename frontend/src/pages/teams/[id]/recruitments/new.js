@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { Box, Flex, Image, Spinner } from '@chakra-ui/react';
+import { Box, Flex, Text, Spinner } from '@chakra-ui/react';
 import ProgressIndicator from '../../../../components/CreateRecruitmentForm/ProgressIndicator';
 import Step1 from '../../../../components/CreateRecruitmentForm/Step1';
 import Step2 from '../../../../components/CreateRecruitmentForm/Step2';
@@ -85,8 +85,9 @@ const CreateRecruitmentForm = () => {
     <Layout>
         <Flex direction="column" align="center" justify="center" minH="calc(100vh - 64px)" bg="gray.100" p={{ base: 2, md: 4 }}>
           <Box p={5} maxW={{ base: "90%", md: "600px" }} w="100%" bg="white" borderRadius="md" boxShadow="lg" mx={2}>
-            <Image src="/banner.jpg" alt="Banner" borderRadius="md" mb={4} />
-            <ProgressIndicator step={step} />
+            <Box mt={8}> {/* ここで余白を追加 */}
+              <ProgressIndicator step={step} />
+            </Box>
             {step === 1 && <Step1 formData={formData} setFormData={setFormData} handleNext={handleNext} />}
             {step === 2 && <Step2 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
             {step === 3 && <Step3 formData={formData} handleChange={handleChange} handleBack={handleBack} handleNext={handleNext} />}
