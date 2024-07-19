@@ -1,9 +1,10 @@
 .env
 .env.development
+.env.production
 docker/db/*
 !docker/db/my.cnf
 
 docker/redis/data/
-.env*s
+.env*
 *.log
 
