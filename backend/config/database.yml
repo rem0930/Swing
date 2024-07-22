@@ -9,7 +9,7 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV["MYSQL_DATABASE"] %>
+  database: swing_dev
 
 test:
   <<: *default

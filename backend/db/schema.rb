@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_07_09_020744) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_22_015129) do
   create_table "applications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "recruitment_id", null: false
@@ -22,6 +22,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_09_020744) do
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
+  create_table "conversations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "recruitment_id"
+    t.index ["recruitment_id"], name: "index_conversations_on_recruitment_id"
+  end
+
   create_table "favorites", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "recruitment_id", null: false
@@ -29,6 +37,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_09_020744) do
     t.datetime "updated_at", null: false
     t.index ["recruitment_id"], name: "index_favorites_on_recruitment_id"
     t.index ["user_id"], name: "index_favorites_on_user_id"
+  end
+
+  create_table "messages", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.text "content"
+    t.bigint "sender_id", null: false
+    t.bigint "recipient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "conversation_id"
+    t.index ["conversation_id"], name: "index_messages_on_conversation_id"
+    t.index ["recipient_id"], name: "index_messages_on_recipient_id"
+    t.index ["sender_id"], name: "index_messages_on_sender_id"
   end
 
   create_table "oauth_access_grants", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -115,10 +135,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_07_09_020744) do
 
   add_foreign_key "applications", "recruitments"
   add_foreign_key "applications", "users"
+  add_foreign_key "conversations", "recruitments"
   add_foreign_key "favorites", "recruitments"
   add_foreign_key "favorites", "users"
+  add_foreign_key "messages", "conversations"
+  add_foreign_key "messages", "users", column: "recipient_id", name: "fk_messages_recipient"
+  add_foreign_key "messages", "users", column: "sender_id", name: "fk_messages_sender"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
-  add_foreign_key "recruitments", "teams"
   add_foreign_key "teams", "users"
 end

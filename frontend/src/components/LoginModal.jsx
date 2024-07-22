@@ -17,9 +17,11 @@ import {
   HStack,
   Link,
 } from '@chakra-ui/react';
+import { createConsumer } from "@rails/actioncable";
+import { useUser } from '../context/UserContext';
+import { initializeWebSocket } from '../utils/webSocket';
 import EmailInput from '../components/Input/EmailInput';
 import PasswordInput from '../components/Input/PasswordInput';
-import { useUser } from '../context/UserContext';
 import NextLink from 'next/link';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -52,6 +54,8 @@ const LoginModal = forwardRef(({ openSignupModal }, ref) => {
         });
       if (response.data.token) {
         await login(response.data.token, response.data.user); // UserContextのlogin関数を使用
+
+        initializeWebSocket(response.data.token); // WebSocketを初期化
 
         toast({
           title: "Login Successful",
