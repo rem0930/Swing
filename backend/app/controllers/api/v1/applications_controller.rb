@@ -14,30 +14,24 @@ module Api
       # POST /applications
       def create
         @recruitment = Recruitment.find(params[:recruitment_id])
-
-        @application = @recruitment.applications.build(user: @current_user)
+        @application = @recruitment.applications.build(user: current_user)
 
         if @application.save
-          begin
-            # 応募完了後に会話とメッセージを作成する
-            @conversation = Conversation.create!(recruitment: @recruitment)
-            Message.create!(
-              sender_id: @recruitment.team.user_id,
-              recipient_id: @current_user.id,
-              conversation_id: @conversation.id,
-              content: "ご応募ありがとうございます。このチャットで詳細を確認させていただきます。"
-            )
+          @conversation = Conversation.create(recruitment: @recruitment)
+          @conversation.users << current_user
+          @conversation.users << @recruitment.team.user
 
-            render json: { application: @application, conversation_id: @conversation.id }, status: :created
-          rescue StandardError => e
-            logger.error "Error creating conversation and message: #{e.message}"
-            render json: { error: "Error creating conversation and message" }, status: :internal_server_error
-          end
+          Message.create(
+            content: "ご応募ありがとうございます。このチャットで詳細を確認させていただきます。",
+            sender: @recruitment.team.user,
+            recipient: current_user,
+            conversation: @conversation
+          )
+
+          render json: { message: "応募が完了しました", conversation_id: @conversation.id }, status: :created
         else
-          render json: @application.errors, status: :unprocessable_entity
+          render json: { error: "応募に失敗しました" }, status: :unprocessable_entity
         end
-      rescue ActiveRecord::RecordNotFound
-        render json: { error: "Recruitment not found" }, status: :not_found
       end
 
       # GET /applications/check?recruitment_id=:recruitment_id
