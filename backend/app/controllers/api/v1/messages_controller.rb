@@ -23,14 +23,13 @@ module Api
       end
 
       private
+        def set_conversation
+          @conversation = Conversation.find(params[:conversation_id])
+        end
 
-      def set_conversation
-        @conversation = Conversation.find(params[:conversation_id])
-      end
-
-      def message_params
-        params.require(:message).permit(:content, :recipient_id)
-      end
+        def message_params
+          params.require(:message).permit(:content, :recipient_id)
+        end
     end
   end
 end

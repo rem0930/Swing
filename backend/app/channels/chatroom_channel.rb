@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/channels/chatroom_channel.rb
 
 class ChatroomChannel < ApplicationCable::Channel
@@ -13,15 +15,14 @@ class ChatroomChannel < ApplicationCable::Channel
 
   def speak(data)
     # クライアントからメッセージが送信されたときの処理
-    message = conversation.messages.new(content: data['message'], sender_id: current_user.id)
+    message = conversation.messages.new(content: data["message"], sender_id: current_user.id)
     if message.save
       ChatroomChannel.broadcast_to(conversation, message)
     end
   end
 
   private
-
-  def conversation
-    @conversation ||= Conversation.find(params[:conversation_id])
-  end
+    def conversation
+      @conversation ||= Conversation.find(params[:conversation_id])
+    end
 end

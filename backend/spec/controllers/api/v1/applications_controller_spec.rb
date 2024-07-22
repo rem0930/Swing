@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 RSpec.describe Api::V1::ApplicationsController, type: :controller do
   let(:user) { create(:user) }
@@ -49,19 +51,19 @@ RSpec.describe Api::V1::ApplicationsController, type: :controller do
       it "returns true if the user has applied" do
         create(:application, recruitment: recruitment, user: user)
         get :check, params: { recruitment_id: recruitment.id }
-        expect(JSON.parse(response.body)['is_applied']).to be_truthy
+        expect(JSON.parse(response.body)["is_applied"]).to be_truthy
       end
 
       it "returns false if the user has not applied" do
         get :check, params: { recruitment_id: recruitment.id }
-        expect(JSON.parse(response.body)['is_applied']).to be_falsey
+        expect(JSON.parse(response.body)["is_applied"]).to be_falsey
       end
     end
 
     context "when the recruitment is not found" do
       it "returns false" do
         get :check, params: { recruitment_id: -1 }
-        expect(JSON.parse(response.body)['is_applied']).to be_falsey
+        expect(JSON.parse(response.body)["is_applied"]).to be_falsey
       end
     end
   end
