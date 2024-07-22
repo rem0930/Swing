@@ -6,10 +6,11 @@ import axios from 'axios';
 
 import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHeader';
 import RecruitmentFooter from '../../components/RecruitmentDetails/RecruitmentFooter';
-import Layout from '../../components/Layout.jsx';
+import Layout from '../../components/Layout';
 import GoogleMapComponent from '../../components/RecruitmentDetails/GoogleMapComponent';
 import LoginModal from '../../components/LoginModal';
 import SignupModal from '../../components/SignupModal';
+import ConfirmationModal from '../../components/Chat/ConfirmationModal';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -19,6 +20,8 @@ const RecruitmentDetail = () => {
   const [recruitmentData, setRecruitmentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // 確認モーダルの状態
+  const [conversationId, setConversationId] = useState(null); // 応募後の会話ID
   const toast = useToast();
 
   const loginModalRef = useRef();
@@ -46,7 +49,6 @@ const RecruitmentDetail = () => {
         },
       })
         .then(response => {
-          console.log('API Response:', response.data);  // デバッグ用
           setRecruitmentData({
             ...response.data.recruitment,
             is_user_team: response.data.is_user_team,
@@ -75,23 +77,19 @@ const RecruitmentDetail = () => {
       openLoginModal();
       return;
     }
-    axios.post(`${apiUrl}/applications`, { recruitment_id: id }, {
+    axios.post(`${apiUrl}/recruitments/${id}/applications`, { recruitment_id: id }, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     })
-    .then(() => {
+    .then((response) => {
       setRecruitmentData(prevData => ({
         ...prevData,
         is_applied: true
       }));
-      toast({
-        title: '応募が完了しました！',
-        status:'success',
-        duration: 3000,
-        isClosable: true,
-      });
+      setConversationId(response.data.conversation_id); // 会話IDを設定
+      setIsConfirmationOpen(true); // 確認モーダルを開く
     })
     .catch(error => {
       console.error("There was an error applying for the recruitment!", error);
@@ -131,7 +129,7 @@ const RecruitmentDetail = () => {
       openLoginModal();
       return;
     }
-    axios.patch(`${apiUrl}/recruitments/${id}/close`, {}, {
+    axios.post(`${apiUrl}/recruitments/${id}/applications`, { recruitment_id: id }, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -159,6 +157,21 @@ const RecruitmentDetail = () => {
         duration: 3000,
         isClosable: true,
       });
+    });
+  };
+
+  const handleNavigateToChat = () => {
+    setIsConfirmationOpen(false);
+    router.push(`/users/${id}/chat?conversationId=${conversationId}`);
+  };
+
+  const handleStayOnPage = () => {
+    setIsConfirmationOpen(false);
+    toast({
+      title: '応募が完了しました！',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
     });
   };
 
@@ -230,6 +243,12 @@ const RecruitmentDetail = () => {
       </Box>
       <LoginModal ref={loginModalRef} openSignupModal={openSignupModal} />
       <SignupModal ref={signupModalRef} openLoginModal={openLoginModal} />
+      <ConfirmationModal // 確認モーダルの追加
+        isOpen={isConfirmationOpen}
+        onClose={() => setIsConfirmationOpen(false)}
+        onNavigateToChat={handleNavigateToChat}
+        onStayOnPage={handleStayOnPage}
+      />
     </Layout>
   );
 };

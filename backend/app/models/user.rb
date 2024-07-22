@@ -12,6 +12,8 @@ class User < ApplicationRecord
   has_one :team, dependent: :destroy
   has_many :applications, dependent: :destroy
   has_many :favorites, dependent: :destroy
+  has_many :recruitments, through: :applications
+  has_many :conversations, through: :applications
 
   mount_uploader :profile_photo, ProfilePhotoUploader
 
