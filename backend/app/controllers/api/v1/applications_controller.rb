@@ -20,7 +20,7 @@ module Api
           @conversation = Conversation.create(recruitment: @recruitment)
           @conversation.users << current_user
           @conversation.users << @recruitment.team.user
-          
+
           Message.create(
             content: "ご応募ありがとうございます。このチャットで詳細を確認させていただきます。",
             sender: @recruitment.team.user,
@@ -28,9 +28,9 @@ module Api
             conversation: @conversation
           )
 
-          render json: { message: '応募が完了しました', conversation_id: @conversation.id }, status: :created
+          render json: { message: "応募が完了しました", conversation_id: @conversation.id }, status: :created
         else
-          render json: { error: '応募に失敗しました' }, status: :unprocessable_entity
+          render json: { error: "応募に失敗しました" }, status: :unprocessable_entity
         end
       end
 
