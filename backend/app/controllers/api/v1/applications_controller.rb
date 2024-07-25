@@ -36,15 +36,24 @@ module Api
 
       # GET /applications/check?recruitment_id=:recruitment_id
       def check
-        if @current_user
+        if current_user
           recruitment = Recruitment.find(params[:recruitment_id])
-          is_applied = recruitment.applications.exists?(user: @current_user)
+          is_applied = recruitment.applications.exists?(user: current_user)
           render json: { is_applied: is_applied }
         else
           render json: { is_applied: false }
         end
       rescue ActiveRecord::RecordNotFound
         render json: { is_applied: false }
+      end
+
+      def close
+        @recruitment.status = "closed"
+        if @recruitment.save
+          render json: @recruitment, status: :ok
+        else
+          render json: @recruitment.errors, status: :unprocessable_entity
+        end
       end
     end
   end

@@ -3,20 +3,19 @@
 module Api
   module V1
     class ConversationsController < ApplicationController
-      before_action :set_current_user
+      before_action :authenticate_user
 
       def index
-        conversations = Conversation.joins(:recruitment, :user)
-                                    .select("conversations.*, users.user_name, users.profile_photo AS profile_photo_url, recruitments.title AS recruitment_title")
-                                    .where("users.id = ? OR recruitments.team_id = ?", @current_user.id, @current_user.team.id)
+        # ユーザーが参加している会話のみを取得
+        conversations = current_user.conversations.includes(:users, recruitment: { team: :user }).distinct
 
-        render json: conversations, status: :ok
+        render json: conversations, each_serializer: ConversationSerializer, status: :ok
       end
 
-      private
-        def set_current_user
-          @current_user = User.find_by(id: params[:user_id])
-        end
+      def show
+        conversation = current_user.conversations.includes(:users).find(params[:id])
+        render json: conversation, serializer: ConversationSerializer, status: :ok
+      end
     end
   end
 end

@@ -1,12 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import {
   Box,
   Flex,
   Button,
-  useDisclosure,
-  IconButton,
   HStack,
-  VStack,
   InputGroup,
   InputLeftElement,
   InputRightElement,
@@ -17,13 +14,10 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
-  Stack,
   Text,
 } from "@chakra-ui/react";
-import { HamburgerIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
-import { FiMapPin, FiBell, FiMessageCircle, FiUsers } from "react-icons/fi";
+import { FiMapPin, FiBell, FiMessageCircle, FiUsers, FiSearch } from "react-icons/fi";
 import { useUser } from '../../context/UserContext';
-import { useRouter } from 'next/router';
 import NextLink from 'next/link';
 
 import useLogout from '../../pages/logout';
@@ -32,11 +26,8 @@ import SignupModal from '../SignupModal';
 import Logo from '../Logo';
 
 const Header = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { user } = useUser();
   const logout = useLogout();
-  const router = useRouter();
-
   const loginModalRef = useRef();
   const signupModalRef = useRef();
 
@@ -54,6 +45,11 @@ const Header = () => {
 
   const userProfilePhotoUrl = user?.profile_photo_url;
   const userName = user?.user_name ?? "John Doe";
+  const userId = user?.id
+
+  useEffect(() => {
+    console.log('User data:', user);
+  }, [user]);
 
   return (
     <Box
@@ -66,22 +62,15 @@ const Header = () => {
       h="64px"
     >
       <Flex h="64px" alignItems={"center"} justifyContent={"space-between"}>
-        <IconButton
-          size={"md"}
-          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-          aria-label={"Open Menu"}
-          display={{ md: "none" }}
-          onClick={isOpen ? onClose : onOpen}
-        />
         <Box>
           <NextLink href="/">
             <Logo />
           </NextLink>
         </Box>
-        <Flex flex={1} justifyContent={"center"} maxW="800px" mx={4}>
+        <Flex flex={1} justifyContent={"center"} maxW="800px" mx={4} display={{ base: "none", md: "flex" }}>
           <InputGroup>
             <InputLeftElement pointerEvents="none">
-              <SearchIcon color="gray.300" />
+              <FiSearch color="gray.300" />
             </InputLeftElement>
             <Input type="text" placeholder="イベントを検索する" borderRightRadius={0} />
           </InputGroup>
@@ -93,7 +82,7 @@ const Header = () => {
           </InputGroup>
         </Flex>
         <HStack spacing={8} alignItems={"center"}>
-          <HStack as={"nav"} spacing={1} display={{ base: "none", md: "flex" }}>
+          <HStack as={"nav"} spacing={1} display="flex">
             {user && (
               <>
                 <NextLink href="/notifications">
@@ -108,7 +97,7 @@ const Header = () => {
                     <Text fontSize="xs" mt={1}>チームを管理</Text>
                   </Button>
                 </NextLink>
-                <NextLink href="/messages">
+                <NextLink href={`/users/${userId}/chat`} passHref>
                   <Button variant="ghost" flexDirection="column" alignItems="center">
                     <FiMessageCircle />
                     <Text fontSize="xs" mt={1}>メッセージ</Text>
@@ -155,17 +144,6 @@ const Header = () => {
           )}
         </Flex>
       </Flex>
-
-      {isOpen ? (
-        <Box pb={4} display={{ md: "none" }}>
-          <Stack as={"nav"} spacing={4}>
-              <>
-                <NextLink href="/notifications">お知らせ</NextLink>
-                <NextLink href="/messages">メッセージ</NextLink>
-              </>
-          </Stack>
-        </Box>
-      ) : null}
     </Box>
   );
 };

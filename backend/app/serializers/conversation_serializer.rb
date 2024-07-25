@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
-class ConversationSerializer < ActiveModel::Serializer
-  attributes :id, :title, :participant
+# app/serializers/conversation_serializer.rb
 
-  def participant
-    user = object.recruitment.user == scope ? object.applications.first.user : object.recruitment.user
-    { id: user.id, userName: user.user_name, profilePhoto: user.profile_photo }
+class ConversationSerializer < ActiveModel::Serializer
+  attributes :id, :recruitment_title, :participants
+
+  def recruitment_title
+    object.recruitment.title
+  end
+
+  def participants
+    object.users.map do |user|
+      {
+        id: user.id,
+        user_name: user.user_name,
+        profile_photo_url: user.profile_photo
+      }
+    end
   end
 end
