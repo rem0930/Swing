@@ -47,8 +47,13 @@ Rails.application.routes.draw do
         collection do
           get "/by_team/:team_id", to: "recruitments#by_team"
         end
-        resources :applications, only: [:index, :create]
+
+        # ネストされたapplicationsのルート
+        resources :applications, only: [:create]
       end
+
+      # 単独のapplicationsのルート
+      resources :applications, only: [:index]
 
       resources :favorites, only: [:create, :index, :destroy]
 

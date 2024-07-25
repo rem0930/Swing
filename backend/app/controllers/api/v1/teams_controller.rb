@@ -32,7 +32,7 @@ module Api
 
         @team = current_user.build_team(team_params)
         if @team.save
-          render json: @team, status: :created, location: api_team_url(@team)
+          render json: @team, status: :created, location: api_v1_team_url(@team)
         else
           render json: @team.errors, status: :unprocessable_entity
         end

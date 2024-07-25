@@ -10,7 +10,7 @@ import Layout from '../../components/Layout';
 import GoogleMapComponent from '../../components/RecruitmentDetails/GoogleMapComponent';
 import LoginModal from '../../components/LoginModal';
 import SignupModal from '../../components/SignupModal';
-import ConfirmationModal from '../../components/Chat/ConfirmationModal';
+import { useUser } from '../../context/UserContext';
 
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -20,8 +20,8 @@ const RecruitmentDetail = () => {
   const [recruitmentData, setRecruitmentData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false); // 確認モーダルの状態
-  const [conversationId, setConversationId] = useState(null); // 応募後の会話ID
+  const [conversationId, setConversationId] = useState(null);  // 追加
+  const { user } = useUser();
   const toast = useToast();
 
   const loginModalRef = useRef();
@@ -88,8 +88,14 @@ const RecruitmentDetail = () => {
         ...prevData,
         is_applied: true
       }));
-      setConversationId(response.data.conversation_id); // 会話IDを設定
-      setIsConfirmationOpen(true); // 確認モーダルを開く
+      setConversationId(response.data.conversation_id);  // 修正
+      toast({
+        title: '応募が完了しました！',
+        description: '相手からのメッセージをお待ちください。',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
     })
     .catch(error => {
       console.error("There was an error applying for the recruitment!", error);
@@ -129,7 +135,7 @@ const RecruitmentDetail = () => {
       openLoginModal();
       return;
     }
-    axios.post(`${apiUrl}/recruitments/${id}/applications`, { recruitment_id: id }, {
+    axios.patch(`${apiUrl}/recruitments/${id}/close`, {}, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -158,11 +164,6 @@ const RecruitmentDetail = () => {
         isClosable: true,
       });
     });
-  };
-
-  const handleNavigateToChat = () => {
-    setIsConfirmationOpen(false);
-    router.push(`/users/${id}/chat?conversationId=${conversationId}`);
   };
 
   const handleStayOnPage = () => {
@@ -243,12 +244,6 @@ const RecruitmentDetail = () => {
       </Box>
       <LoginModal ref={loginModalRef} openSignupModal={openSignupModal} />
       <SignupModal ref={signupModalRef} openLoginModal={openLoginModal} />
-      <ConfirmationModal // 確認モーダルの追加
-        isOpen={isConfirmationOpen}
-        onClose={() => setIsConfirmationOpen(false)}
-        onNavigateToChat={handleNavigateToChat}
-        onStayOnPage={handleStayOnPage}
-      />
     </Layout>
   );
 };

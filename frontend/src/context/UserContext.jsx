@@ -40,8 +40,8 @@ export const UserProvider = ({ children }) => {
 
   const login = useCallback(async (token, userData) => {
     localStorage.setItem('token', token);
-    setUser(userData);
     await fetchUserData();
+    setUser(userData);
   }, [fetchUserData]);
 
   const logout = useCallback(() => {

@@ -17,7 +17,7 @@ const RecruitmentFooter = ({ eventDate, onApply, isOwnTeam, isApplied, status, r
       justifyContent="space-between"
       zIndex={1000}
       alignItems="center"
-      height="80px" // フッターの高さを固定
+      height="80px"
     >
       <VStack align="start" spacing={1}>
         <HStack>
