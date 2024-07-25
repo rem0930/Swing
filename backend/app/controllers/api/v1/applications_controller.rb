@@ -48,7 +48,7 @@ module Api
       end
 
       def close
-        @recruitment.status = 'closed'
+        @recruitment.status = "closed"
         if @recruitment.save
           render json: @recruitment, status: :ok
         else

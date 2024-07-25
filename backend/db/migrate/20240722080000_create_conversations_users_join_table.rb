@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateConversationsUsersJoinTable < ActiveRecord::Migration[7.1]
   def change
     create_table :conversations_users, id: false do |t|

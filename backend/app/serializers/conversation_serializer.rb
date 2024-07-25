@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/serializers/conversation_serializer.rb
 
 class ConversationSerializer < ActiveModel::Serializer
