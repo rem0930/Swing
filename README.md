@@ -57,20 +57,20 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 ### メインページ
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/e9be126d-5568-49fd-9082-dcc19adef471" alt="スクリーンショット 2024-07-15 10 04 36" style="width:100%; max-width:800px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/d96c80ac-8b47-4526-8c67-d1d237e8e176" alt="スクリーンショット 2024-07-15 10 06 45" style="width:100%; max-width:800px;"></td>
+    <td><img width="1256" alt="メインページ" src="https://github.com/user-attachments/assets/0d0940c7-daf1-46c4-ae14-8b2495a52273" alt="スクリーンショット 2024-07-15 10 04 36" style="width:100%; max-width:800px;"></td>
+    <td><img width="494" alt="スクリーンショット 2024-07-25 16 29 48" src="https://github.com/user-attachments/assets/2ef981d6-e4d1-4a11-99ef-abf79d0f4d28" alt="スクリーンショット 2024-07-15 10 06 45" style="width:100%; max-width:800px;"></td>
   </tr>
   <tr>
     <td>ユーザーが必要な情報を一目で確認できるよう、一覧表示に工夫を凝らしました。</td>
-    <td>レスポンシブデザインではフィルターとハンバーガーメニューを作成しました。</td>
+    <td>レスポンシブデザインにも対応しています。</td>
   </tr>
 </table>
 
 ### フィルタリング
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/6108610e-cf97-488a-8ff2-3469b99014c7" alt="スクリーンショット 2024-07-15 10 13 12" style="width:100%; max-width:600px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/697d3811-2261-4629-9a6d-44cd680f7cae" alt="スクリーンショット 2024-07-15 10 20 15" style="width:100%; max-width:600px;"></td>
+    <td><img width="1280" alt="スクリーンショット 2024-07-25 15 27 15" src="https://github.com/user-attachments/assets/518b59ff-c931-4c64-946c-01f501659db4" style="width:100%; max-width:600px;"></td>
+    <td><img width="465" alt="スクリーンショット 2024-07-25 14 44 18" src="https://github.com/user-attachments/assets/0f6febe3-a7d1-4994-80fd-5a8fc8670f5d" style="width:100%; max-width:600px;"></td>
   </tr>
   <tr>
     <td>カレンダーでその日の募集を探すことができます。募集の種類も選択できます。チェックを入れれば募集中のみ表示することもできます。</td>
@@ -93,8 +93,9 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 ### チーム管理
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/31d02306-9111-43df-be88-523539faeb0a" alt="スクリーンショット 2024-07-15 10 48 00" style="width:100%; max-width:700px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/bc86ee06-9e37-494b-8a24-1cab2f606289" alt="スクリーンショット 2024-07-15 11 22 55" style="width:100%; max-width:700px;"></td>
+    <td><img src="https://github.com/user-attachments/assets/8e555ad0-009e-45a9-8806-7757f3cdc57d"
+ style="width:100%; max-width:700px;"></td>
+    <td><img width="1280" alt="チーム情報 2024-07-25 15 38 29" src="https://github.com/user-attachments/assets/ea237238-873e-4d29-a1da-bf9e0f1313a4" alt="スクリーンショット 2024-07-15 11 22 55" style="width:100%; max-width:700px;"></td>
   </tr>
   <tr>
     <td>ヘッダーにある人が二人いるみたいなアイコンを押します。チームを所持しているかいないかで現れるページが違います。チームも所持していなければチーム作成画面に遷移します。ここでもプロフィール画像を設定できます。</td>
@@ -102,23 +103,41 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
   </tr>
 </table>
 
-### 募集の作成と管理
+### 募集の作成とテンプレート
 <table style="width:100%;">
   <tr>
     <td><img src="https://github.com/user-attachments/assets/1b6b507d-342e-49ec-89fd-fe6ab5c99524" alt="スクリーンショット 2024-07-15 10 56 07" style="width:100%; max-width:206px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/f697c828-ac19-4c9d-a009-d581bb0ebba8" alt="スクリーンショット 2024-07-15 11 13 55" style="width:100%; max-width:1236px;"></td>
+    <td><img src="https://github.com/user-attachments/assets/616b93ed-6ebd-4116-b479-a16686ac313e"
+ alt="スクリーンショット 2024-07-15 10 56 07" style="width:100%; max-width:206px;"></td>
   </tr>
   <tr>
     <td>少しわかりにくいのでカーソルを合わせると募集作成　と表示されます。ログインしていないユーザーが押すとログインモーダルが現れ、チームを持っていないユーザーが押すとチーム作成画面が表示されます。</td>
-    <td>募集を作成し、参加者を募集することができます。募集タイトル、詳細、日時、場所を設定して最後に確認画面があります。場所に関してはジオコーディング APIを使用しています。この写真の例だと大田スタジアムと打ったらこの住所に変えてくれました。</td>
+    <td>募集作成用のテンプレートを用意しました！募集の種類に応じたテンプレートを使用することができます。文章を考えるのが面倒な人にとっては最高です。</td>
   </tr>
 </table>
+
+
+
+### 募集の確認とチーム編集
+<table style="width:100%;">
+  <tr>
+    <td><img width="1252" alt="募集確認 2024-07-25 16 14 53" src="https://github.com/user-attachments/assets/73ea3658-3c7b-4c59-957c-db6580028d4c" style="width:100%; max-width:1236px;"></td>
+    <td><img width="1255" alt="チーム編集 2024-07-25 15 38 50" src="https://github.com/user-attachments/assets/04690615-fddf-418f-b1bd-edaade81c7bf" style="width:100%; max-width:1236px;"></td>
+  </tr>
+  <tr>
+    <td>募集を作成し、参加者を募集することができます。募集タイトル、詳細、日時、場所を設定して最後に確認画面があります。場所に関してはジオコーディング APIを使用しています。この写真の例だと大田スタジアムと打ったらこの住所に変えてくれました。</td>
+    <td>このページではチーム情報を変更できます。もちろん権限のあるユーザーだけです。ユーザ情報変更のロジックも同じです。</td>
+  </tr>
+</table>
+
+
+
 
 ### 募集詳細
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/57374bfd-d98b-46ec-beea-9e8b47af6444" alt="スクリーンショット 2024-07-15 11 16 37" style="width:100%; max-width:1226px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/8dee9b0a-aa37-4af7-8d8a-8d42584695ff" alt="スクリーンショット 2024-07-15 11 03 04" style="width:100%; max-width:1242px;"></td>
+    <td><img width="1280" alt="スクリーンショット 2024-07-25 15 05 08" src="https://github.com/user-attachments/assets/be013764-f975-4477-90a0-c8b8f4c5e050" style="width:100%; max-width:1226px;"></td>
+    <td><img width="1255" alt="マイページ" src="https://github.com/user-attachments/assets/d793882c-9d7e-45dc-8cb4-b2b7eaecfc3d" alt="スクリーンショット 2024-07-15 11 03 04" style="width:100%; max-width:1242px;"></td>
   </tr>
   <tr>
     <td>興味のある募集に応募し、参加することができます。参加者は募集詳細ページから簡単に応募できます。位置情報を地図上に表示することで、ユーザーが直感的に場所を確認できるようにしました。</td>
