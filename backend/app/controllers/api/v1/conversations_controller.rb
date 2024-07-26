@@ -23,7 +23,7 @@ module Api
         if @conversations.present?
           render json: @conversations
         else
-          render json: { message: 'No conversations found' }, status: :ok
+          render json: { message: "No conversations found" }, status: :ok
         end
       end
     end
