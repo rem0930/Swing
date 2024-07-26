@@ -30,7 +30,7 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 <ul>
   <li>JWTを用いた認証システムにより、ユーザー認証を強化し、不正アクセスを防止します。</li>
   <li>プレースホルダーを使用したSQLクエリの実行を活用してSQLインジェクション防止</li>
-  <li>トランザクションを使用しています。</li>
+  <li>トランザクションの管理を行い、データベース操作を一貫性のある単位として管理し、全ての操作が成功するか、全てが取り消されることを保証</li>
   <li>HTTPS（SSL/TLS）プロトコルを使用して、クライアントとサーバー間のデータ通信を暗号化しています。</li>
   <li>ボリュームを使用してデータベースの永続化をしました。</li>
 </ul>
@@ -154,11 +154,11 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 | Frontend         | React (18-alpine),　Next.js, Node.js, Chakra UI                                 　  |
 | Backend          | Ruby (3.2), Ruby on Rails (7)                                              |
 | Infrastructure   | Amazon Web Services                                                              |
-| Database         | MySQL (8.0)                                                                      |
+| Database         | MySQL (8.0), Redis                                                                     |
 | Environment      | Docker , Docker Compose, Docker Hub                                                  |
 | CI/CD            | GitHub Actions                                                                   |              
 | Test             | Rubocop, Rspec, ESLint                                                           |
-| Etc.             | GitHub, Nginx, Redis                                                             |
+| Etc.             | GitHub, Nginx                                                             |
 
 ## 今後の予定
 - [ ] チャット機能の追加
