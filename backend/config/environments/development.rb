@@ -81,6 +81,7 @@ Rails.application.configure do
   config.hosts << "frontend"
   config.hosts << "nginx"
   config.hosts << "swi-ng.com"
+  config.hosts << "host.docker.internal"
 
   # エラーを無効にする設定
   config.action_controller.raise_on_missing_callback_actions = false

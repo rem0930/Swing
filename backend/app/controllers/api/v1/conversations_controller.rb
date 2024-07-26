@@ -16,6 +16,16 @@ module Api
         conversation = current_user.conversations.includes(:users).find(params[:id])
         render json: conversation, serializer: ConversationSerializer, status: :ok
       end
+
+      def by_user
+        @user = User.find(params[:user_id])
+        @conversations = @user.conversations
+        if @conversations.present?
+          render json: @conversations
+        else
+          render json: { message: 'No conversations found' }, status: :ok
+        end
+      end
     end
   end
 end

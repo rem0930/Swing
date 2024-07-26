@@ -58,6 +58,9 @@ Rails.application.routes.draw do
       resources :favorites, only: [:create, :index, :destroy]
 
       resources :conversations, only: [:index, :show] do
+        collection do
+          get :by_user
+        end
         resources :messages, only: [:index, :create]
       end
     end
