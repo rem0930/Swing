@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class AddCascadeToTeamAssociations < ActiveRecord::Migration[7.1]
   def change
     remove_foreign_key :recruitments, :teams
     remove_foreign_key :teams, :users
-    
+
     add_foreign_key :recruitments, :teams, on_delete: :cascade
     add_foreign_key :teams, :users, on_delete: :cascade
 
