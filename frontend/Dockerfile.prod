@@ -1,5 +1,5 @@
 # 使用するNode.jsのバージョンを指定
-FROM node:18-alpine
+FROM node:18.16.0-alpine
 
 # コンテナ内での作業ディレクトリを設定
 WORKDIR /usr/src/app

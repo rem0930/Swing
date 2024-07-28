@@ -1,4 +1,4 @@
-FROM ruby:3.2
+FROM ruby:3.2.4
 
 # 必要なディレクトリを作成
 RUN mkdir /app
