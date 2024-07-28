@@ -3,15 +3,15 @@ import { VStack, FormControl, FormLabel, Input, Button, Heading } from '@chakra-
 
 const Step5 = ({ initialFormData, handleChange, handleBack, handleNext }) => {
   const [formData, setFormData] = useState({
-    event_date: initialFormData?.event_date || new Date().toISOString().slice(0, 16),
-    deadline: initialFormData?.deadline || new Date().toISOString().slice(0, 16),
+    event_date: initialFormData?.event_date || '',
+    deadline: initialFormData?.deadline || '',
   });
 
   useEffect(() => {
     if (initialFormData) {
       setFormData({
-        event_date: initialFormData.event_date || new Date().toISOString().slice(0, 16),
-        deadline: initialFormData.deadline || new Date().toISOString().slice(0, 16),
+        event_date: initialFormData.event_date || '',
+        deadline: initialFormData.deadline || '',
       });
     }
   }, [initialFormData]);
@@ -20,6 +20,14 @@ const Step5 = ({ initialFormData, handleChange, handleBack, handleNext }) => {
     const { name, value } = e.target;
     setFormData(prevState => ({ ...prevState, [name]: value }));
     handleChange(e);
+  };
+
+  const handleNextClick = () => {
+    if (!formData.event_date || !formData.deadline) {
+      alert('開催日時と募集締切日時を設定してください');
+      return;
+    }
+    handleNext();
   };
 
   return (
@@ -44,7 +52,13 @@ const Step5 = ({ initialFormData, handleChange, handleBack, handleNext }) => {
         />
       </FormControl>
       <Button onClick={handleBack}>戻る</Button>
-      <Button onClick={handleNext} colorScheme="teal">次へ</Button>
+      <Button 
+        onClick={handleNextClick} 
+        colorScheme="teal" 
+        isDisabled={!formData.event_date || !formData.deadline}
+      >
+        次へ
+      </Button>
     </VStack>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text, Flex, Input, Button } from "@chakra-ui/react";
+import { Box, Text, Flex, Textarea, Button } from "@chakra-ui/react";
 import ReactAvatar from 'react-avatar';
 
 const ChatMessage = ({ userId, conversation, messages, newMessage, setNewMessage, handleSendMessage }) => {
@@ -34,12 +34,22 @@ const ChatMessage = ({ userId, conversation, messages, newMessage, setNewMessage
         ))}
       </Box>
       <Flex>
-        <Input
-          placeholder="メッセージを入力"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          mr="3"
-        />
+        <Textarea
+            placeholder="メッセージを入力"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            mr="3"
+            rows={1}
+            resize="none"
+            onFocus={(e) => e.target.rows = 3}
+            onBlur={(e) => e.target.rows = 1}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSendMessage();
+              }
+            }}
+          />
         <Button colorScheme="teal" onClick={handleSendMessage}>送信</Button>
       </Flex>
     </Box>

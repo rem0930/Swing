@@ -144,4 +144,7 @@ jobs:
           docker-compose pull
           docker-compose up -d --build
           docker image prune -af
+
+          # Update crontab with whenever
+          docker-compose run backend bundle exec whenever --update-crontab
         timeout: 1200s # タイムアウトを1200秒（20分）に設定

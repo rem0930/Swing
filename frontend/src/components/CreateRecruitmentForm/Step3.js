@@ -33,6 +33,7 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [previewContent, setPreviewContent] = useState("");
   const [textareaContent, setTextareaContent] = useState(formData.description || "");
+  const [error, setError] = useState('');
 
   useEffect(() => {
     if (selectedTemplate) {
@@ -58,6 +59,15 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
     setTextareaContent(formData.description);
   }, [formData.description]);
 
+  const handleNextStep = () => {
+    if (!textareaContent) {
+      setError('募集内容詳細を入力してください');
+      return;
+    }
+    setError('');
+    handleNext();
+  };
+
   return (
     <Container maxW="container.lg" height="50vh" p={4}>
       <VStack spacing={4} align="stretch" height="100%">
@@ -75,9 +85,10 @@ const Step3 = ({ formData, handleChange, handleBack, handleNext }) => {
           readOnly
           flex="1"
         />
+        {error && <Text color="red.500">{error}</Text>}
         <HStack justify="center" spacing={4}>
           <Button onClick={handleBack} size="md">戻る</Button>
-          <Button onClick={handleNext} colorScheme="teal" size="md">次へ</Button>
+          <Button onClick={handleNextStep} colorScheme="teal" size="md">次へ</Button>
         </HStack>
 
         <Modal isOpen={isOpen} onClose={onClose} size="xl">
