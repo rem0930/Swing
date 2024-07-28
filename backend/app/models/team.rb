@@ -2,7 +2,10 @@
 
 class Team < ApplicationRecord
   belongs_to :user
-  has_many :recruitments
+  has_many :recruitments, dependent: :destroy
+  has_many :applications, through: :recruitments, dependent: :destroy
+  has_many :favorites, through: :recruitments, dependent: :destroy
+  has_many :conversations, through: :recruitments, dependent: :destroy
 
   mount_uploader :profile_photo, ProfilePhotoUploader
 

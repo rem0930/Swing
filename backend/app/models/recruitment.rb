@@ -3,7 +3,7 @@
 class Recruitment < ApplicationRecord
   has_many :applications, dependent: :destroy
   has_many :favorites, dependent: :destroy
-  has_many :conversations
+  has_many :conversations, dependent: :destroy
   belongs_to :team
 
   validates :title, presence: true
