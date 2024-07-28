@@ -22,7 +22,7 @@ module Api
           @conversation.users << @recruitment.team.user
 
           Message.create(
-            content: "ご応募ありがとうございます。このチャットで詳細を確認させていただきます。",
+            content: "ご応募ありがとうございます！#{@recruitment.team.name}です。このチャットで詳細を確認させていただきます。",
             sender: @recruitment.team.user,
             recipient: current_user,
             conversation: @conversation
