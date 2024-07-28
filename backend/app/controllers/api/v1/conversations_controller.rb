@@ -10,9 +10,9 @@ module Api
         conversations = current_user.conversations
                                     .includes(:users, recruitment: { team: :user })
                                     .joins(:messages)
-                                    .select('conversations.*, MAX(messages.created_at) AS last_message_time')
-                                    .group('conversations.id')
-                                    .order('last_message_time DESC')
+                                    .select("conversations.*, MAX(messages.created_at) AS last_message_time")
+                                    .group("conversations.id")
+                                    .order("last_message_time DESC")
 
         render json: conversations, each_serializer: ConversationSerializer, status: :ok
       end
@@ -26,9 +26,9 @@ module Api
         @user = User.find(params[:user_id])
         @conversations = @user.conversations
                               .joins(:messages)
-                              .select('conversations.*, MAX(messages.created_at) AS last_message_time')
-                              .group('conversations.id')
-                              .order('last_message_time DESC')
+                              .select("conversations.*, MAX(messages.created_at) AS last_message_time")
+                              .group("conversations.id")
+                              .order("last_message_time DESC")
 
         if @conversations.present?
           render json: @conversations

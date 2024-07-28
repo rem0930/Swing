@@ -15,7 +15,7 @@ class Recruitment < ApplicationRecord
   enum role: { member: 0, opponent: 1, helper: 2 }
 
   # 募集が古いかどうかを判断するためのスコープを定義
-  scope :old_posts, -> { where('created_at < ?', 30.days.ago) }
+  scope :old_posts, -> { where("created_at < ?", 30.days.ago) }
 
   after_initialize :set_default_status, if: :new_record?
 
