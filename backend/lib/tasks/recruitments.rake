@@ -3,9 +3,13 @@
 namespace :recruitments do
   desc "Close expired recruitments"
   task close_expired: :environment do
-    Recruitment.where("deadline <= ? AND status = ?", Time.now, Recruitment.statuses[:open]).find_each do |recruitment|
-      recruitment.update(status: :closed)
-    end
+    Recruitment.update_expired_recruitments
     puts "Closed expired recruitments"
+  end
+
+  desc "Cleanup old recruitments"
+  task cleanup_old_posts: :environment do
+    Recruitment.cleanup_old_posts
+    puts "Cleaned up old recruitments"
   end
 end
