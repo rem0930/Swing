@@ -1,4 +1,5 @@
 # Swing
+<img src="https://github.com/user-attachments/assets/b12887c4-fbf0-4b48-a07e-a4567f139b24" alt="Swing Logo" >
 
 ## サービス URL
 [https://swi-ng.com/](https://swi-ng.com/)
@@ -14,6 +15,7 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 ## こだわった点
 <details>
 <summary>ユーザービリティとデザインの工夫</summary>
+<br>
 <ul>
   <li>ユーザーが必要な情報を一目で確認できるよう、一覧表示に工夫を凝らしました。</li>
   <li>ユーザーが自分の応募状況や保存した募集を簡単に把握できるようにデザインしました。</li>
@@ -27,30 +29,33 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 
 <details>
 <summary>セキュリティ</summary>
+<br>
 <ul>
   <li>JWTを用いた認証システムにより、ユーザー認証を強化し、不正アクセスを防止します。</li>
-  <li>プレースホルダーを使用したSQLクエリの実行を活用してSQLインジェクション防止</li>
-  <li>トランザクションの管理を行い、データベース操作を一貫性のある単位として管理し、全ての操作が成功するか、全てが取り消されることを保証</li>
+  <li>プレースホルダーを使用したSQLクエリの実行を活用してSQLインジェクションを防止。</li>
+  <li>トランザクションの管理を行い、データベース操作を一貫性のある単位として管理し、全ての操作が成功するか、全てが取り消されることを保証。</li>
   <li>HTTPS（SSL/TLS）プロトコルを使用して、クライアントとサーバー間のデータ通信を暗号化しています。</li>
-  <li>ボリュームを使用してデータベースの永続化をしました。</li>
+  <li>ボリュームを使用してデータベースの永続化を実現。</li>
 </ul>
 </details>
 
 <details>
 <summary>CI/CD関連</summary>
+<br>
 <ul>
   <li>継続的インテグレーション（CI）パイプラインにより、コード変更ごとに自動テストとビルドを行い、品質を確保しています。</li>
   <li>継続的デリバリー（CD）パイプラインを通じて、ステージングおよび本番環境へのデプロイを自動化し、リリースプロセスを効率化しています。</li>
 </ul>
 </details>
-  
+
 <details>
 <summary>その他</summary>
+<br>
 <ul>
   <li>チーム開発を意識したプルリクエストの書き方を工夫してみました。</li>
-  <li><img src="https://github.com/user-attachments/assets/daee629c-a264-4ea5-a2fd-e7e0d40defce" alt="スクリーンショット 2024-07-17 14 16 57" style="width:100%; max-width:800px;"></li>
+  <li><img src="https://github.com/user-attachments/assets/daee629c-a264-4ea5-a2fd-e7e0d40defce" alt="スクリーンショット 2024-07-17 14 16 57" style="width:100%; max-width:600px;"></li>
 </ul>
-</details>  
+</details>
 
 ## 機能
 
@@ -94,8 +99,7 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 ### チーム管理
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/8e555ad0-009e-45a9-8806-7757f3cdc57d"
- style="width:100%; max-width:700px;"></td>
+    <td><img src="https://github.com/user-attachments/assets/8e555ad0-009e-45a9-8806-7757f3cdc57d" style="width:100%; max-width:700px;"></td>
     <td><img width="1280" alt="チーム情報 2024-07-25 15 38 29" src="https://github.com/user-attachments/assets/ea237238-873e-4d29-a1da-bf9e0f1313a4" alt="スクリーンショット 2024-07-15 11 22 55" style="width:100%; max-width:700px;"></td>
   </tr>
   <tr>
@@ -108,16 +112,13 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 <table style="width:100%;">
   <tr>
     <td><img src="https://github.com/user-attachments/assets/1b6b507d-342e-49ec-89fd-fe6ab5c99524" alt="スクリーンショット 2024-07-15 10 56 07" style="width:100%; max-width:206px;"></td>
-    <td><img src="https://github.com/user-attachments/assets/616b93ed-6ebd-4116-b479-a16686ac313e"
- alt="スクリーンショット 2024-07-15 10 56 07" style="width:100%; max-width:206px;"></td>
+    <td><img src="https://github.com/user-attachments/assets/616b93ed-6ebd-4116-b479-a16686ac313e" alt="スクリーンショット 2024-07-15 10 56 07" style="width:100%; max-width:206px;"></td>
   </tr>
   <tr>
     <td>少しわかりにくいのでカーソルを合わせると募集作成　と表示されます。ログインしていないユーザーが押すとログインモーダルが現れ、チームを持っていないユーザーが押すとチーム作成画面が表示されます。</td>
     <td>募集作成用のテンプレートを用意しました！募集の種類に応じたテンプレートを使用することができます。文章を考えるのが面倒な人にとっては最高です。</td>
   </tr>
 </table>
-
-
 
 ### 募集の確認とチーム編集
 <table style="width:100%;">
@@ -131,9 +132,6 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
   </tr>
 </table>
 
-
-
-
 ### 募集詳細
 <table style="width:100%;">
   <tr>
@@ -146,23 +144,37 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
   </tr>
 </table>
 
+### リアルタイムチャット機能とバリデーション
+<table style="width:100%;">
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/2f3400fa-56ca-4721-a23f-56913a1ef841"></td>
+    <td><img src="https://github.com/user-attachments/assets/c3fb7a33-20c1-418f-adc5-5825e562adea"></td>
+  </tr>
+  <tr>
+    <td>リアルタイムチャット機能を実装し、ユーザー間のコミュニケーションを円滑にしました。メッセージの送受信は即時に反映されます。</td>
+    <td>入力内容のバリデーションを強化し、無効なメッセージや不適切な内容の送信を防止します。ユーザーエクスペリエンスの向上を図りました。</td>
+  </tr>
+</table>
+
 ## インフラ構成図
 <img src="https://github.com/user-attachments/assets/755bc285-f51d-48e9-8714-a10ef6a8da11" alt="スクリーンショット 2024-07-15 6 50 31" style="width:100%; max-width:762px;">
 
-## 使用技術
-| Category         | Technology Stack                                                                 |
-|------------------|----------------------------------------------------------------------------------|
-| Frontend         | React (18-alpine),　Next.js, Node.js, Chakra UI                                 　  |
-| Backend          | Ruby (3.2), Ruby on Rails (7)                                              |
-| Infrastructure   | Amazon Web Services                                                              |
-| Database         | MySQL (8.0), Redis                                                                     |
-| Environment      | Docker , Docker Compose, Docker Hub                                                  |
-| CI/CD            | GitHub Actions                                                                   |              
-| Test             | Rubocop, Rspec, ESLint                                                           |
-| Etc.             | GitHub, Nginx                                                             |
+## 使用技術や開発環境
+
+| Category           | Technology                                    |
+|--------------------|-----------------------------------------------|
+| Frontend           | React, Next.js, Node.js (node:18.16.0-alpine) |
+| Backend            | Ruby (3.2.4), Ruby on Rails (7.1.3.4)         |
+| Database           | MySQL (8.0), Redis (7.2.5)                    |
+| Development        | Docker (3.8), GitHub Actions (CI/CD)          |
+| Authentication     | JWT                                           |
+| Deployment         | AWS EC2, S3, CloudFront                       |
+| Web Server         | Nginx (1.26.1)                                |
+| Code Quality       | Rubocop, ESLint                               |
+| Testing Tools      | Rspec                                         |
+| Maps API           | Google Maps API (Geolocation and JavaScript)  |
 
 ## 今後の予定
-- [ ] チャット機能の追加
 - [ ] 通知機能の追加
 - [ ] Cookieの導入
 - [ ] デプロイ戦略(ブルーグリーンデプロイ など)
