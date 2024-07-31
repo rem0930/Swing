@@ -43,12 +43,6 @@ const ChatMessage = ({ userId, conversation, messages, newMessage, setNewMessage
             resize="none"
             onFocus={(e) => e.target.rows = 3}
             onBlur={(e) => e.target.rows = 1}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                handleSendMessage();
-              }
-            }}
           />
         <Button colorScheme="teal" onClick={handleSendMessage}>送信</Button>
       </Flex>
