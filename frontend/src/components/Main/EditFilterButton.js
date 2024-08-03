@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box, Button, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton,
   VStack, RadioGroup, Radio, Stack, Text, Switch, Tab, Tabs, TabList, TabPanel, TabPanels, Icon, Flex
@@ -8,9 +8,10 @@ import { FiType, FiCalendar, FiCheck } from 'react-icons/fi';
 import CustomCalendar from './CustomCalendar';
 
 const EditFilterButton = ({
-  selectedDate, setSelectedDate, selectedRole, setSelectedRole, showOnlyOpen, setShowOnlyOpen
+  selectedDate, setSelectedDate, selectedRole, setSelectedRole, showOnlyOpen, setShowOnlyOpen, footerRef
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   const openDrawer = () => setIsOpen(true);
   const closeDrawer = () => setIsOpen(false);
@@ -20,9 +21,31 @@ const EditFilterButton = ({
     setShowOnlyOpen(false);
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1
+      }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, [footerRef]);
+
   return (
     <>
-      <Button leftIcon={<FaSlidersH />} colorScheme="teal" size="sm" onClick={openDrawer}>
+      <Button leftIcon={<FaSlidersH />} colorScheme="teal" size="sm" onClick={openDrawer} display={isVisible ? "block" : "none"}>
         フィルター
       </Button>
       <Drawer isOpen={isOpen} placement="bottom" onClose={closeDrawer}>

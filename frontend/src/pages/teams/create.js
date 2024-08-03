@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layouts/Layout';
 import CreateTeamForm from '../../components/Team/CreateTeamForm';
 import Logo from '../../components/Logo';
 

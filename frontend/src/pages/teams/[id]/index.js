@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import TeamProfile from '../../../components/Team/TeamProfile';
 import TeamRecruitments from '../../../components/Team/TeamRecruitments';
-import Layout from '../../../components/Layout';
+import Layout from '../../../components/Layouts/Layout';
 import CreateRecruitmentButton from '../../../components/CreateRecruitmentButton';
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 

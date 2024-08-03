@@ -1,6 +1,7 @@
 import { Box, IconButton, Tooltip, useToast, useDisclosure } from "@chakra-ui/react";
 import { FiFeather } from "react-icons/fi";
 import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import LoginModal from './LoginModal'; // パスを適切に調整してください
 import SignupModal from './SignupModal'; // パスを適切に調整してください
@@ -10,6 +11,8 @@ const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const CreateRecruitmentButton = () => {
   const router = useRouter();
   const toast = useToast();
+  const footerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   const {
     isOpen: isLoginModalOpen,
@@ -74,19 +77,44 @@ const CreateRecruitmentButton = () => {
     }
   };
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(!entry.isIntersecting);
+      },
+      {
+        root: null,
+        threshold: 0.1
+      }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => {
+      if (footerRef.current) {
+        observer.unobserve(footerRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <Box position="fixed" bottom="20px" right="20px" zIndex="1000">
-      <Tooltip label="募集作成" aria-label="募集作成">
-        <IconButton
-          colorScheme="teal"
-          size="lg"
-          icon={<FiFeather />}
-          onClick={handleClick}
-          isRound
-          aria-label="新規募集作成"
-        />
-      </Tooltip>
-    </Box>
+    <>
+      <Box position="fixed" bottom="20px" right="20px" zIndex="1000" display={isVisible ? "block" : "none"}>
+        <Tooltip label="募集作成" aria-label="募集作成">
+          <IconButton
+            colorScheme="teal"
+            size="lg"
+            icon={<FiFeather />}
+            onClick={handleClick}
+            isRound
+            aria-label="新規募集作成"
+          />
+        </Tooltip>
+      </Box>
+      <div ref={footerRef}></div>
+    </>
   );
 };
 
