@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Box, Flex, Text, Spinner, useBreakpointValue } from "@chakra-ui/react";
 import axios from 'axios';
 import RecruitmentCards from '../components/Main/RecruitmentCards';
 import CustomCalendar from '../components/Main/CustomCalendar';
 import EditFilterButton from '../components/Main/EditFilterButton';
 import CreateRecruitmentButton from '../components/CreateRecruitmentButton';
-import Layout from '../components/Layout';
+import Layout from '../components/Layouts/Layout';
 import { format } from 'date-fns';
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -17,11 +17,11 @@ const IndexPage = () => {
   const [selectedRole, setSelectedRole] = useState('all');
   const [showOnlyOpen, setShowOnlyOpen] = useState(false);
   const [filteredRecruitments, setFilteredRecruitments] = useState([]);
+  const footerRef = useRef(null);
 
   const isMobileView = useBreakpointValue({ base: true, md: false });
 
   useEffect(() => {
-    // console.log(apiUrl)
     const fetchRecruitments = async () => {
       try {
         const response = await axios.get(`${apiUrl}/recruitments`);
@@ -99,10 +99,12 @@ const IndexPage = () => {
               setSelectedRole={setSelectedRole}
               showOnlyOpen={showOnlyOpen}
               setShowOnlyOpen={setShowOnlyOpen}
+              footerRef={footerRef}
             />
           </Box>
         )}
         <CreateRecruitmentButton />
+        <div ref={footerRef}></div>
       </Box>
     </Layout>
   );

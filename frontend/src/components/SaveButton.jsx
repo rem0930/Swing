@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { IconButton, useToast } from '@chakra-ui/react';
+import { IconButton, useToast, useBreakpointValue } from '@chakra-ui/react';
 import { MdBookmark, MdBookmarkBorder } from 'react-icons/md';
 import axios from 'axios';
 
@@ -8,6 +8,10 @@ const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const SaveButton = ({ recruitmentId, openLoginModal }) => {
   const [isSaved, setIsSaved] = useState(false);
   const toast = useToast();
+
+  // useBreakpointValueでレスポンシブ対応の値を設定
+  const buttonSize = useBreakpointValue({ base: '30px', md: '50px' });
+  const iconSize = useBreakpointValue({ base: '20px', md: '35px' });
 
   useEffect(() => {
     const checkSavedStatus = async () => {
@@ -87,13 +91,12 @@ const SaveButton = ({ recruitmentId, openLoginModal }) => {
 
   return (
     <IconButton
-      icon={isSaved ? <MdBookmark /> : <MdBookmarkBorder />}
+      icon={isSaved ? <MdBookmark size={iconSize} /> : <MdBookmarkBorder size={iconSize} />}
       onClick={handleSave}
       variant="ghost"
       aria-label="Save Recruitment"
-      height="50px"
-      width="50px"
-      fontSize="35px" // アイコンのサイズを大き
+      height={buttonSize}
+      width={buttonSize}
       mx={2} // 水平方向のマージンを追加してボタン間のスペースを確保
     />
   );

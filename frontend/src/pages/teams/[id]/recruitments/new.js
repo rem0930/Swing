@@ -9,7 +9,7 @@ import Step3 from '../../../../components/CreateRecruitmentForm/Step3';
 import Step4 from '../../../../components/CreateRecruitmentForm/Step4';
 import Step5 from '../../../../components/CreateRecruitmentForm/Step5';
 import Step6 from '../../../../components/CreateRecruitmentForm/Step6';
-import Layout from '../../../../components/Layout';
+import Layout from '../../../../components/Layouts/Layout';
 const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const CreateRecruitmentForm = () => {

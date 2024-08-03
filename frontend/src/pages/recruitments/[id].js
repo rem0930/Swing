@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Box, Text, HStack, Icon, Container, Spinner, useToast, Heading, Flex } from '@chakra-ui/react';
+import { Box, Text, HStack, Icon, Container, Spinner, useToast, Heading, Flex, useBreakpointValue } from '@chakra-ui/react';
 import { FiClock } from 'react-icons/fi';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
 import RecruitmentHeader from '../../components/RecruitmentDetails/RecruitmentHeader';
 import RecruitmentFooter from '../../components/RecruitmentDetails/RecruitmentFooter';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layouts/Layout';
 import GoogleMapComponent from '../../components/RecruitmentDetails/GoogleMapComponent';
 import LoginModal from '../../components/LoginModal';
 import SignupModal from '../../components/SignupModal';
@@ -166,15 +166,7 @@ const RecruitmentDetail = () => {
     });
   };
 
-  const handleStayOnPage = () => {
-    setIsConfirmationOpen(false);
-    toast({
-      title: '応募が完了しました！',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-  };
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (loading) {
     return (
@@ -211,8 +203,18 @@ const RecruitmentDetail = () => {
           />
         </Box>
         <Container maxW="container.lg" py={8} bg="gray.50">
-          <Flex>
-            <Box flex="6" ml={4}>
+          {isMobile && recruitmentData.latitude && recruitmentData.longitude && (
+            <Box mb={4}>
+              <GoogleMapComponent
+                latitude={recruitmentData.latitude}
+                longitude={recruitmentData.longitude}
+                width="100%"
+                height="100px"  // モバイル時に高さを半分に設定
+              />
+            </Box>
+          )}
+          <Flex direction={isMobile ? 'column' : 'row'}>
+            <Box flex="6" ml={isMobile ? 0 : 4}>
               <Heading fontSize="lg" fontWeight="bold" mb={4}>詳細</Heading>
               <Text whiteSpace="pre-line" mb={4}>{recruitmentData.description}</Text>
               
@@ -221,14 +223,16 @@ const RecruitmentDetail = () => {
                 <Text>締切日: {new Date(recruitmentData.deadline).toLocaleDateString()}</Text>
               </HStack>
             </Box>
-            <Box flex="4" ml={4}>
-              {recruitmentData.latitude && recruitmentData.longitude && (
+            {!isMobile && recruitmentData.latitude && recruitmentData.longitude && (
+              <Box flex="4" ml={4}>
                 <GoogleMapComponent
                   latitude={recruitmentData.latitude}
                   longitude={recruitmentData.longitude}
+                  width="100%"
+                  height="400px"  // デスクトップ時の高さを設定
                 />
-              )}
-            </Box>
+              </Box>
+            )}
           </Flex>
         </Container>
         <RecruitmentFooter 
