@@ -20,13 +20,16 @@ const Footer = () => {
           </Box>
           <Box textAlign="left" mr={6}>
             <VStack spacing={2} align="left">
+              <Link href="/about" color="white" fontSize="xs" _hover={{ textDecoration: "underline", color: "teal.300" }}>
+                ABOUT
+              </Link>
               <Link color="white" fontSize="xs" _hover={{ textDecoration: "underline", color: "teal.300" }}>
                 Privacy Policy
               </Link>
               <Link color="white" fontSize="xs" _hover={{ textDecoration: "underline", color: "teal.300" }}>
                 Terms of Use
               </Link>
-              <Link isExternal color="white" fontSize="xs" _hover={{ textDecoration: "underline", color: "teal.300" }}>
+              <Link href="https://forms.gle/e6pnLbU5FcCjsyTt7" isExternal color="white" fontSize="xs" _hover={{ textDecoration: "underline", color: "teal.300" }}>
                 Contact
               </Link>
             </VStack>
