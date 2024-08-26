@@ -156,9 +156,6 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
   </tr>
 </table>
 
-## インフラ構成図
-<img src="https://github.com/user-attachments/assets/755bc285-f51d-48e9-8714-a10ef6a8da11" alt="スクリーンショット 2024-07-15 6 50 31" style="width:100%; max-width:762px;">
-
 ## 使用技術や開発環境
 
 | Category           | Technology                                    |
