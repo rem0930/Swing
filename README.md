@@ -86,7 +86,7 @@ Swing はユーザーがチームや募集を簡単に作成、管理、参加�
 ### ログインモーダル
 <table style="width:100%;">
   <tr>
-    <td><img src="https://github.com/user-attachments/assets/29481261-38aa-4725-82d0-ba80d334e8ab" alt="スクリーンショット 2024-07-15 11 18 56" style="width:100%; max-width:800px;"></td>
+    <td><img src="https://github.com/user-attachments/assets/b69fdc2c-40e6-4951-96c3-68e535266ed4" style="width:100%; max-width:800px;"></td>
     <td><img src="https://github.com/user-attachments/assets/22154ee1-6d82-4387-a711-503c12c986f4" alt="スクリーンショット 2024-07-15 10 43 56" style="width:100%; max-width:800px;"></td>
   </tr>
   <tr>
